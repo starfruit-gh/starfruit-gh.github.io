@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构</title>
+    
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    
+    <style>
+        /* =========================================== */
+        /* 1. 全局基础样式                             */
+        /* =========================================== */
+        
+        /* 全局盒模型设置 */
+        * {
+            margin: 0;                       /* 所有元素外边距归零 */
+            padding: 0;                      /* 所有元素内边距归零 */
+            box-sizing: border-box;          /* 使用border-box盒模型 */
+        }
+        
+        /* 页面主体样式 */
+        body {
+            color: #000;                     /* 字体颜色为黑色 */
+            background: url(stardewbackground.png) fixed;  /* 固定背景图片 */
+            background-size: cover;          /* 背景图片覆盖整个区域 */
+            background-repeat: no-repeat;    /* 背景图片不重复 */
+            font-family: JetBrains Mono, Consolas, 微软雅黑, 'Courier New', monospace; /* 字体栈 */
+            font-size: 16px;                 /* 基础字体大小 */
+            min-height: 100vh;               /* 最小高度为视口高度 */
+            margin: 0;                       /* 外边距归零 */
+            padding: 0;                      /* 内边距归零 */
+            background-color: #f5f5f5;       /* 备用背景色 */
+        }
+        
+        /* =========================================== */
+        /* 2. 布局容器样式                             */
+        /* =========================================== */
+        
+        /* 主容器布局 */
+        #home {
+            opacity: 0.95;                   /* 不透明度为0.95 */
+            padding: 50px clamp(20px, 40vw - 460px, 100px);  /* 响应式内边距 */
+            margin: 0;                       /* 外边距归零 */
+            display: flex;                   /* 使用弹性布局 */
+            gap: clamp(10px, 2vw, 20px);     /* 响应式子元素间距 */
+            justify-content: center;         /* 水平居中对齐 */
+            align-items: flex-start;         /* 垂直顶部对齐 */
+            min-height: calc(100vh - 200px); /* 最小高度计算（视口高度-200px） */
+            background: rgba(0,0,0,0.1);     /* 半透明黑色背景 */
+        }
+        
+        /* 主内容区域包装器 */
+        .main-content-wrapper {
+            flex: 1;                         /* 占据剩余可用空间 */
+            position: relative;              /* 相对定位 */
+            min-width: 0;                    /* 允许内容收缩 */
+        }
+        
+        /* =========================================== */
+        /* 3. 侧边栏通用样式                           */
+        /* =========================================== */
+        
+        /* 侧边栏包装器 */
+        .left-sidebar-wrapper {
+            width: 200px;                    /* 固定宽度200px */
+            position: sticky;                /* 粘性定位 */
+            top: 20px;                       /* 距离顶部20px */
+            flex-shrink: 0;                  /* 禁止收缩 */
+        }
+        
+        /* 侧边栏通用样式 */
+        .left-sidebar {
+            width: 100%;                     /* 宽度100%填充容器 */
+            background-color: rgba(255, 255, 255, 0.95);  /* 半透明白色背景 */
+            padding: 15px;                   /* 内边距15px */
+            border-radius: 8px;              /* 圆角8px */
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);  /* 轻微阴影效果 */
+            margin-bottom: 15px;             /* 底部外边距15px */
+            font-family: JetBrains Mono, Consolas, 华文细黑, 'Courier New', monospace; /* 字体设置 */
+            font-size: 13px;                 /* 字体大小13px */
+        }
+        
+        /* =========================================== */
+        /* 4. 右侧目录样式                             */
+        /* =========================================== */
+        
+        /* 目录包装器 */
+        .right-catalog-wrapper {
+            width: 200px;                    /* 固定宽度200px */
+            position: sticky;                /* 粘性定位 */
+            flex-shrink: 0;                  /* 禁止收缩 */
+            top: 50%;                        /* 垂直居中定位 */
+            transform: translateY(-50%);     /* Y轴偏移-50%以实现垂直居中 */
+        }
+        
+        /* 目录容器 */
+        .right-catalog {
+            width: 100%;                     /* 宽度100%填充容器 */
+            background-color: rgba(255, 255, 255, 0.95);  /* 半透明白色背景 */
+            padding: 15px;                   /* 内边距15px */
+            border-radius: 8px;              /* 圆角8px */
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);  /* 轻微阴影效果 */
+            max-height: 80vh;                /* 最大高度为视口高度的80% */
+            overflow-y: auto;                /* 垂直方向溢出时显示滚动条 */
+            font-family: JetBrains Mono, Consolas, 华文细黑, 'Courier New', monospace; /* 字体设置 */
+            font-size: 15px;                 /* 字体大小15px */
+            scrollbar-width: none;           /* Firefox隐藏滚动条 */
+            -ms-overflow-style: none;        /* IE/Edge隐藏滚动条 */
+        }
+        
+        /* Webkit内核浏览器隐藏滚动条 */
+        .right-catalog::-webkit-scrollbar {
+            display: none;                   /* 隐藏滚动条 */
+        }
+        
+        /* =========================================== */
+        /* 5. 内容区域样式                             */
+        /* =========================================== */
+        
+        /* 文章内容区域 */
+        .article-content {
+            max-width: 2100px;               /* 最大宽度2100px */
+            width: 100%;                     /* 宽度100%填充容器 */
+            padding: 35px 45px;              /* 内边距35px 45px */
+            border-radius: 8px;              /* 圆角8px */
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);  /* 轻微阴影效果 */
+            background-color: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+            margin: 0 auto;                  /* 水平居中 */
+        }
+        
+        /* 图片容器样式 */
+        .article-content figure {
+            margin: 10px auto;               /* 与正文间距10px，水平居中 */
+            text-align: center;              /* 居中对齐 */
+        }
+        
+        /* 图片样式 */
+        .article-content img {
+            display: block;                  /* 块级显示 */
+            max-width: 100%;                 /* 最大宽度100% */
+            height: auto;                    /* 高度自适应 */
+            margin: 0 auto 5px;              /* 水平居中，底部间距5px */
+            border-radius: 8px;              /* 圆角8px */
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);  /* 轻微阴影效果 */
+        }
+        
+        /* 图片序号样式 */
+        .article-content figcaption {
+            font-size: 14px;                 /* 字体大小14px（比正文字体17px小一号） */
+            color: #999;                     /* 灰色字体 */
+            text-align: center;              /* 居中对齐 */
+            margin-top: 0;                   /* 顶部外边距0（与图片间距小） */
+            margin-bottom: 20px;             /* 底部外边距20px（与下文间距大） */
+            font-style: italic;              /* 斜体 */
+        }
+        
+        /* 表格容器样式 */
+        .article-content .table-container {
+            margin: 20px 0;                  /* 表格与正文间距20px */
+        }
+        
+        /* 表格序号样式 */
+        .article-content .table-caption {
+            font-size: 14px;                 /* 字体大小14px */
+            color: #999;                     /* 灰色字体 */
+            text-align: center;              /* 居中对齐 */
+            margin-bottom: 8px;              /* 底部外边距8px */
+            font-style: italic;              /* 斜体 */
+        }
+        
+        /* 统一黑色系文本样式 */
+        .article-content p,
+        .article-content li {
+            color: #222 !important;          /* 比纯黑稍浅一点的颜色 */
+            font-weight: 400;                /* 正常字重 */
+        }
+        
+        /* =========================================== */
+        /* 6. 标题样式                                 */
+        /* =========================================== */
+        
+        /* 通用标题样式（用于侧边栏和目录） */
+        .sidebar-title,
+        .catalog-title,
+        .tech-stack-title {
+            font-size: 14px;                 /* 字体大小14px */
+            font-weight: bold;               /* 字体加粗 */
+            color: #2c3e50;                  /* 深蓝色字体 */
+            margin-bottom: 10px;             /* 底部外边距10px */
+            border-left: none;               /* 无左边框 */
+            background: none;                /* 无背景色 */
+            padding-left: 0;                 /* 左侧内边距归零 */
+            padding-top: 0;                  /* 顶部内边距归零 */
+            padding-bottom: 0;               /* 底部内边距归零 */
+        }
+        
+        /* 目录标题特定样式 */
+        .catalog-title {
+            font-size: 16px;                 /* 字体大小16px */
+            padding-bottom: 8px;             /* 底部内边距8px */
+            border-bottom: 1px solid #eee;   /* 底部边框浅灰色 */
+            margin-bottom: 10px;             /* 底部外边距10px */
+        }
+        
+        /* 技术栈标题特定样式 */
+        .tech-stack-title {
+            text-align: left;                /* 左对齐 */
+            font-size: 14px;                 /* 字体大小14px */
+            margin: 15px 0 8px;              /* 上下外边距15px和8px，左右为0 */
+            padding-top: 10px;               /* 顶部内边距10px */
+            border-top: 1px solid #eee;      /* 顶部边框浅灰色 */
+        }
+        
+        /* 一级标题样式 */
+        .article-content h1 {
+            color: #2c3e50;                  /* 深蓝色字体 */
+            font-family: "Comic Sans MS";    /* Comic Sans MS字体 */
+            font-size: 32px;                 /* 字体大小32px */
+            font-weight: bold;               /* 字体加粗 */
+            margin-bottom: 25px;             /* 底部外边距25px */
+            text-align: center;              /* 居中对齐 */
+            scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+        }
+        
+        /* 二级标题样式 */
+        .article-content h2 {
+            color: #000;                     /* 黑色字体 */
+            margin: 35px 0 18px;             /* 上下外边距35px和18px，左右为0 */
+            font-size: 26px;                 /* 字体大小26px */
+            scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+        }
+        
+        /* 三级标题样式 */
+        .article-content h3 {
+            color: #111;                     /* 深灰色字体 */
+            margin: 30px 0 15px;             /* 上下外边距30px和15px，左右为0 */
+            font-size: 20px;                 /* 字体大小20px */
+            scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+        }
+        
+        /* 四级标题样式 */
+        .article-content h4 {
+            color: #222;                     /* 深灰色字体 */
+            margin: 25px 0 12px;             /* 上下外边距25px和12px，左右为0 */
+            font-size: 18px;                 /* 字体大小18px */
+            scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+        }
+        
+        /* 五级标题样式 */
+        .article-content h5 {
+            color: #333;                     /* 深灰色字体 */
+            margin: 20px 0 10px;             /* 上下外边距20px和10px，左右为0 */
+            font-size: 16px;                 /* 字体大小16px */
+            scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+        }
+        
+        /* 标题与标题相邻时，缩小上方间距 */
+        .article-content h3 + h2,
+        .article-content h4 + h3,
+        .article-content h5 + h4,
+        .article-content h2 + h3,
+        .article-content h3 + h4,
+        .article-content h4 + h5 {
+            margin-top: 0px !important;      /* 标题间上方间距统一缩小 */
+        }
+        
+        /* =========================================== */
+        /* 7. 段落与文本样式                           */
+        /* =========================================== */
+        
+        /* 文章段落样式 */
+        .article-content p {
+            color: #333;                     /* 深灰色字体 */
+            line-height: 1.8;                /* 行高1.8倍 */
+            margin-bottom: 15px;             /* 底部外边距15px */
+            font-size: 17px;                 /* 字体大小17px */
+            text-align: justify;             /* 两端对齐 */
+        }
+        
+        /* =========================================== */
+        /* 8. 列表样式                                 */
+        /* =========================================== */
+        
+        /* 文章内容中的无序列表 */
+        .article-content ul {
+            list-style-type: disc;           /* 列表标记为实心圆点 */
+            margin: 10px 0 10px 30px;        /* 上下外边距10px，左侧30px */
+            font-size: 16px;                 /* 字体大小16px */
+            line-height: 1.3;                /* 行高1.3倍 */
+        }
+        
+        /* 文章内容中的有序列表 */
+        .article-content ol {
+            list-style-type: decimal;        /* 列表标记为数字 */
+            margin: 10px 0 10px 30px;        /* 上下外边距10px，左侧30px */
+            font-size: 16px;                 /* 字体大小16px */
+            line-height: 1.3;                /* 行高1.3倍 */
+        }
+        
+        /* 列表项样式 */
+        .article-content li {
+            margin-bottom: 8px;              /* 底部外边距8px */
+        }
+        
+        /* 嵌套列表样式 */
+        .article-content ul ul,
+        .article-content ol ul,
+        .article-content ul ol,
+        .article-content ol ol {
+            margin-top: 8px;                 /* 顶部外边距8px */
+            margin-bottom: 8px;              /* 底部外边距8px */
+            margin-left: 20px;               /* 左侧外边距20px */
+            font-size: 16px;                 /* 字体大小16px */
+        }
+        
+        /* 列表段落间距调整 */
+        .article-content li p {
+            margin-bottom: 8px;              /* 底部外边距8px */
+            font-size: 16px;                 /* 字体大小16px */
+        }
+        
+        /* =========================================== */
+        /* 9. highlight.js代码块样式                   */
+        /* =========================================== */
+        
+        /* 代码块容器样式 */
+        pre code.hljs,
+        .hljs {
+            display: block;                  /* 块级显示 */
+            overflow-x: auto;                /* 水平方向溢出时显示滚动条 */
+            padding: 0.7em 1em;              /* 内边距0.7em 1em */
+            background: #2b2b2b !important;  /* 深灰色背景，重要规则 */
+            border: 1px solid #2c2a2a !important;  /* 边框深灰色，重要规则 */
+            color: #bababa !important;       /* 浅灰色字体，重要规则 */
+            font-family: JetBrains Mono, Consolas, 华文细黑, 'Courier New', monospace !important; /* 等宽字体，重要规则 */
+            font-size: 16px;                 /* 字体大小16px */
+            border-radius: 3px !important;   /* 圆角3px，重要规则 */
+            --line-numbers-gutter-bg: #333;  /* 行号背景色变量 */
+            margin: 15px 0 !important;       /* 上下外边距15px，重要规则 */
+        }
+        
+        /* 代码块滚动条样式 */
+        .hljs::-webkit-scrollbar {
+            height: 4px;                     /* 滚动条高度4px */
+        }
+        
+        .hljs::-webkit-scrollbar-thumb {
+            background-color: #596172;       /* 滚动条滑块颜色 */
+        }
+        
+        /* 代码语法高亮样式 */
+        .hljs-comment,
+        .hljs-quote {
+            color: #5c6370 !important;       /* 注释颜色，重要规则 */
+            font-style: italic !important;   /* 斜体，重要规则 */
+        }
+        
+        .hljs-doctag,
+        .hljs-keyword,
+        .hljs-formula {
+            color: #c678dd !important;       /* 关键字颜色，重要规则 */
+        }
+        
+        .hljs-section,
+        .hljs-name,
+        .hljs-selector-tag,
+        .hljs-deletion,
+        .hljs-subst {
+            color: #e06c75 !important;       /* 标签名颜色，重要规则 */
+        }
+        
+        .hljs-literal {
+            color: #56b6c2 !important;       /* 字面量颜色，重要规则 */
+        }
+        
+        .hljs-string,
+        .hljs-regexp,
+        .hljs-addition,
+        .hljs-attribute,
+        .hljs-meta-string {
+            color: #98c379 !important;       /* 字符串颜色，重要规则 */
+        }
+        
+        .hljs-built_in,
+        .hljs-class .hljs-title {
+            color: #e6c07b !important;       /* 内置函数颜色，重要规则 */
+        }
+        
+        .hljs-attr,
+        .hljs-variable,
+        .hljs-template-variable,
+        .hljs-type,
+        .hljs-selector-class,
+        .hljs-selector-attr,
+        .hljs-selector-pseudo,
+        .hljs-number {
+            color: #d19a66 !important;       /* 属性名颜色，重要规则 */
+        }
+        
+        .hljs-symbol,
+        .hljs-bullet,
+        .hljs-link,
+        .hljs-meta,
+        .hljs-selector-id,
+        .hljs-title {
+            color: #61aeee !important;       /* 符号颜色，重要规则 */
+        }
+        
+        .hljs-emphasis {
+            font-style: italic !important;   /* 强调文本斜体，重要规则 */
+        }
+        
+        .hljs-strong {
+            font-weight: bold !important;    /* 强调文本加粗，重要规则 */
+        }
+        
+        .hljs-link {
+            text-decoration: underline !important;  /* 链接下划线，重要规则 */
+        }
+        
+        .hljs-keyword,
+        .hljs-selector-tag,
+        .hljs-built_in,
+        .hljs-name,
+        .hljs-tag {
+            color: #7171bf !important;       /* 关键字和标签颜色，重要规则 */
+        }
+        
+        /* 行号样式 */
+        .hljs .hljs-ln-line.hljs-ln-numbers {
+            background: #333 !important;     /* 行号背景色，重要规则 */
+            padding: 0 .7em !important;      /* 行号内边距，重要规则 */
+            color: #777 !important;          /* 行号颜色，重要规则 */
+        }
+        
+        .hljs .hljs-ln-line.hljs-ln-code {
+            padding-left: .6em !important;   /* 代码行左侧内边距，重要规则 */
+        }
+        
+        .hljs .hljs-ln {
+            margin: 0 -1em !important;       /* 行号容器外边距，重要规则 */
+        }
+        
+        /* 首行和末行行号特殊样式 */
+        .hljs td.hljs-ln-line[data-line-number="1"].hljs-ln-numbers,
+        .hljs .hljs-ln > tbody > tr:last-child td.hljs-ln-line.hljs-ln-numbers {
+            position: relative !important;   /* 相对定位，重要规则 */
+        }
+        
+        .hljs .hljs-ln > tbody > tr:last-child td.hljs-ln-line.hljs-ln-numbers:after,
+        .hljs td.hljs-ln-line[data-line-number="1"].hljs-ln-numbers:before {
+            content: '' !important;          /* 伪元素内容为空，重要规则 */
+            position: absolute !important;   /* 绝对定位，重要规则 */
+            top: -0.7em !important;          /* 顶部偏移-0.7em，重要规则 */
+            left: 0 !important;              /* 左侧偏移0，重要规则 */
+            width: 100% !important;          /* 宽度100%，重要规则 */
+            background: var(--line-numbers-gutter-bg) !important;  /* 使用变量设置背景色，重要规则 */
+            display: inline-block !important; /* 行内块显示，重要规则 */
+            height: 0.7em !important;        /* 高度0.7em，重要规则 */
+            right: 0 !important;             /* 右侧偏移0，重要规则 */
+        }
+        
+        .hljs .hljs-ln > tbody > tr:last-child td.hljs-ln-line.hljs-ln-numbers:after {
+            top: initial !important;         /* 取消顶部定位，重要规则 */
+            bottom: -0.7em !important;       /* 底部偏移-0.7em，重要规则 */
+        }
+        
+        /* =========================================== */
+        /* 10. 行内代码样式                             */
+        /* =========================================== */
+        
+        /* 行内代码通用样式 */
+        .code-inline {
+            font-family: JetBrains Mono, Consolas, "Liberation Mono", Menlo, monospace;  /* 等宽字体栈 */
+            font-size: 15px;                 /* 字体大小15px */
+            line-height: 1.2;                /* 行高1.2倍 */
+            background-color: rgba(245, 245, 245, 0.95);  /* 浅灰色半透明背景 */
+            color: #000;                     /* 黑色字体 */
+            border-radius: 3px;              /* 圆角3px */
+            padding: 0.2em 0.4em;            /* 内边距0.2em 0.4em */
+            margin: 0 0.1em;                 /* 左右外边距0.1em */
+            white-space: pre-wrap;           /* 保留空白符但允许换行 */
+            word-break: break-word;          /* 允许单词内断行 */
+        }
+        
+        /* 表格中的行内代码 */
+        td .code-inline,
+        th .code-inline {
+            font-size: 0.8em;                /* 字体大小缩小为0.8倍 */
+            line-height: 1.1;                /* 行高1.1倍 */
+        }
+        
+        /* 标题中的行内代码 */
+        h1 .code-inline,
+        h2 .code-inline,
+        h3 .code-inline,
+        h4 .code-inline,
+        h5 .code-inline,
+        h6 .code-inline {
+            font-size: 0.75em;               /* 字体大小缩小为0.75倍 */
+            line-height: 1.1;                /* 行高1.1倍 */
+        }
+        
+        /* =========================================== */
+        /* 11. 作者信息样式                            */
+        /* =========================================== */
+        
+        /* 作者头像样式 */
+        .author-avatar {
+            width: 80px;                     /* 宽度80px */
+            height: 80px;                    /* 高度80px */
+            border-radius: 50%;              /* 圆形边框 */
+            object-fit: cover;               /* 图片填充方式 */
+            border: 2px solid #f0f8ff;       /* 浅蓝色边框 */
+            margin: 0 auto 10px;             /* 水平居中，底部外边距10px */
+            display: block;                  /* 块级显示 */
+        }
+        
+        /* 作者昵称样式 */
+        .author-nickname {
+            font-size: 16px;                 /* 字体大小16px */
+            font-weight: bold;               /* 字体加粗 */
+            color: #2c3e50;                  /* 深蓝色字体 */
+            margin-bottom: 5px;              /* 底部外边距5px */
+            text-align: center;              /* 居中对齐 */
+        }
+        
+        /* 作者真实姓名样式 */
+        .author-realname {
+            font-size: 12px;                 /* 字体大小12px */
+            color: #999;                     /* 浅灰色字体 */
+            margin-bottom: 15px;             /* 底部外边距15px */
+            padding-bottom: 10px;            /* 底部内边距10px */
+            border-bottom: 1px solid #eee;   /* 底部边框浅灰色 */
+            text-align: center;              /* 居中对齐 */
+        }
+        
+        /* 作者信息项样式 */
+        .author-info-item {
+            text-align: left;                /* 左对齐 */
+            margin: 8px 0;                   /* 上下外边距8px，左右为0 */
+            font-size: 12px;                 /* 字体大小12px */
+        }
+        
+        /* 信息标签样式 */
+        .info-label {
+            color: #666;                     /* 中灰色字体 */
+            font-weight: 500;                /* 中等字重 */
+            display: inline-block;           /* 行内块显示 */
+            width: 60px;                     /* 固定宽度60px */
+        }
+        
+        /* 信息内容样式 */
+        .info-content {
+            color: #34495e;                  /* 稍浅的蓝色字体 */
+        }
+        
+        /* =========================================== */
+        /* 12. 名人名言样式                            */
+        /* =========================================== */
+        
+        /* 名人名言样式 */
+        .author-quote {
+            margin: 12px 0;                  /* 上下外边距12px，左右为0 */
+            padding: 10px;                   /* 内边距10px */
+            font-size: 12px;                 /* 字体大小12px */
+            font-style: italic;              /* 斜体 */
+            color: #888;                     /* 浅灰色字体 */
+            text-align: center;              /* 居中对齐 */
+            border-top: 1px dashed #f0f0f0;  /* 顶部虚线边框 */
+            border-bottom: 1px dashed #f0f0f0; /* 底部虚线边框 */
+        }
+        
+        /* =========================================== */
+        /* 13. 技术栈标签样式                          */
+        /* =========================================== */
+        
+        /* 技术栈标签容器 */
+        .tech-stack-tags {
+            display: flex;                   /* 弹性布局 */
+            flex-wrap: wrap;                 /* 允许换行 */
+            gap: 6px;                        /* 子元素间距6px */
+            justify-content: flex-start;     /* 左对齐 */
+        }
+        
+        /* 单个技术标签样式 */
+        .tech-tag {
+            background-color: rgba(240, 248, 255, 0.9);  /* 浅蓝色半透明背景 */
+            color: #3498db;                  /* 蓝色字体 */
+            padding: 3px 8px;                /* 内边距3px 8px */
+            border-radius: 16px;             /* 圆形边框 */
+            font-size: 11px;                 /* 字体大小11px */
+        }
+        
+        /* =========================================== */
+        /* 14. 日历组件样式                            */
+        /* =========================================== */
+        
+        /* 日历容器 */
+        .blog-calendar {
+            width: 100%;                     /* 宽度100%填充容器 */
+        }
+        
+        /* 日历头部样式 */
+        .calendar-header {
+            display: flex;                   /* 弹性布局 */
+            justify-content: space-between;  /* 两端对齐 */
+            align-items: center;             /* 垂直居中对齐 */
+            font-size: 12px;                 /* 字体大小12px */
+            color: #34495e;                  /* 稍浅的蓝色字体 */
+            margin-bottom: 8px;              /* 底部外边距8px */
+        }
+        
+        /* 日历按钮样式 */
+        .calendar-btn {
+            background-color: rgba(240, 248, 255, 0.9);  /* 浅蓝色半透明背景 */
+            color: #3498db;                  /* 蓝色字体 */
+            border: none;                    /* 无边框 */
+            width: 20px;                     /* 宽度20px */
+            height: 20px;                    /* 高度20px */
+            border-radius: 4px;              /* 圆角4px */
+            cursor: pointer;                 /* 鼠标指针为手型 */
+            font-size: 10px;                 /* 字体大小10px */
+            display: flex;                   /* 弹性布局 */
+            align-items: center;             /* 垂直居中对齐 */
+            justify-content: center;         /* 水平居中对齐 */
+            transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
+        }
+        
+        /* 日历按钮悬停效果 */
+        .calendar-btn:hover {
+            background-color: #3498db;       /* 悬停时背景色变为蓝色 */
+            color: #fff;                     /* 悬停时字体变为白色 */
+        }
+        
+        /* 年月显示样式 */
+        .calendar-year-month {
+            font-weight: 500;                /* 中等字重 */
+        }
+        
+        /* 星期行样式 */
+        .calendar-week {
+            display: flex;                   /* 弹性布局 */
+            background-color: rgba(245, 247, 250, 0.9);  /* 浅灰色半透明背景 */
+            border-radius: 4px 4px 0 0;      /* 仅顶部圆角 */
+        }
+        
+        /* 星期项样式 */
+        .week-item {
+            width: 14.28%;                   /* 宽度为1/7 (100%/7) */
+            text-align: center;              /* 居中对齐 */
+            padding: 5px 0;                  /* 上下内边距5px，左右为0 */
+            font-size: 10px;                 /* 字体大小10px */
+            color: #666;                     /* 中灰色字体 */
+        }
+        
+        /* 日期容器样式 */
+        .calendar-dates {
+            display: flex;                   /* 弹性布局 */
+            flex-wrap: wrap;                 /* 允许换行 */
+            border: 1px solid #eee;          /* 浅灰色边框 */
+            border-top: none;                /* 无顶部边框 */
+            border-radius: 0 0 4px 4px;      /* 仅底部圆角 */
+        }
+        
+        /* 日期项样式 */
+        .date-item {
+            width: 14.28%;                   /* 宽度为1/7 (100%/7) */
+            text-align: center;              /* 居中对齐 */
+            padding: 5px 0;                  /* 上下内边距5px，左右为0 */
+            font-size: 10px;                 /* 字体大小10px */
+            color: #34495e;                  /* 稍浅的蓝色字体 */
+            border-right: 1px solid #eee;    /* 右侧浅灰色边框 */
+            border-bottom: 1px solid #eee;   /* 底部浅灰色边框 */
+            transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
+        }
+        
+        /* 每周最后一列取消右侧边框 */
+        .date-item:nth-child(7n) {
+            border-right: none;              /* 无右侧边框 */
+        }
+        
+        /* 最后一行取消底部边框 */
+        .date-item:last-child,
+        .date-item:nth-last-child(2):nth-child(7n-1),
+        .date-item:nth-last-child(3):nth-child(7n-2),
+        .date-item:nth-last-child(4):nth-child(7n-3),
+        .date-item:nth-last-child(5):nth-child(7n-4),
+        .date-item:nth-last-child(6):nth-child(7n-5) {
+            border-bottom: none;             /* 无底部边框 */
+        }
+        
+        /* 非本月日期样式 */
+        .date-item.other-month {
+            color: #ccc;                     /* 浅灰色字体 */
+        }
+        
+        /* 今日日期样式 */
+        .date-item.today {
+            background-color: #3498db;       /* 蓝色背景 */
+            color: #fff;                     /* 白色字体 */
+            font-weight: bold;               /* 字体加粗 */
+            border-radius: 2px;              /* 圆角2px */
+        }
+        
+        /* 本月日期悬停效果 */
+        .date-item:not(.other-month):hover {
+            background-color: rgba(240, 248, 255, 0.9);  /* 悬停时浅蓝色半透明背景 */
+            color: #3498db;                  /* 悬停时蓝色字体 */
+            cursor: default;                 /* 鼠标指针为默认 */
+        }
+        
+        /* =========================================== */
+        /* 15. 相关文章列表样式                        */
+        /* =========================================== */
+        
+        /* 相关文章列表容器 */
+        .related-articles-list {
+            list-style: none;                /* 无列表标记 */
+        }
+        
+        /* 相关文章项样式 */
+        .related-article-item {
+            margin-bottom: 8px;              /* 底部外边距8px */
+            padding-bottom: 8px;             /* 底部内边距8px */
+            border-bottom: 1px dashed #f0f0f0; /* 底部虚线边框 */
+        }
+        
+        /* 最后一个相关文章项样式 */
+        .related-article-item:last-child {
+            margin-bottom: 0;                /* 底部外边距归零 */
+            padding-bottom: 0;               /* 底部内边距归零 */
+            border-bottom: none;             /* 无底部边框 */
+        }
+        
+        /* 相关文章链接样式 */
+        .related-article-link {
+            color: #34495e;                  /* 稍浅的蓝色字体 */
+            text-decoration: none;           /* 无下划线 */
+            font-size: 12px;                 /* 字体大小12px */
+            line-height: 1.4;                /* 行高1.4倍 */
+            transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
+            display: -webkit-box;            /* 旧版Webkit弹性盒模型 */
+            -webkit-line-clamp: 2;           /* 限制显示2行 */
+            -webkit-box-orient: vertical;    /* 垂直方向排列 */
+            overflow: hidden;                /* 溢出隐藏 */
+            font-family: JetBrains Mono, Consolas, 华文细黑, 'Courier New', monospace; /* 字体设置 */
+            background: none;                /* 无背景色 */
+            border: none;                    /* 无边框 */
+            padding: 0;                      /* 内边距归零 */
+        }
+        
+        /* 相关文章链接悬停效果 */
+        .related-article-link:hover {
+            color: #4C9ED9;                  /* 悬停时浅蓝色字体 */
+            text-decoration: underline;      /* 悬停时显示下划线 */
+        }
+        
+        /* =========================================== */
+        /* 16. 目录列表样式                            */
+        /* =========================================== */
+        
+        /* 目录列表容器 */
+        .catalog-list {
+            list-style: none;                /* 无列表标记 */
+        }
+        
+        /* 不同层级目录项样式 */
+        .catalog-item-level2 {
+            margin: 6px 0 6px 0;             /* 上下外边距6px，左右为0 */
+            font-size: 15px;                 /* 字体大小15px */
+        }
+        
+        .catalog-item-level3 {
+            margin: 5px 0 5px 8px;           /* 上下外边距5px，左侧8px */
+            font-size: 15px;                 /* 字体大小15px */
+        }
+        
+        .catalog-item-level4 {
+            margin: 4px 0 4px 16px;          /* 上下外边距4px，左侧16px */
+            font-size: 15px;                 /* 字体大小15px */
+        }
+        
+        .catalog-item-level5 {
+            margin: 4px 0 4px 24px;          /* 上下外边距4px，左侧24px */
+            font-size: 15px;                 /* 字体大小15px */
+        }
+        
+        /* 目录链接样式 */
+        .catalog-link {
+            color: #666;                     /* 中灰色字体 */
+            text-decoration: none;           /* 无下划线 */
+            display: block;                  /* 块级显示 */
+            padding: 3px 6px;                /* 内边距3px 6px */
+            border-radius: 4px;              /* 圆角4px */
+            transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
+            font-size: inherit;              /* 继承父元素字体大小 */
+        }
+        
+        /* 目录链接悬停效果 */
+        .catalog-link:hover {
+            color: #4C9ED9;                  /* 悬停时浅蓝色字体 */
+            background-color: rgba(240, 248, 255, 0.9);  /* 悬停时浅蓝色半透明背景 */
+        }
+        
+        /* 激活状态目录链接样式 */
+        .catalog-link.active {
+            color: #fff;                     /* 白色字体 */
+            background-color: #4C9ED9;       /* 浅蓝色背景 */
+        }
+        
+        /* 无目录提示样式 */
+        .catalog-empty-tip {
+            color: #999;                     /* 浅灰色字体 */
+            font-size: 15px;                 /* 字体大小15px */
+            text-align: center;              /* 居中对齐 */
+            padding: 10px 0;                 /* 上下内边距10px，左右为0 */
+        }
+        
+        /* =========================================== */
+        /* 17. 回到顶部按钮样式                         */
+        /* =========================================== */
+        
+        /* 回到顶部按钮基础样式 */
+        .back-to-top-btn {
+            position: fixed;                 /* 固定定位，相对于视口 */
+            bottom: 95px;                    /* 距离视口底部95px */
+            right: 25px;                     /* 距离视口右侧25px */
+            width: 50px;                     /* 宽度50px */
+            height: 50px;                    /* 高度50px */
+            background-color: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+            color: #4C9ED9;                  /* 浅蓝色字体 */
+            border: 1px solid #e0e0e0;       /* 浅灰色边框 */
+            border-radius: 6px;              /* 圆角6px */
+            font-size: 24px;                 /* 字体大小24px */
+            font-weight: bold;               /* 字体加粗 */
+            cursor: pointer;                 /* 鼠标指针为手型 */
+            display: flex;                   /* 弹性布局 */
+            align-items: center;             /* 垂直居中对齐 */
+            justify-content: center;         /* 水平居中对齐 */
+            transition: all 0.3s ease;       /* 所有属性0.3秒缓动过渡 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 阴影效果 */
+            z-index: 1000;                   /* 提高层级，确保在最上层 */
+            opacity: 0;                      /* 初始透明度为0（隐藏） */
+            visibility: hidden;              /* 初始不可见 */
+            transform: translateY(20px);     /* 初始向下偏移20px */
+        }
+        
+        /* 鼠标悬停效果 */
+        .back-to-top-btn:hover {
+            background-color: #4C9ED9;       /* 悬停时浅蓝色背景 */
+            color: #fff;                     /* 悬停时白色字体 */
+            border-color: #4C9ED9;           /* 悬停时浅蓝色边框 */
+            box-shadow: 0 6px 20px rgba(76, 158, 217, 0.4); /* 加强悬停阴影效果 */
+            transform: translateY(-3px);     /* 悬停时轻微上移 */
+        }
+        
+        /* 按钮显示状态 */
+        .back-to-top-btn.show {
+            opacity: 1;                      /* 透明度为1（显示） */
+            visibility: visible;             /* 可见 */
+            transform: translateY(0);        /* 取消偏移 */
+        }
+        
+        /* =========================================== */
+        /* 18. 移动端响应式适配                        */
+        /* =========================================== */
+        
+        /* 移动端适配（屏幕宽度小于等于768px） */
+        @media (max-width: 768px) {
+            /* 主容器移动端布局 */
+            #home {
+                flex-direction: column;      /* 垂直方向排列 */
+                gap: 15px;                   /* 子元素间距15px */
+                padding: 15px;               /* 内边距15px */
+            }
+            
+            /* 侧边栏和目录移动端布局 */
+            .left-sidebar-wrapper,
+            .right-catalog-wrapper {
+                width: 100%;                 /* 宽度100%填充容器 */
+                position: static;            /* 静态定位 */
+                transform: none;             /* 无变换 */
+            }
+            
+            /* 文章内容移动端内边距调整 */
+            .article-content {
+                padding: 20px 25px;          /* 内边距20px 25px */
+            }
+            
+            /* 回到顶部按钮移动端适配 */
+            .back-to-top-btn {
+                bottom: 20px;                /* 距离底部20px */
+                right: 20px;                 /* 距离右侧20px */
+                width: 45px;                 /* 宽度45px */
+                height: 45px;                /* 高度45px */
+                font-size: 22px;             /* 字体大小22px */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="Starfruit.png" alt="作者头像" class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 名人名言 -->
+                <div class="author-quote">
+                    Talk is cheap. Show me the code.
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Go并发编程实战：Goroutine与Channel详解</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">分布式系统设计：一致性协议与实现</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">微服务架构下的Go语言实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Kubernetes中Go应用部署最佳实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">高性能Go程序优化技巧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文（整合markdown内容） -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+                <h1 id="main-title">（一）概述</h1>
+                
+                <h2 id="data-structure-research">数据结构研究的内容</h2>
+                <p>数据结构研究的内容是：如何高效地组织、存储和处理数据。</p>
+                
+                <figure>
+                    <img src="用计算机解决实际问题通常的步骤.svg" alt="用计算机解决实际问题通常的步骤">
+                    <figcaption>图1 用计算机解决实际问题通常的步骤</figcaption>
+                </figure>
+                
+                <p>如何使用计算机解决实际问题？通常的步骤是：分析具体问题，将具体的问题抽象为数学模型，然后设计算法，编程、调试、运行，最终得出结果。</p>
+                <p>数据结构在使用计算机解决实际问题的过程中起到什么作用？在使用计算机解决实际问题时，通过分析问题抽象出的数学模型包括：要操作的对象以及操作对象之间的关系。要想用计算机处理这个数学模型，就需要借助数据结构将这个数学模型要操作的对象以及操作对象之间的关系存储到计算机中，并借助数据结构对其进行操作、处理。</p>
+                <p>早期的计算机主要用于数值计算，所使用的数据结构相对简单。例如，使用一维数组存储向量；使用二维数组存储矩阵；使用栈处理数学表达式中的运算符优先级和括号匹配等...</p>
+                <p>现在的计算机更多用于非数值计算（这里的计算是逻辑层面的处理运算，而非狭义的数值运算），包括对字符、表、图、音频、视频等数据的运算处理，所使用的数据结构更复杂。例如，使用线性表处理学生信息（对学生信息进行增删改查、检索、排序、统计等）；使用树实现文件系统的目录结构（每个目录下可动态包含任意数量的子目录或文件，并能通过父目录路径进行逐层定位、路径回溯等），处理棋局走棋问题（某一棋盘格局下，下一步棋的可能与选择等）；使用图处理地图中某两个地点的最短路径、最优路径等...</p>
+                
+                <h2 id="basic-concepts">数据结构的基本概念与术语</h2>
+                <h3 id="data-terms">数据、数据元素、数据项和数据对象</h3>
+                <ul>
+                    <li>数据（Data）：是所有能输入计算机并能被计算机程序处理的符号的总称。包括：数字、字符串、表、图、音频、视频...</li>
+                    <li>数据元素（Data Element）：是数据的基本单位。简称元素，或称为记录、结点、顶点。</li>
+                    <li>数据项（Data Item）：是组成数据元素的、有独立含义的、不可分割的最小单位。</li>
+                    <li>数据对象（Data Object）：是性质相同的数据元素的集合。例如：整数集<span class="code-inline">N={0,±1,±2,...}</span>、字母字符集<span class="code-inline">C={'A','B','C'...'a','b','c',...}</span>。</li>
+                </ul>
+                
+                <h3 id="data-structure-def">数据结构</h3>
+                <h4 id="ds-definition">定义</h4>
+                <ul>
+                    <li>数据结构（Data Structure）：是相互之间存在一种或多种特定关系的数据元素的集合。DS={“数据元素”+“结构(关系)”}。</li>
+                </ul>
+                
+                <h4 id="ds-three-elements">三要素</h4>
+                <h5 id="logical-structure">逻辑结构</h5>
+                <ul>
+                    <li>集合结构：数据元素之间除了属于同一集合的关系外，别无其他关系。</li>
+                    <li>线性结构：数据元素之间存在着一对一的关系。</li>
+                    <li>树结构：数据元素之间存在着一对多的关系。</li>
+                    <li>图结构(网结构)：数据元素之间存在着多对多的关系。</li>
+                </ul>
+                
+                <h5 id="storage-structure">存储结构</h5>
+                <ul>
+                    <li>顺序存储结构：把数据元素存放在地址连续的存储单元里。</li>
+                    <li>链式存储结构：把数据元素存放在任意的存储单元里，地址可以连续也可以不连续，其中每个结点占用两个连续的存储单元，一个存放结点的信息，另一个存放后续结点的首地址。</li>
+                    <li>索引存储结构：在存储数据元素的同时，还建立附加的索引表。索引表中的每项称为索引项，索引项的一般形式是(关键字，地址)。</li>
+                    <li>散列存储结构：根据数据元素的关键字直接计算出该元素的存储地址，又称哈希(Hash)存储。</li>
+                </ul>
+                
+                <h5 id="operation-implement">运算和实现</h5>
+                <ul>
+                    <li>运算（针对逻辑结构）：对数据元素可以施加的操作。</li>
+                    <li>实现（针对存储结构）：可施加的操作在相应的存储结构上的实现。</li>
+                </ul>
+                
+                <h3 id="data-type">数据类型</h3>
+                <ul>
+                    <li>数据类型（Data Type）：是一个值的集合和定义在这个集合上的一组操作的总称。</li>
+                    <li>数据在存储时所需要的存储空间各不相同，所以不同的数据在存储时要分配不同大小的存储空间，因此要用不同的数据类型来区分。</li>
+                    <li>数据类型定义了数据的性质、取值范围、存储方式以及对数据所能进行的运算和操作。</li>
+                </ul>
+                
+                <h3 id="adt">抽象数据类型</h3>
+                <ul>
+                    <li>抽象数据类型（Abstract Data Type，ADT）：一般指由用户定义的一个数学模型以及定义在这个模型上的一组操作的总称，包括三个部分：数据对象、数据关系、基本操作。</li>
+                </ul>
+                
+                <h2 id="algorithm">算法</h2>
+                <h3 id="algorithm-def">算法的定义</h3>
+                <ul>
+                    <li>算法（Algorithm）：是解决特定问题求解步骤的描述，在计算机中表现为指令的有限序列，且每条指令表示一个或多个操作。</li>
+                </ul>
+                
+                <h3 id="algorithm-characteristics">算法的特性</h3>
+                <ul>
+                    <li>有穷性：一个算法必须在执行有穷步骤后结束，而且每一步必须在有穷时间内完成。</li>
+                    <li>确定性：算法中的每条指令必须有确切的含义，每一步操作都没有二义性，对于相同的输入只能得出相同的输出。</li>
+                    <li>可行性：算法不能是空中楼阁，算法中的所有操作都必须可以通过 已经实现的基本操作 运算执行有限次来实现。</li>
+                    <li>输入：一个算法有零个或多个输入。</li>
+                    <li>输出：一个算法有一个或多个输出。</li>
+                </ul>
+                
+                <h3 id="algorithm-design">算法的设计要求</h3>
+                <ul>
+                    <li>正确性：算法的正确性并非仅仅指语法正确或通过部分测试用例，而是指对于问题定义范围内的所有合法输入，算法都能够在有限时间内产生符合预期的正确结果。</li>
+                    <li>可读性：算法应当具有良好的结构、清晰的逻辑和恰当的注释，以便于理解、交流，降低协作和维护成本。</li>
+                    <li>健壮性：当算法接收到不符合预设条件（包括边界条件、异常值或非法格式）的输入时，算法能恰当的做出反应或进行处理，而不是产生莫名其妙的输出结果或出现不可预期的副作用或系统级故障。</li>
+                    <li>高效性：算法在执行过程中应高效利用计算资源，要花费尽量少的时间和尽量低的存储。</li>
+                </ul>
+                
+                <h3 id="algorithm-evaluation">算法的好坏分析</h3>
+                <p>解决同一个问题，可以有许多不同的算法。那要如何评判不同算法的好坏呢？</p>
+                <p>一个好的算法首先要具备正确性，然后是健壮性，可读性，在几个方面都满足的情况下，主要考虑算法的效率，通过算法的效率高低来评判不同算法的优劣程度。</p>
+                <p>算法效率的度量可以从两方面考虑：算法的时间效率和算法的空间效率。</p>
+                <ul>
+                    <li>时间效率：指的是算法执行所耗费的时间。</li>
+                    <li>空间效率：指的是算法执行过程中所耗费的存储空间。</li>
+                </ul>
+                <p>算法效率的度量方法有两种：事后统计和事前分析。</p>
+                <ul>
+                    <li>事后统计：是一种将算法编程实现，真正运行之后，测算其时间和空间开销的方法。</li>
+                    <li>事前分析：是一种在算法实现和运行之前，通过理论分析，估算其时间和空间开销的方法。</li>
+                </ul>
+                <p>由于事后统计需要先将算法实现为可执行程序，不仅耗费较多时间与精力，且测算结果受计算机软硬件等环境因素影响，因此通常采用事前分析来度量算法的效率。</p>
+                
+                <h3 id="time-complexity">算法的时间复杂度</h3>
+                <h4 id="execution-time">算法的执行时间</h4>
+                <p>算法的执行时间 = Σ每条语句的执行次数×该语句执行一次所需的时间</p>
+                <ul>
+                    <li>每条语句的执行次数：每条语句的执行次数又被称作语句频度。</li>
+                    <li>语句执行一次所需的时间：每条语句执行一次所需的时间取决于机器的指令性能、速度以及编译的代码质量。是由机器本身软硬件环境决定的，它与算法无关。所以，我们可以假设执行每条语句所需的时间均为单位时间。</li>
+                </ul>
+                <p>此时，看一个算法的执行时间就只看所有语句的频度之和即可。</p>
+                <p>假设问题规模为n，所有语句的频度之和用f(n)表示，算法的执行时间用T(n)表示。则有T(n)=f(n)。</p>
+                <p>举个例子：</p>
+                <pre><code class="language-go">// 计算两个n×n矩阵的乘积
+func matrixMultiply(a, b [][]int, n int) [][]int {
+    result := make([][]int, n)     // 语句1：执行1次
+    for i := 0; i &lt; n; i++ {       // 语句2：执行n+1次
+        result[i] = make([]int, n) // 语句3：执行n次
+    }
+    
+    for i := 0; i &lt; n; i++ {       // 语句4：执行n+1次
+        for j := 0; j &lt; n; j++ {   // 语句5：执行n×(n+1)次
+            sum := 0               // 语句6：执行n×n次
+            for k := 0; k &lt; n; k++ { // 语句7：执行n×n×(n+1)次
+                sum += a[i][k] * b[k][j] // 语句8：执行n×n×n次
+            }
+            result[i][j] = sum     // 语句9：执行n×n次
+        }
+    }
+    return result                  // 语句10：执行1次
+}
+
+// T(n) = f(n) = 3n³ + 4n² + 7n + 6
+</code></pre>
+                
+                <h4 id="asymptotic-growth">函数的渐近增长</h4>
+                <p>对比几个不同算法执行时间随问题规模n的变化的例子：</p>
+                <div class="table-container">
+                    <div class="table-caption">表1. 算法时间复杂度对比</div>
+                    <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+                        <thead>
+                            <tr style="background-color: #f5f5f5;">
+                                <th style="border:1px solid #eee; padding:8px; text-align:left;">问题规模n</th>
+                                <th style="border:1px solid #eee; padding:8px; text-align:left;">算法A: 3n+1</th>
+                                <th style="border:1px solid #eee; padding:8px; text-align:left;">算法B: 2n²+3n+1</th>
+                                <th style="border:1px solid #eee; padding:8px; text-align:left;">算法C: 3n³+4n²+7n+6</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=1</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">4</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">6</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">20</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=2</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">7</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">15</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">68</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=5</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">16</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">66</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">526</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=10</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">31</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">231</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,476</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=100</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">301</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">20,301</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,040,706</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=1000</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,001</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">2,003,001</td>
+                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,004,007,006</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>分析以上数据可以得出：对于不同的算法，当问题规模n比较小的时候，各算法之间的执行时间差距不大，但随着n的增大，各算法的执行时间差距急剧增大，增长快的算法会迅速远超增长慢的算法。这一规律清晰表明：低次项和常数项对算法执行时间的影响，在n足够大时会被逐渐稀释，真正决定算法长期效率的是其时间复杂度的最高次项。最高次项的阶数直接主导了算法执行时间的增长速率，最终成为区分不同算法效率上限的关键因素。</p>
+                
+                <h4 id="time-complexity-def">算法的时间复杂度</h4>
+                <ul>
+                    <li>算法的时间复杂度就是：算法的所有语句频度之和关于问题规模n的函数f(n)的最高次项的数量级（Order），记作O(f(n))。</li>
+                </ul>
+                
+                <h4 id="basic-statement">基本语句频度</h4>
+                <p>既然算法的时间复杂度只和f(n)的最高次项的数量级有关，那就没必要用所有语句频度之和来求解一个算法的时间复杂度了，直接找能影响f(n)最高次项的语句即可，这种语句就是基本语句。</p>
+                <p>同样的例子：</p>
+                <pre><code class="language-go">// 计算两个n×n矩阵的乘积
+func matrixMultiply(a, b [][]int, n int) [][]int {
+    result := make([][]int, n)
+    for i := 0; i &lt; n; i++ {
+        result[i] = make([]int, n)
+    }
+    
+    for i := 0; i &lt; n; i++ {
+        for j := 0; j &lt; n; j++ {
+            sum := 0
+            for k := 0; k &lt; n; k++ {
+                sum += a[i][k] * b[k][j]  // 基本语句，执行n×n×n次
+            }
+            result[i][j] = sum
+        }
+    }
+    return result
+}
+
+// T(n) = f(n) = n³
+// O(n) = n³
+</code></pre>
+                
+                <h4 id="time-complexity-calc">算法时间复杂度的计算</h4>
+                <h5 id="calc-method">方法</h5>
+                <ol>
+                    <li>找出语句频度最大的语句作为基本语句</li>
+                    <li>得出基本语句关于问题规模n的函数f(n)</li>
+                    <li>用1取代所有加法常数</li>
+                    <li>前三步得到的结果只保留最高阶项</li>
+                    <li>前四步后的结果若存在且不为1，则去除其常数系数</li>
+                </ol>
+                
+                <h5 id="calc-rules">规则</h5>
+                <ul>
+                    <li>加法规则：T(n)=T1(n)+T2(n)=O(f(n))+O(g(n))=O(max(f(n), g(n)))</li>
+                    <li>乘法规则：T(n)=T1(n)×T2(n)=O(f(n))×O(g(n))=O(f(n)×g(n))</li>
+                </ul>
+                <p>Eg：T(n)=n³+n²log₂n=O(n³)+O(n²log₂n)=O(n²n)+O(n²log₂n)=O(n³)</p>
+                
+                <h4 id="common-time-complexity">常见的时间复杂度</h4>
+                <p>常用的时间复杂度所耗费的时间从小到大依次是：O(1) &lt; O(logn) &lt; O(n) &lt; O(nlogn) &lt; O(n²) &lt; O(n³) &lt; O(2ⁿ) &lt; O(n!) &lt; O(nⁿ)</p>
+                <p>像O(n³)、O(2ⁿ)、O(n!) 、O(nⁿ)等这样的时间复杂度，除非n的值很小，否则哪怕n只是100，都是噩梦般的运行时间。所以这种不切实际的算法时间复杂度，一般都不去讨论它。 </p>
+                
+                <h4 id="best-worst-average">最好、最坏和平均时间复杂度</h4>
+                <ol>
+                    <li>算法在最好情况下的时间复杂度称为最好时间复杂度。</li>
+                    <li>算法在最坏情况下的时间复杂度称为最坏时间复杂度。</li>
+                    <li>算法的平均时间复杂度是指：算法在所有可能情况下，按照输入实例以等概率出现时，算法计算量的加权平均值。</li>
+                </ol>
+                <p>除特别指明外，算法时间复杂度一般都是指最坏情况下的时间复杂度。</p>
+                <pre><code class="language-go">// 线性查找：在数组中查找目标值
+func linearSearch(arr []int, target int) int {
+    // 遍历数组
+    for i := 0; i &lt; len(arr); i++ {
+        // 如果找到目标值，返回索引
+        if arr[i] == target {
+            return i
+        }
+    }
+    // 未找到目标值，返回-1
+    return -1
+}
+
+// 最好时间复杂度：O(1)，目标值在数组的第一个位置，只需要比较1次
+// 最坏时间复杂度：O(n)，目标值在数组的最后位置或不存在，需要比较n次
+// 平均时间复杂度：O(n)，目标值平均在数组的中间位置，平均比较次数=(1+2+...+n)/n=(n+1)/2
+</code></pre>
+                
+                <h3 id="space-complexity">算法的空间复杂度</h3>
+                <h4 id="storage-space">算法所需的存储空间</h4>
+                <p>算法所需存储空间 = 程序本身所用的指令、常量、变量和输入数据的存储空间 + 对数据进行操作的辅助存储空间</p>
+                <ul>
+                    <li>程序本身所用的指令、常量、变量和输入数据的存储空间：取决于问题本身，与算法无关。</li>
+                    <li>对数据进行操作的辅助存储空间：算法要使用的辅助空间。</li>
+                </ul>
+                <p>此时，看一个算法所需的存储空间就只看算法要使用的辅助空间即可。</p>
+                <p>假设问题规模为n，算法要使用的辅助空间用f(n)表示，算法所需的存储空间用S(n)表示。则有S(n)=f(n)。</p>
+                <p>举个例子：</p>
+                <pre><code class="language-go">// 反转长度为n的数组
+func reverseArray(arr []int, n int) []int {
+    // 辅助数组：用于暂存反转后的结果
+    temp := make([]int, n)       // 语句1：辅助空间大小为n
+    
+    // 将原数组逆序复制到辅助数组
+    for i := 0; i &lt; n; i++ {
+        temp[n-1-i] = arr[i]
+    }
+    
+    // 将辅助数组复制回原数组
+    for i := 0; i &lt; n; i++ {
+        arr[i] = temp[i]
+    }
+    
+    return arr
+}
+
+// S(n) = f(n) = n
+</code></pre>
+                
+                <h4 id="space-complexity-def">算法的空间复杂度</h4>
+                <ul>
+                    <li>算法的空间复杂度就是：算法执行所需的辅助存储空间关于问题规模n的函数f(n)的最高次项的数量级（Order），记作O(f(n))。</li>
+                </ul>
+                
+                <h4 id="common-space-complexity">常见的空间复杂度</h4>
+                <p>常见的空间复杂度：常数阶O(1)、线性阶O(n)、平方阶O(n²)</p>
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    
+    <script>
+        /* =========================================== */
+        /* 1. 动态生成目录核心逻辑（仅兼容H2-H5）       */
+        /* =========================================== */
+        
+        /**
+         * 生成动态目录函数
+         * 从文章内容中提取H2-H5标题，构建层级目录结构
+         */
+        function generateDynamicCatalog() {
+            // 获取目录列表容器元素
+            const catalogList = document.getElementById('dynamicCatalogList');
+            
+            // 获取文章内容区域中的所有H2-H5标题元素
+            const articleTitles = document.querySelectorAll('.article-content h2, .article-content h3, .article-content h4, .article-content h5');
+            
+            // 层级容器栈：用于构建嵌套目录结构
+            const levelUlStack = [catalogList]; 
+            
+            // 层级创建标记：记录每个层级是否已创建子容器
+            const levelCreated = {2: false, 3: false, 4: false, 5: false};
+
+            // 清空原有目录内容
+            catalogList.innerHTML = '';
+
+            // 检查是否有标题元素，无标题时显示提示信息
+            if (articleTitles.length === 0) {
+                const emptyTip = document.createElement('div');
+                emptyTip.className = 'catalog-empty-tip';
+                emptyTip.textContent = '本文暂无目录';
+                catalogList.appendChild(emptyTip);
+                return;
+            }
+
+            // 遍历所有标题元素，生成目录项
+            articleTitles.forEach(title => {
+                // 为没有ID的标题自动生成唯一ID
+                let titleId = title.getAttribute('id');
+                if (!titleId) {
+                    titleId = 'title-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                    title.setAttribute('id', titleId);
+                }
+
+                // 创建目录链接元素
+                const catalogLink = document.createElement('a');
+                catalogLink.className = 'catalog-link';
+                catalogLink.href = '#' + titleId;
+                catalogLink.textContent = title.textContent;
+
+                // 获取当前标题层级（H2=2，H3=3，H4=4，H5=5）
+                const currentLevel = parseInt(title.tagName.replace('H', ''));
+                
+                // 定义目录项类名
+                const itemClassName = `catalog-item-level${currentLevel}`;
+
+                // 创建目录列表项元素
+                const catalogItem = document.createElement('li');
+                catalogItem.className = itemClassName;
+                catalogItem.appendChild(catalogLink);
+
+                // 处理层级嵌套：裁剪栈，找到正确的父级ul容器
+                while (levelUlStack.length > currentLevel - 1) {
+                    levelUlStack.pop();
+                    levelCreated[levelUlStack.length] = false;
+                }
+
+                // 获取父级ul容器（栈中最后一个元素）
+                const parentUl = levelUlStack[levelUlStack.length - 1];
+                
+                // 将当前目录项添加到父级ul中
+                parentUl.appendChild(catalogItem);
+
+                // 为当前层级创建子ul容器（仅H2-H4需要，H5是最后一级）
+                if (!levelCreated[currentLevel] && currentLevel < 5) {
+                    const childUl = document.createElement('ul');
+                    childUl.className = 'catalog-list';
+                    catalogItem.appendChild(childUl);
+                    
+                    // 将新创建的子ul加入栈中并标记为已创建
+                    levelUlStack.push(childUl);
+                    levelCreated[currentLevel] = true;
+                }
+            });
+        }
+
+        /* =========================================== */
+        /* 2. 页面初始化函数                            */
+        /* =========================================== */
+        
+        /**
+         * 页面加载完成后执行的初始化函数
+         * 包含目录生成、高亮显示、日历初始化等功能
+         */
+        window.addEventListener('DOMContentLoaded', () => {
+            // 动态生成目录
+            generateDynamicCatalog();
+
+            /* =========================================== */
+            /* 3. 目录交互逻辑（添加目录动态滑动效果）     */
+            /* =========================================== */
+            
+            // 获取所有目录链接元素
+            const catalogLinks = document.querySelectorAll('.catalog-link');
+            
+            // 获取文章中的所有H2-H5标题元素
+            const articleTitles = document.querySelectorAll('.article-content h2, .article-content h3, .article-content h4, .article-content h5');
+
+            // 滚动时高亮当前目录项并确保其在可视区域内
+            window.addEventListener('scroll', () => {
+                let currentTitle = '';
+                let currentCatalogLink = null;
+                
+                // 遍历所有标题元素，确定当前视口中的标题
+                articleTitles.forEach(title => {
+                    const titleTop = title.offsetTop;
+                    if (window.scrollY >= titleTop - 100) {
+                        currentTitle = '#' + title.getAttribute('id');
+                        currentCatalogLink = document.querySelector(`.catalog-link[href="${currentTitle}"]`);
+                    }
+                });
+                
+                // 更新目录链接的激活状态
+                catalogLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === currentTitle) {
+                        link.classList.add('active');
+                        
+                        // 滚动目录容器到当前激活的目录项
+                        if (currentCatalogLink) {
+                            const catalogContainer = document.querySelector('.right-catalog');
+                            const linkTop = currentCatalogLink.offsetTop;
+                            const linkHeight = currentCatalogLink.offsetHeight;
+                            const containerHeight = catalogContainer.offsetHeight;
+                            const scrollTop = catalogContainer.scrollTop;
+                            
+                            if (linkTop < scrollTop) {
+                                // 如果链接在滚动区域上方，滚动到链接顶部
+                                catalogContainer.scrollTop = linkTop;
+                            } else if (linkTop + linkHeight > scrollTop + containerHeight) {
+                                // 如果链接在滚动区域下方，滚动到链接底部
+                                catalogContainer.scrollTop = linkTop + linkHeight - containerHeight;
+                            }
+                        }
+                    }
+                });
+            });
+
+            // 点击目录链接时的平滑滚动效果
+            catalogLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').slice(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'  // 平滑滚动效果
+                        });
+                    }
+                });
+            });
+
+            /* =========================================== */
+            /* 4. highlight.js初始化                      */
+            /* =========================================== */
+            
+            // 初始化highlight.js代码高亮功能
+            hljs.highlightAll();
+            
+            // 为代码块添加行号显示
+            hljs.initLineNumbersOnLoad({
+                singleLine: false  // 单行代码块不显示行号
+            });
+
+            /* =========================================== */
+            /* 5. 日历组件逻辑                             */
+            /* =========================================== */
+            
+            // 获取日历相关DOM元素
+            const prevMonthBtn = document.getElementById('prevMonth');
+            const nextMonthBtn = document.getElementById('nextMonth');
+            const yearMonthEl = document.getElementById('yearMonth');
+            const calendarDatesEl = document.getElementById('calendarDates');
+
+            // 初始化当前日期对象
+            let currentDate = new Date();
+            let currentYear = currentDate.getFullYear();
+            let currentMonth = currentDate.getMonth();
+
+            /**
+             * 渲染日历函数
+             * @param {number} year - 年份
+             * @param {number} month - 月份（0-11）
+             */
+            function renderCalendar(year, month) {
+                // 更新年月显示
+                yearMonthEl.textContent = `${year}年${month + 1}月`;
+                
+                // 清空日期容器
+                calendarDatesEl.innerHTML = '';
+
+                // 计算当月第一天和最后一天
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+                const firstDayWeek = firstDay.getDay();  // 当月第一天是星期几（0=周日）
+                const totalDays = lastDay.getDate();     // 当月总天数
+                const lastDayOfPrevMonth = new Date(year, month, 0).getDate();  // 上个月最后一天的日期
+
+                // 添加上个月的日期（显示在日历开头部分）
+                for (let i = firstDayWeek; i > 0; i--) {
+                    const dateItem = document.createElement('div');
+                    dateItem.className = 'date-item other-month';
+                    dateItem.textContent = lastDayOfPrevMonth - i + 1;
+                    calendarDatesEl.appendChild(dateItem);
+                }
+
+                // 添加当月日期
+                const today = new Date();
+                const isTodayYear = year === today.getFullYear();
+                const isTodayMonth = month === today.getMonth();
+
+                for (let i = 1; i <= totalDays; i++) {
+                    const dateItem = document.createElement('div');
+                    dateItem.className = 'date-item';
+                    dateItem.textContent = i;
+
+                    // 如果是今天，添加特殊样式
+                    if (isTodayYear && isTodayMonth && i === today.getDate()) {
+                        dateItem.classList.add('today');
+                    }
+
+                    calendarDatesEl.appendChild(dateItem);
+                }
+
+                // 添加下个月的日期（填充日历末尾部分）
+                const totalCells = firstDayWeek + totalDays;
+                const needNextMonthDays = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+
+                for (let i = 1; i <= needNextMonthDays; i++) {
+                    const dateItem = document.createElement('div');
+                    dateItem.className = 'date-item other-month';
+                    dateItem.textContent = i;
+                    calendarDatesEl.appendChild(dateItem);
+                }
+            }
+
+            // 上个月按钮点击事件
+            prevMonthBtn.addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar(currentYear, currentMonth);
+            });
+
+            // 下个月按钮点击事件
+            nextMonthBtn.addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar(currentYear, currentMonth);
+            });
+
+            // 初始化日历显示
+            renderCalendar(currentYear, currentMonth);
+
+            /* =========================================== */
+            /* 6. 回到顶部按钮逻辑                         */
+            /* =========================================== */
+            
+            // 获取回到顶部按钮元素
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            
+            // 滚动显示/隐藏回到顶部按钮
+            window.addEventListener('scroll', () => {
+                // 当滚动距离超过300px时才显示按钮，否则隐藏
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+            
+            // 点击回到顶部按钮
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'  // 平滑滚动效果
+                });
+                
+                // 点击后立即隐藏按钮
+                backToTopBtn.classList.remove('show');
+            });
+            
+            // 初始检查，如果页面已经滚动了一段距离，显示按钮
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
