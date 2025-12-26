@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数据结构</title>
+
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
     
     <!-- highlight.js 核心CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
@@ -23,10 +25,10 @@
         /* 页面主体样式 */
         body {
             color: #000;                     /* 字体颜色为黑色 */
-            background: url(stardewbackground.png) fixed;  /* 固定背景图片 */
+            background: url(/assets/images/common/stardew_valley_background.png) fixed;  /* 固定背景图片 */
             background-size: cover;          /* 背景图片覆盖整个区域 */
             background-repeat: no-repeat;    /* 背景图片不重复 */
-            font-family: JetBrains Mono, Consolas, 微软雅黑, 'Courier New', monospace; /* 字体栈 */
+            font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
             font-size: 16px;                 /* 基础字体大小 */
             min-height: 100vh;               /* 最小高度为视口高度 */
             margin: 0;                       /* 外边距归零 */
@@ -48,7 +50,6 @@
             justify-content: center;         /* 水平居中对齐 */
             align-items: flex-start;         /* 垂直顶部对齐 */
             min-height: calc(100vh - 200px); /* 最小高度计算（视口高度-200px） */
-            background: rgba(0,0,0,0.1);     /* 半透明黑色背景 */
         }
         
         /* 主内容区域包装器 */
@@ -78,7 +79,7 @@
             border-radius: 8px;              /* 圆角8px */
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);  /* 轻微阴影效果 */
             margin-bottom: 15px;             /* 底部外边距15px */
-            font-family: JetBrains Mono, Consolas, 华文细黑, 'Courier New', monospace; /* 字体设置 */
+            font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
             font-size: 13px;                 /* 字体大小13px */
         }
         
@@ -104,7 +105,7 @@
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);  /* 轻微阴影效果 */
             max-height: 80vh;                /* 最大高度为视口高度的80% */
             overflow-y: auto;                /* 垂直方向溢出时显示滚动条 */
-            font-family: JetBrains Mono, Consolas, 华文细黑, 'Courier New', monospace; /* 字体设置 */
+            font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
             font-size: 15px;                 /* 字体大小15px */
             scrollbar-width: none;           /* Firefox隐藏滚动条 */
             -ms-overflow-style: none;        /* IE/Edge隐藏滚动条 */
@@ -215,8 +216,8 @@
         
         /* 一级标题样式 */
         .article-content h1 {
-            color: #2c3e50;                  /* 深蓝色字体 */
-            font-family: "Comic Sans MS";    /* Comic Sans MS字体 */
+            color: #000;                  /* 黑色字体 */
+            font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
             font-size: 32px;                 /* 字体大小32px */
             font-weight: bold;               /* 字体加粗 */
             margin-bottom: 25px;             /* 底部外边距25px */
@@ -334,7 +335,7 @@
             background: #2b2b2b !important;  /* 深灰色背景，重要规则 */
             border: 1px solid #2c2a2a !important;  /* 边框深灰色，重要规则 */
             color: #bababa !important;       /* 浅灰色字体，重要规则 */
-            font-family: JetBrains Mono, Consolas, 华文细黑, 'Courier New', monospace !important; /* 等宽字体，重要规则 */
+            font-family: "JetBrains Mono", "Times New Roman", "华文细黑", Consolas; /* 字体栈 */
             font-size: 16px;                 /* 字体大小16px */
             border-radius: 3px !important;   /* 圆角3px，重要规则 */
             --line-numbers-gutter-bg: #333;  /* 行号背景色变量 */
@@ -473,14 +474,15 @@
         
         /* 行内代码通用样式 */
         .code-inline {
-            font-family: JetBrains Mono, Consolas, "Liberation Mono", Menlo, monospace;  /* 等宽字体栈 */
-            font-size: 15px;                 /* 字体大小15px */
-            line-height: 1.2;                /* 行高1.2倍 */
-            background-color: rgba(245, 245, 245, 0.95);  /* 浅灰色半透明背景 */
+            font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
+            font-size: 0.9em;                 /* 字体大小0.9em */
             color: #000;                     /* 黑色字体 */
-            border-radius: 3px;              /* 圆角3px */
-            padding: 0.2em 0.4em;            /* 内边距0.2em 0.4em */
+            background-color: #fff;            /* 背景色 */
+            border-radius: 4px;              /* 圆角4px */
+            padding: 0.1em 0.4em;            /* 内边距0.2em 0.4em */
             margin: 0 0.1em;                 /* 左右外边距0.1em */
+            border:1px solid #ddd;          /* 边框 */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);  /* 阴影 */
             white-space: pre-wrap;           /* 保留空白符但允许换行 */
             word-break: break-word;          /* 允许单词内断行 */
         }
@@ -746,7 +748,7 @@
             -webkit-line-clamp: 2;           /* 限制显示2行 */
             -webkit-box-orient: vertical;    /* 垂直方向排列 */
             overflow: hidden;                /* 溢出隐藏 */
-            font-family: JetBrains Mono, Consolas, 华文细黑, 'Courier New', monospace; /* 字体设置 */
+            font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
             background: none;                /* 无背景色 */
             border: none;                    /* 无边框 */
             padding: 0;                      /* 内边距归零 */
@@ -908,7 +910,7 @@
         <div class="left-sidebar-wrapper">
             <!-- 作者信息 -->
             <div class="left-sidebar left-author-card">
-                <img src="Starfruit.png" alt="作者头像" class="author-avatar">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
                 <div class="author-nickname">Starfruit</div>
                 <div class="author-realname">HJL</div>
                 
@@ -971,7 +973,7 @@
                 <p>数据结构研究的内容是：如何高效地组织、存储和处理数据。</p>
                 
                 <figure>
-                    <img src="用计算机解决实际问题通常的步骤.svg" alt="用计算机解决实际问题通常的步骤">
+                    <img src="/assets/images/posts/用计算机解决实际问题通常的步骤.svg" alt="用计算机解决实际问题通常的步骤">
                     <figcaption>图1 用计算机解决实际问题通常的步骤</figcaption>
                 </figure>
                 
@@ -1021,9 +1023,9 @@
                 <h3 id="data-type">数据类型</h3>
                 <ul>
                     <li>数据类型（Data Type）：是一个值的集合和定义在这个集合上的一组操作的总称。</li>
-                    <li>数据在存储时所需要的存储空间各不相同，所以不同的数据在存储时要分配不同大小的存储空间，因此要用不同的数据类型来区分。</li>
-                    <li>数据类型定义了数据的性质、取值范围、存储方式以及对数据所能进行的运算和操作。</li>
                 </ul>
+                <p>数据在存储时所需要的存储空间各不相同，所以不同的数据在存储时要分配不同大小的存储空间，因此要用不同的数据类型来区分。</p>
+                <p>数据类型定义了数据的性质、取值范围、存储方式以及对数据所能进行的运算和操作。</p>
                 
                 <h3 id="adt">抽象数据类型</h3>
                 <ul>
@@ -1103,7 +1105,7 @@ func matrixMultiply(a, b [][]int, n int) [][]int {
                 <h4 id="asymptotic-growth">函数的渐近增长</h4>
                 <p>对比几个不同算法执行时间随问题规模n的变化的例子：</p>
                 <div class="table-container">
-                    <div class="table-caption">表1. 算法时间复杂度对比</div>
+                    <div class="table-caption">表1 算法时间复杂度对比</div>
                     <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
                         <thead>
                             <tr style="background-color: #f5f5f5;">
@@ -1160,7 +1162,7 @@ func matrixMultiply(a, b [][]int, n int) [][]int {
                     <li>算法的时间复杂度就是：算法的所有语句频度之和关于问题规模n的函数f(n)的最高次项的数量级（Order），记作O(f(n))。</li>
                 </ul>
                 
-                <h4 id="basic-statement">基本语句频度</h4>
+                <h4 id="basic-statement">算法的基本语句频度</h4>
                 <p>既然算法的时间复杂度只和f(n)的最高次项的数量级有关，那就没必要用所有语句频度之和来求解一个算法的时间复杂度了，直接找能影响f(n)最高次项的语句即可，这种语句就是基本语句。</p>
                 <p>同样的例子：</p>
                 <pre><code class="language-go">// 计算两个n×n矩阵的乘积

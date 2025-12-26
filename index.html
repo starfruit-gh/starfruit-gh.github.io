@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的博客 | 首页</title>
+
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
     
     <!-- Font Awesome 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,7 +23,7 @@
         
         body {
             color: #000;
-            background: url(stardewbackground.png) fixed;
+            background: url(/assets/images/common/stardew_valley_background.png) fixed;
             background-size: cover;
             background-repeat: no-repeat;
             font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas;
@@ -633,7 +635,7 @@
     <div id="home">
         <!-- 资料卡 -->
         <div class="profile-card">
-            <img src="Starfruit.png" alt="糟糕，头像没显示出来..." class="profile-avatar">
+            <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="profile-avatar">
             <div class="profile-content">
                 <h1 class="profile-name">starfruit-gh</h1>
                 <p class="profile-bio">
@@ -670,7 +672,7 @@
                         <div>
                             <h2 class="list-title">
                                 <i class="fas fa-newspaper list-icon"></i>
-                                <span id="currentViewTitle">最新文章</span>
+                                <span id="currentViewTitle">文章</span>
                                 <span class="search-result-info" id="searchInfo"></span>
                             </h2>
                         </div>
@@ -1019,7 +1021,7 @@
                 updateActiveColumn('');
                 
                 // 更新视图标题
-                currentViewTitle.textContent = searchTerm ? '搜索结果' : '最新文章';
+                currentViewTitle.textContent = searchTerm ? '搜索结果' : '文章';
                 
                 // 筛选文章
                 if (searchTerm) {
@@ -1083,7 +1085,7 @@
                     currentViewTitle.textContent = columnName;
                     searchInfo.textContent = `共 ${articlesDatabase.filter(article => article.column === columnName).length} 篇文章`;
                 } else {
-                    currentViewTitle.textContent = '最新文章';
+                    currentViewTitle.textContent = '文章';
                     searchInfo.textContent = '';
                 }
                 
