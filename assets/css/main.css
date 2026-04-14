@@ -1,0 +1,890 @@
+/* =========================================== */
+/* 1. 全局基础样式                             */
+/* =========================================== */
+
+/* 全局盒模型设置 */
+* {
+    margin: 0;                       /* 所有元素外边距归零 */
+    padding: 0;                      /* 所有元素内边距归零 */
+    box-sizing: border-box;          /* 使用border-box盒模型 */
+}
+
+/* 页面主体样式 */
+body {
+    color: #000;                     /* 字体颜色为黑色 */
+    background: url(/assets/images/common/stardew_valley_background.png) fixed;  /* 固定背景图片 */
+    background-size: cover;          /* 背景图片覆盖整个区域 */
+    background-repeat: no-repeat;    /* 背景图片不重复 */
+    font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
+    font-size: 16px;                 /* 基础字体大小 */
+    min-height: 100vh;               /* 最小高度为视口高度 */
+    margin: 0;                       /* 外边距归零 */
+    padding: 0;                      /* 内边距归零 */
+    background-color: #f5f5f5;       /* 备用背景色 */
+}
+
+/* =========================================== */
+/* 2. 布局容器样式                             */
+/* =========================================== */
+
+/* 主容器布局 */
+#home {
+    opacity: 0.95;                   /* 不透明度为0.95 */
+    padding: 50px clamp(20px, 40vw - 460px, 100px);  /* 响应式内边距 */
+    margin: 0;                       /* 外边距归零 */
+    display: flex;                   /* 使用弹性布局 */
+    gap: clamp(10px, 2vw, 20px);     /* 响应式子元素间距 */
+    justify-content: center;         /* 水平居中对齐 */
+    align-items: flex-start;         /* 垂直顶部对齐 */
+    min-height: calc(100vh - 200px); /* 最小高度计算（视口高度-200px） */
+}
+
+/* 主内容区域包装器 */
+.main-content-wrapper {
+    flex: 1;                         /* 占据剩余可用空间 */
+    position: relative;              /* 相对定位 */
+    min-width: 0;                    /* 允许内容收缩 */
+}
+
+/* =========================================== */
+/* 3. 侧边栏通用样式                           */
+/* =========================================== */
+
+/* 侧边栏包装器 */
+.left-sidebar-wrapper {
+    width: 200px;                    /* 固定宽度200px */
+    position: sticky;                /* 粘性定位 */
+    top: 20px;                       /* 距离顶部20px */
+    flex-shrink: 0;                  /* 禁止收缩 */
+}
+
+/* 侧边栏通用样式 */
+.left-sidebar {
+    width: 100%;                     /* 宽度100%填充容器 */
+    background-color: rgba(255, 255, 255, 0.95);  /* 半透明白色背景 */
+    padding: 15px;                   /* 内边距15px */
+    border-radius: 8px;              /* 圆角8px */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);  /* 轻微阴影效果 */
+    margin-bottom: 15px;             /* 底部外边距15px */
+    font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
+    font-size: 13px;                 /* 字体大小13px */
+}
+
+/* =========================================== */
+/* 4. 右侧目录样式                             */
+/* =========================================== */
+
+/* 目录包装器 */
+.right-catalog-wrapper {
+    width: 200px;                    /* 固定宽度200px */
+    position: sticky;                /* 粘性定位 */
+    flex-shrink: 0;                  /* 禁止收缩 */
+    top: 50%;                        /* 垂直居中定位 */
+    transform: translateY(-50%);     /* Y轴偏移-50%以实现垂直居中 */
+}
+
+/* 目录容器 */
+.right-catalog {
+    width: 100%;                     /* 宽度100%填充容器 */
+    background-color: rgba(255, 255, 255, 0.95);  /* 半透明白色背景 */
+    padding: 15px;                   /* 内边距15px */
+    border-radius: 8px;              /* 圆角8px */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);  /* 轻微阴影效果 */
+    max-height: 80vh;                /* 最大高度为视口高度的80% */
+    overflow-y: auto;                /* 垂直方向溢出时显示滚动条 */
+    font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
+    font-size: 15px;                 /* 字体大小15px */
+    scrollbar-width: none;           /* Firefox隐藏滚动条 */
+    -ms-overflow-style: none;        /* IE/Edge隐藏滚动条 */
+}
+
+/* Webkit内核浏览器隐藏滚动条 */
+.right-catalog::-webkit-scrollbar {
+    display: none;                   /* 隐藏滚动条 */
+}
+
+/* =========================================== */
+/* 5. 内容区域样式                             */
+/* =========================================== */
+
+/* 文章内容区域 */
+.article-content {
+    max-width: 2100px;               /* 最大宽度2100px */
+    width: 100%;                     /* 宽度100%填充容器 */
+    padding: 35px 45px;              /* 内边距35px 45px */
+    border-radius: 8px;              /* 圆角8px */
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);  /* 轻微阴影效果 */
+    background-color: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+    margin: 0 auto;                  /* 水平居中 */
+}
+
+/* 图片容器样式 */
+.article-content figure {
+    margin: 10px auto;               /* 与正文间距10px，水平居中 */
+    text-align: center;              /* 居中对齐 */
+}
+
+/* 图片样式 */
+.article-content img {
+    display: block;                  /* 块级显示 */
+    max-width: 100%;                 /* 最大宽度100% */
+    height: auto;                    /* 高度自适应 */
+    margin: 0 auto 5px;              /* 水平居中，底部间距5px */
+    border-radius: 8px;              /* 圆角8px */
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);  /* 轻微阴影效果 */
+}
+
+/* 图片序号样式 */
+.article-content figcaption {
+    font-size: 14px;                 /* 字体大小14px（比正文字体17px小一号） */
+    color: #999;                     /* 灰色字体 */
+    text-align: center;              /* 居中对齐 */
+    margin-top: 0;                   /* 顶部外边距0（与图片间距小） */
+    margin-bottom: 20px;             /* 底部外边距20px（与下文间距大） */
+    font-style: italic;              /* 斜体 */
+}
+
+/* 表格容器样式 */
+.article-content .table-container {
+    margin: 20px 0;                  /* 表格与正文间距20px */
+}
+
+/* 表格序号样式 */
+.article-content .table-caption {
+    font-size: 14px;                 /* 字体大小14px */
+    color: #999;                     /* 灰色字体 */
+    text-align: center;              /* 居中对齐 */
+    margin-bottom: 8px;              /* 底部外边距8px */
+    font-style: italic;              /* 斜体 */
+}
+
+/* 统一黑色系文本样式 */
+.article-content p,
+.article-content li {
+    color: #222 !important;          /* 比纯黑稍浅一点的颜色 */
+    font-weight: 400;                /* 正常字重 */
+}
+
+/* =========================================== */
+/* 6. 标题样式                                 */
+/* =========================================== */
+
+/* 通用标题样式（用于侧边栏和目录） */
+.sidebar-title,
+.catalog-title,
+.tech-stack-title {
+    font-size: 14px;                 /* 字体大小14px */
+    font-weight: bold;               /* 字体加粗 */
+    color: #2c3e50;                  /* 深蓝色字体 */
+    margin-bottom: 10px;             /* 底部外边距10px */
+    border-left: none;               /* 无左边框 */
+    background: none;                /* 无背景色 */
+    padding-left: 0;                 /* 左侧内边距归零 */
+    padding-top: 0;                  /* 顶部内边距归零 */
+    padding-bottom: 0;               /* 底部内边距归零 */
+}
+
+/* 目录标题特定样式 */
+.catalog-title {
+    font-size: 16px;                 /* 字体大小16px */
+    padding-bottom: 8px;             /* 底部内边距8px */
+    border-bottom: 1px solid #eee;   /* 底部边框浅灰色 */
+    margin-bottom: 10px;             /* 底部外边距10px */
+}
+
+/* 技术栈标题特定样式 */
+.tech-stack-title {
+    text-align: left;                /* 左对齐 */
+    font-size: 14px;                 /* 字体大小14px */
+    margin: 15px 0 8px;              /* 上下外边距15px和8px，左右为0 */
+    padding-top: 10px;               /* 顶部内边距10px */
+    border-top: 1px solid #eee;      /* 顶部边框浅灰色 */
+}
+
+/* 一级标题样式 */
+.article-content h1 {
+    color: #000;                  /* 黑色字体 */
+    font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
+    font-size: 32px;                 /* 字体大小32px */
+    font-weight: bold;               /* 字体加粗 */
+    margin-bottom: 25px;             /* 底部外边距25px */
+    text-align: center;              /* 居中对齐 */
+    scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+}
+
+/* 二级标题样式 */
+.article-content h2 {
+    color: #000;                     /* 黑色字体 */
+    margin: 35px 0 18px;             /* 上下外边距35px和18px，左右为0 */
+    font-size: 26px;                 /* 字体大小26px */
+    scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+}
+
+/* 三级标题样式 */
+.article-content h3 {
+    color: #111;                     /* 深灰色字体 */
+    margin: 30px 0 15px;             /* 上下外边距30px和15px，左右为0 */
+    font-size: 20px;                 /* 字体大小20px */
+    scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+}
+
+/* 四级标题样式 */
+.article-content h4 {
+    color: #222;                     /* 深灰色字体 */
+    margin: 25px 0 12px;             /* 上下外边距25px和12px，左右为0 */
+    font-size: 18px;                 /* 字体大小18px */
+    scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+}
+
+/* 五级标题样式 */
+.article-content h5 {
+    color: #333;                     /* 深灰色字体 */
+    margin: 20px 0 10px;             /* 上下外边距20px和10px，左右为0 */
+    font-size: 16px;                 /* 字体大小16px */
+    scroll-margin-top: 20px;         /* 滚动边距顶部20px */
+}
+
+/* 标题与标题相邻时，缩小上方间距 */
+.article-content h3 + h2,
+.article-content h4 + h3,
+.article-content h5 + h4,
+.article-content h2 + h3,
+.article-content h3 + h4,
+.article-content h4 + h5 {
+    margin-top: 0px !important;      /* 标题间上方间距统一缩小 */
+}
+
+/* =========================================== */
+/* 7. 段落与文本样式                           */
+/* =========================================== */
+
+/* 文章段落样式 */
+.article-content p {
+    color: #333;                     /* 深灰色字体 */
+    line-height: 1.8;                /* 行高1.8倍 */
+    margin-bottom: 15px;             /* 底部外边距15px */
+    font-size: 17px;                 /* 字体大小17px */
+    text-align: justify;             /* 两端对齐 */
+}
+
+/* =========================================== */
+/* 8. 列表样式                                 */
+/* =========================================== */
+
+/* 文章内容中的无序列表 */
+.article-content ul {
+    list-style-type: disc;           /* 列表标记为实心圆点 */
+    margin: 10px 0 10px 30px;        /* 上下外边距10px，左侧30px */
+    font-size: 16px;                 /* 字体大小16px */
+    line-height: 1.3;                /* 行高1.3倍 */
+}
+
+/* 文章内容中的有序列表 */
+.article-content ol {
+    list-style-type: decimal;        /* 列表标记为数字 */
+    margin: 10px 0 10px 30px;        /* 上下外边距10px，左侧30px */
+    font-size: 16px;                 /* 字体大小16px */
+    line-height: 1.3;                /* 行高1.3倍 */
+}
+
+/* 列表项样式 */
+.article-content li {
+    margin-bottom: 8px;              /* 底部外边距8px */
+}
+
+/* 嵌套列表样式 */
+.article-content ul ul,
+.article-content ol ul,
+.article-content ul ol,
+.article-content ol ol {
+    margin-top: 8px;                 /* 顶部外边距8px */
+    margin-bottom: 8px;              /* 底部外边距8px */
+    margin-left: 20px;               /* 左侧外边距20px */
+    font-size: 16px;                 /* 字体大小16px */
+}
+
+/* 列表段落间距调整 */
+.article-content li p {
+    margin-bottom: 8px;              /* 底部外边距8px */
+    font-size: 16px;                 /* 字体大小16px */
+}
+
+/* =========================================== */
+/* 9. highlight.js代码块样式                   */
+/* =========================================== */
+
+/* 代码块容器样式 */
+pre code.hljs,
+.hljs {
+    display: block;                  /* 块级显示 */
+    overflow-x: auto;                /* 水平方向溢出时显示滚动条 */
+    padding: 0.7em 1em;              /* 内边距0.7em 1em */
+    background: #2b2b2b !important;  /* 深灰色背景，重要规则 */
+    border: 1px solid #2c2a2a !important;  /* 边框深灰色，重要规则 */
+    color: #bababa !important;       /* 浅灰色字体，重要规则 */
+    font-family: "JetBrains Mono", "Times New Roman", "华文细黑", Consolas; /* 字体栈 */
+    font-size: 16px;                 /* 字体大小16px */
+    border-radius: 3px !important;   /* 圆角3px，重要规则 */
+    --line-numbers-gutter-bg: #333;  /* 行号背景色变量 */
+    margin: 15px 0 !important;       /* 上下外边距15px，重要规则 */
+}
+
+/* 代码块滚动条样式 */
+.hljs::-webkit-scrollbar {
+    height: 4px;                     /* 滚动条高度4px */
+}
+
+.hljs::-webkit-scrollbar-thumb {
+    background-color: #596172;       /* 滚动条滑块颜色 */
+}
+
+/* 代码语法高亮样式 */
+.hljs-comment,
+.hljs-quote {
+    color: #5c6370 !important;       /* 注释颜色，重要规则 */
+    font-style: italic !important;   /* 斜体，重要规则 */
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+    color: #c678dd !important;       /* 关键字颜色，重要规则 */
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+    color: #e06c75 !important;       /* 标签名颜色，重要规则 */
+}
+
+.hljs-literal {
+    color: #56b6c2 !important;       /* 字面量颜色，重要规则 */
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta-string {
+    color: #98c379 !important;       /* 字符串颜色，重要规则 */
+}
+
+.hljs-built_in,
+.hljs-class .hljs-title {
+    color: #e6c07b !important;       /* 内置函数颜色，重要规则 */
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+    color: #d19a66 !important;       /* 属性名颜色，重要规则 */
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+    color: #61aeee !important;       /* 符号颜色，重要规则 */
+}
+
+.hljs-emphasis {
+    font-style: italic !important;   /* 强调文本斜体，重要规则 */
+}
+
+.hljs-strong {
+    font-weight: bold !important;    /* 强调文本加粗，重要规则 */
+}
+
+.hljs-link {
+    text-decoration: underline !important;  /* 链接下划线，重要规则 */
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name,
+.hljs-tag {
+    color: #7171bf !important;       /* 关键字和标签颜色，重要规则 */
+}
+
+/* 行号样式 */
+.hljs .hljs-ln-line.hljs-ln-numbers {
+    background: #333 !important;     /* 行号背景色，重要规则 */
+    padding: 0 .7em !important;      /* 行号内边距，重要规则 */
+    color: #777 !important;          /* 行号颜色，重要规则 */
+}
+
+.hljs .hljs-ln-line.hljs-ln-code {
+    padding-left: .6em !important;   /* 代码行左侧内边距，重要规则 */
+}
+
+.hljs .hljs-ln {
+    margin: 0 -1em !important;       /* 行号容器外边距，重要规则 */
+}
+
+/* 首行和末行行号特殊样式 */
+.hljs td.hljs-ln-line[data-line-number="1"].hljs-ln-numbers,
+.hljs .hljs-ln > tbody > tr:last-child td.hljs-ln-line.hljs-ln-numbers {
+    position: relative !important;   /* 相对定位，重要规则 */
+}
+
+.hljs .hljs-ln > tbody > tr:last-child td.hljs-ln-line.hljs-ln-numbers:after,
+.hljs td.hljs-ln-line[data-line-number="1"].hljs-ln-numbers:before {
+    content: '' !important;          /* 伪元素内容为空，重要规则 */
+    position: absolute !important;   /* 绝对定位，重要规则 */
+    top: -0.7em !important;          /* 顶部偏移-0.7em，重要规则 */
+    left: 0 !important;              /* 左侧偏移0，重要规则 */
+    width: 100% !important;          /* 宽度100%，重要规则 */
+    background: var(--line-numbers-gutter-bg) !important;  /* 使用变量设置背景色，重要规则 */
+    display: inline-block !important; /* 行内块显示，重要规则 */
+    height: 0.7em !important;        /* 高度0.7em，重要规则 */
+    right: 0 !important;             /* 右侧偏移0，重要规则 */
+}
+
+.hljs .hljs-ln > tbody > tr:last-child td.hljs-ln-line.hljs-ln-numbers:after {
+    top: initial !important;         /* 取消顶部定位，重要规则 */
+    bottom: -0.7em !important;       /* 底部偏移-0.7em，重要规则 */
+}
+
+/* =========================================== */
+/* 10. 行内代码样式                             */
+/* =========================================== */
+
+/* 行内代码通用样式 */
+.code-inline {
+    font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
+    font-size: 0.9em;                 /* 字体大小0.9em */
+    color: #000;                     /* 黑色字体 */
+    background-color: #fff;            /* 背景色 */
+    border-radius: 4px;              /* 圆角4px */
+    padding: 0.1em 0.4em;            /* 内边距0.2em 0.4em */
+    margin: 0 0.1em;                 /* 左右外边距0.1em */
+    border:1px solid #ddd;          /* 边框 */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);  /* 阴影 */
+    white-space: pre-wrap;           /* 保留空白符但允许换行 */
+    word-break: break-word;          /* 允许单词内断行 */
+}
+
+/* 表格中的行内代码 */
+td .code-inline,
+th .code-inline {
+    font-size: 0.8em;                /* 字体大小缩小为0.8倍 */
+    line-height: 1.1;                /* 行高1.1倍 */
+}
+
+/* 标题中的行内代码 */
+h1 .code-inline,
+h2 .code-inline,
+h3 .code-inline,
+h4 .code-inline,
+h5 .code-inline,
+h6 .code-inline {
+    font-size: 0.75em;               /* 字体大小缩小为0.75倍 */
+    line-height: 1.1;                /* 行高1.1倍 */
+}
+
+/* =========================================== */
+/* 11. 作者信息样式                            */
+/* =========================================== */
+
+/* 作者头像样式 */
+.author-avatar {
+    width: 80px;                     /* 宽度80px */
+    height: 80px;                    /* 高度80px */
+    border-radius: 50%;              /* 圆形边框 */
+    object-fit: cover;               /* 图片填充方式 */
+    border: 2px solid #f0f8ff;       /* 浅蓝色边框 */
+    margin: 0 auto 10px;             /* 水平居中，底部外边距10px */
+    display: block;                  /* 块级显示 */
+}
+
+/* 作者昵称样式 */
+.author-nickname {
+    font-size: 16px;                 /* 字体大小16px */
+    font-weight: bold;               /* 字体加粗 */
+    color: #2c3e50;                  /* 深蓝色字体 */
+    margin-bottom: 5px;              /* 底部外边距5px */
+    text-align: center;              /* 居中对齐 */
+}
+
+/* 作者真实姓名样式 */
+.author-realname {
+    font-size: 12px;                 /* 字体大小12px */
+    color: #999;                     /* 浅灰色字体 */
+    margin-bottom: 15px;             /* 底部外边距15px */
+    padding-bottom: 10px;            /* 底部内边距10px */
+    border-bottom: 1px solid #eee;   /* 底部边框浅灰色 */
+    text-align: center;              /* 居中对齐 */
+}
+
+/* 作者信息项样式 */
+.author-info-item {
+    text-align: left;                /* 左对齐 */
+    margin: 8px 0;                   /* 上下外边距8px，左右为0 */
+    font-size: 12px;                 /* 字体大小12px */
+}
+
+/* 信息标签样式 */
+.info-label {
+    color: #666;                     /* 中灰色字体 */
+    font-weight: 500;                /* 中等字重 */
+    display: inline-block;           /* 行内块显示 */
+    width: 60px;                     /* 固定宽度60px */
+}
+
+/* 信息内容样式 */
+.info-content {
+    color: #34495e;                  /* 稍浅的蓝色字体 */
+}
+
+/* =========================================== */
+/* 12. 名人名言样式                            */
+/* =========================================== */
+
+/* 名人名言样式 */
+.author-quote {
+    margin: 12px 0;                  /* 上下外边距12px，左右为0 */
+    padding: 10px;                   /* 内边距10px */
+    font-size: 12px;                 /* 字体大小12px */
+    font-style: italic;              /* 斜体 */
+    color: #888;                     /* 浅灰色字体 */
+    text-align: center;              /* 居中对齐 */
+    border-top: 1px dashed #f0f0f0;  /* 顶部虚线边框 */
+    border-bottom: 1px dashed #f0f0f0; /* 底部虚线边框 */
+}
+
+/* =========================================== */
+/* 13. 技术栈标签样式                          */
+/* =========================================== */
+
+/* 技术栈标签容器 */
+.tech-stack-tags {
+    display: flex;                   /* 弹性布局 */
+    flex-wrap: wrap;                 /* 允许换行 */
+    gap: 6px;                        /* 子元素间距6px */
+    justify-content: flex-start;     /* 左对齐 */
+}
+
+/* 单个技术标签样式 */
+.tech-tag {
+    background-color: rgba(240, 248, 255, 0.9);  /* 浅蓝色半透明背景 */
+    color: #3498db;                  /* 蓝色字体 */
+    padding: 3px 8px;                /* 内边距3px 8px */
+    border-radius: 16px;             /* 圆形边框 */
+    font-size: 11px;                 /* 字体大小11px */
+}
+
+/* =========================================== */
+/* 14. 日历组件样式                            */
+/* =========================================== */
+
+/* 日历容器 */
+.blog-calendar {
+    width: 100%;                     /* 宽度100%填充容器 */
+}
+
+/* 日历头部样式 */
+.calendar-header {
+    display: flex;                   /* 弹性布局 */
+    justify-content: space-between;  /* 两端对齐 */
+    align-items: center;             /* 垂直居中对齐 */
+    font-size: 12px;                 /* 字体大小12px */
+    color: #34495e;                  /* 稍浅的蓝色字体 */
+    margin-bottom: 8px;              /* 底部外边距8px */
+}
+
+/* 日历按钮样式 */
+.calendar-btn {
+    background-color: rgba(240, 248, 255, 0.9);  /* 浅蓝色半透明背景 */
+    color: #3498db;                  /* 蓝色字体 */
+    border: none;                    /* 无边框 */
+    width: 20px;                     /* 宽度20px */
+    height: 20px;                    /* 高度20px */
+    border-radius: 4px;              /* 圆角4px */
+    cursor: pointer;                 /* 鼠标指针为手型 */
+    font-size: 10px;                 /* 字体大小10px */
+    display: flex;                   /* 弹性布局 */
+    align-items: center;             /* 垂直居中对齐 */
+    justify-content: center;         /* 水平居中对齐 */
+    transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
+}
+
+/* 日历按钮悬停效果 */
+.calendar-btn:hover {
+    background-color: #3498db;       /* 悬停时背景色变为蓝色 */
+    color: #fff;                     /* 悬停时字体变为白色 */
+}
+
+/* 年月显示样式 */
+.calendar-year-month {
+    font-weight: 500;                /* 中等字重 */
+}
+
+/* 星期行样式 */
+.calendar-week {
+    display: flex;                   /* 弹性布局 */
+    background-color: rgba(245, 247, 250, 0.9);  /* 浅灰色半透明背景 */
+    border-radius: 4px 4px 0 0;      /* 仅顶部圆角 */
+}
+
+/* 星期项样式 */
+.week-item {
+    width: 14.28%;                   /* 宽度为1/7 (100%/7) */
+    text-align: center;              /* 居中对齐 */
+    padding: 5px 0;                  /* 上下内边距5px，左右为0 */
+    font-size: 10px;                 /* 字体大小10px */
+    color: #666;                     /* 中灰色字体 */
+}
+
+/* 日期容器样式 */
+.calendar-dates {
+    display: flex;                   /* 弹性布局 */
+    flex-wrap: wrap;                 /* 允许换行 */
+    border: 1px solid #eee;          /* 浅灰色边框 */
+    border-top: none;                /* 无顶部边框 */
+    border-radius: 0 0 4px 4px;      /* 仅底部圆角 */
+}
+
+/* 日期项样式 */
+.date-item {
+    width: 14.28%;                   /* 宽度为1/7 (100%/7) */
+    text-align: center;              /* 居中对齐 */
+    padding: 5px 0;                  /* 上下内边距5px，左右为0 */
+    font-size: 10px;                 /* 字体大小10px */
+    color: #34495e;                  /* 稍浅的蓝色字体 */
+    border-right: 1px solid #eee;    /* 右侧浅灰色边框 */
+    border-bottom: 1px solid #eee;   /* 底部浅灰色边框 */
+    transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
+}
+
+/* 每周最后一列取消右侧边框 */
+.date-item:nth-child(7n) {
+    border-right: none;              /* 无右侧边框 */
+}
+
+/* 最后一行取消底部边框 */
+.date-item:last-child,
+.date-item:nth-last-child(2):nth-child(7n-1),
+.date-item:nth-last-child(3):nth-child(7n-2),
+.date-item:nth-last-child(4):nth-child(7n-3),
+.date-item:nth-last-child(5):nth-child(7n-4),
+.date-item:nth-last-child(6):nth-child(7n-5) {
+    border-bottom: none;             /* 无底部边框 */
+}
+
+/* 非本月日期样式 */
+.date-item.other-month {
+    color: #ccc;                     /* 浅灰色字体 */
+}
+
+/* 今日日期样式 */
+.date-item.today {
+    background-color: #3498db;       /* 蓝色背景 */
+    color: #fff;                     /* 白色字体 */
+    font-weight: bold;               /* 字体加粗 */
+    border-radius: 2px;              /* 圆角2px */
+}
+
+/* 本月日期悬停效果 */
+.date-item:not(.other-month):hover {
+    background-color: rgba(240, 248, 255, 0.9);  /* 悬停时浅蓝色半透明背景 */
+    color: #3498db;                  /* 悬停时蓝色字体 */
+    cursor: default;                 /* 鼠标指针为默认 */
+}
+
+/* =========================================== */
+/* 15. 相关文章列表样式                        */
+/* =========================================== */
+
+/* 相关文章列表容器 */
+.related-articles-list {
+    list-style: none;                /* 无列表标记 */
+}
+
+/* 相关文章项样式 */
+.related-article-item {
+    margin-bottom: 8px;              /* 底部外边距8px */
+    padding-bottom: 8px;             /* 底部内边距8px */
+    border-bottom: 1px dashed #f0f0f0; /* 底部虚线边框 */
+}
+
+/* 最后一个相关文章项样式 */
+.related-article-item:last-child {
+    margin-bottom: 0;                /* 底部外边距归零 */
+    padding-bottom: 0;               /* 底部内边距归零 */
+    border-bottom: none;             /* 无底部边框 */
+}
+
+/* 相关文章链接样式 */
+.related-article-link {
+    color: #34495e;                  /* 稍浅的蓝色字体 */
+    text-decoration: none;           /* 无下划线 */
+    font-size: 12px;                 /* 字体大小12px */
+    line-height: 1.4;                /* 行高1.4倍 */
+    transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
+    display: -webkit-box;            /* 旧版Webkit弹性盒模型 */
+    -webkit-line-clamp: 2;           /* 限制显示2行 */
+    -webkit-box-orient: vertical;    /* 垂直方向排列 */
+    overflow: hidden;                /* 溢出隐藏 */
+    font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas; /* 字体栈 */
+    background: none;                /* 无背景色 */
+    border: none;                    /* 无边框 */
+    padding: 0;                      /* 内边距归零 */
+}
+
+/* 相关文章链接悬停效果 */
+.related-article-link:hover {
+    color: #4C9ED9;                  /* 悬停时浅蓝色字体 */
+    text-decoration: underline;      /* 悬停时显示下划线 */
+}
+
+/* =========================================== */
+/* 16. 目录列表样式                            */
+/* =========================================== */
+
+/* 目录列表容器 */
+.catalog-list {
+    list-style: none;                /* 无列表标记 */
+}
+
+/* 不同层级目录项样式 */
+.catalog-item-level2 {
+    margin: 6px 0 6px 0;             /* 上下外边距6px，左右为0 */
+    font-size: 15px;                 /* 字体大小15px */
+}
+
+.catalog-item-level3 {
+    margin: 5px 0 5px 8px;           /* 上下外边距5px，左侧8px */
+    font-size: 15px;                 /* 字体大小15px */
+}
+
+.catalog-item-level4 {
+    margin: 4px 0 4px 16px;          /* 上下外边距4px，左侧16px */
+    font-size: 15px;                 /* 字体大小15px */
+}
+
+.catalog-item-level5 {
+    margin: 4px 0 4px 24px;          /* 上下外边距4px，左侧24px */
+    font-size: 15px;                 /* 字体大小15px */
+}
+
+/* 目录链接样式 */
+.catalog-link {
+    color: #666;                     /* 中灰色字体 */
+    text-decoration: none;           /* 无下划线 */
+    display: block;                  /* 块级显示 */
+    padding: 3px 6px;                /* 内边距3px 6px */
+    border-radius: 4px;              /* 圆角4px */
+    transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
+    font-size: inherit;              /* 继承父元素字体大小 */
+}
+
+/* 目录链接悬停效果 */
+.catalog-link:hover {
+    color: #4C9ED9;                  /* 悬停时浅蓝色字体 */
+    background-color: rgba(240, 248, 255, 0.9);  /* 悬停时浅蓝色半透明背景 */
+}
+
+/* 激活状态目录链接样式 */
+.catalog-link.active {
+    color: #fff;                     /* 白色字体 */
+    background-color: #4C9ED9;       /* 浅蓝色背景 */
+}
+
+/* 无目录提示样式 */
+.catalog-empty-tip {
+    color: #999;                     /* 浅灰色字体 */
+    font-size: 15px;                 /* 字体大小15px */
+    text-align: center;              /* 居中对齐 */
+    padding: 10px 0;                 /* 上下内边距10px，左右为0 */
+}
+
+/* =========================================== */
+/* 17. 回到顶部按钮样式                         */
+/* =========================================== */
+
+/* 回到顶部按钮基础样式 */
+.back-to-top-btn {
+    position: fixed;                 /* 固定定位，相对于视口 */
+    bottom: 95px;                    /* 距离视口底部95px */
+    right: 25px;                     /* 距离视口右侧25px */
+    width: 50px;                     /* 宽度50px */
+    height: 50px;                    /* 高度50px */
+    background-color: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+    color: #4C9ED9;                  /* 浅蓝色字体 */
+    border: 1px solid #e0e0e0;       /* 浅灰色边框 */
+    border-radius: 6px;              /* 圆角6px */
+    font-size: 24px;                 /* 字体大小24px */
+    font-weight: bold;               /* 字体加粗 */
+    cursor: pointer;                 /* 鼠标指针为手型 */
+    display: flex;                   /* 弹性布局 */
+    align-items: center;             /* 垂直居中对齐 */
+    justify-content: center;         /* 水平居中对齐 */
+    transition: all 0.3s ease;       /* 所有属性0.3秒缓动过渡 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 阴影效果 */
+    z-index: 1000;                   /* 提高层级，确保在最上层 */
+    opacity: 0;                      /* 初始透明度为0（隐藏） */
+    visibility: hidden;              /* 初始不可见 */
+    transform: translateY(20px);     /* 初始向下偏移20px */
+}
+
+/* 鼠标悬停效果 */
+.back-to-top-btn:hover {
+    background-color: #4C9ED9;       /* 悬停时浅蓝色背景 */
+    color: #fff;                     /* 悬停时白色字体 */
+    border-color: #4C9ED9;           /* 悬停时浅蓝色边框 */
+    box-shadow: 0 6px 20px rgba(76, 158, 217, 0.4); /* 加强悬停阴影效果 */
+    transform: translateY(-3px);     /* 悬停时轻微上移 */
+}
+
+/* 按钮显示状态 */
+.back-to-top-btn.show {
+    opacity: 1;                      /* 透明度为1（显示） */
+    visibility: visible;             /* 可见 */
+    transform: translateY(0);        /* 取消偏移 */
+}
+
+/* =========================================== */
+/* 18. 移动端响应式适配                        */
+/* =========================================== */
+
+/* 移动端适配（屏幕宽度小于等于768px） */
+@media (max-width: 768px) {
+    /* 主容器移动端布局 */
+    #home {
+        flex-direction: column;      /* 垂直方向排列 */
+        gap: 15px;                   /* 子元素间距15px */
+        padding: 15px;               /* 内边距15px */
+    }
+    
+    /* 侧边栏和目录移动端布局 */
+    .left-sidebar-wrapper,
+    .right-catalog-wrapper {
+        width: 100%;                 /* 宽度100%填充容器 */
+        position: static;            /* 静态定位 */
+        transform: none;             /* 无变换 */
+    }
+    
+    /* 文章内容移动端内边距调整 */
+    .article-content {
+        padding: 20px 25px;          /* 内边距20px 25px */
+    }
+    
+    /* 回到顶部按钮移动端适配 */
+    .back-to-top-btn {
+        bottom: 20px;                /* 距离底部20px */
+        right: 20px;                 /* 距离右侧20px */
+        width: 45px;                 /* 宽度45px */
+        height: 45px;                /* 高度45px */
+        font-size: 22px;             /* 字体大小22px */
+    }
+}
