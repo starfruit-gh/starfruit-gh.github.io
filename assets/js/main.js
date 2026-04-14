@@ -1,5 +1,95 @@
 /* =========================================== */
-/* 1. 动态生成目录核心逻辑（仅兼容H2-H5）       */
+/* 1. 代码块语言切换功能                         */
+/* =========================================== */
+
+/**
+ * 为每个代码块添加语言切换下拉框
+ * 要求：在 pre code 标签上提供 data-cpp-code 和 data-go-code 属性
+ */
+function setupCodeBlockSwitchers() {
+    const switchers = document.querySelectorAll('.code-switcher');
+
+    switchers.forEach(switcher => {
+        // 获取默认的 pre > code 元素
+        const defaultPre = switcher.querySelector('pre');
+        const defaultCode = defaultPre?.querySelector('code');
+        if (!defaultCode) return;
+
+        // 获取默认语言（从 data-default-lang 读取，默认为 cpp）
+        const defaultLang = switcher.getAttribute('data-default-lang') || 'cpp';
+
+        // 收集所有语言的代码（包括默认语言）
+        const codeMap = new Map();
+        
+        // 1. 添加默认语言
+        codeMap.set(defaultLang, {
+            code: defaultCode.textContent,
+            className: defaultCode.className
+        });
+
+        // 2. 添加 template 中定义的备用语言
+        const templates = switcher.querySelectorAll('template[data-lang]');
+        templates.forEach(tmpl => {
+            const lang = tmpl.getAttribute('data-lang');
+            const codeContent = tmpl.content.querySelector('code');
+            if (codeContent) {
+                codeMap.set(lang, {
+                    code: codeContent.textContent,
+                    className: codeContent.className
+                });
+            }
+        });
+
+        // 如果没有备用语言，则无需添加下拉框
+        if (codeMap.size <= 1) return;
+
+        // 创建下拉框
+        const select = document.createElement('select');
+        select.className = 'code-lang-select';
+        for (let lang of codeMap.keys()) {
+            const option = document.createElement('option');
+            option.value = lang;
+            option.textContent = lang.toUpperCase();
+            select.appendChild(option);
+        }
+        select.value = defaultLang;
+        switcher.appendChild(select);
+
+        // 保存 codeMap 和当前显示的 pre 元素引用
+        switcher.codeMap = codeMap;
+        let currentPre = defaultPre;
+
+        // 语言切换事件
+        select.addEventListener('change', function(e) {
+            const newLang = e.target.value;
+            const langData = switcher.codeMap.get(newLang);
+            if (!langData) return;
+
+            // 创建新的 pre 和 code 元素
+            const newPre = document.createElement('pre');
+            const newCode = document.createElement('code');
+            newCode.className = langData.className;
+            newCode.textContent = langData.code;
+            newPre.appendChild(newCode);
+
+            // 替换当前显示的 pre
+            switcher.replaceChild(newPre, currentPre);
+            currentPre = newPre;
+
+            // 重新高亮
+            hljs.highlightElement(newCode);
+            // 重新生成行号
+            if (hljs.lineNumbersBlock) {
+                const oldLineNumbers = newPre.querySelector('.hljs-ln');
+                if (oldLineNumbers) oldLineNumbers.remove();
+                hljs.lineNumbersBlock(newCode);
+            }
+        });
+    });
+}
+
+/* =========================================== */
+/* 2. 动态生成目录核心逻辑（仅兼容H2-H5）          */
 /* =========================================== */
 
 /**
@@ -83,7 +173,7 @@ function generateDynamicCatalog() {
 }
 
 /* =========================================== */
-/* 2. 页面初始化函数                            */
+/* 3. 页面初始化函数                            */
 /* =========================================== */
 
 /**
@@ -95,7 +185,7 @@ window.addEventListener('DOMContentLoaded', () => {
     generateDynamicCatalog();
 
     /* =========================================== */
-    /* 3. 目录交互逻辑（添加目录动态滑动效果）     */
+    /* 4. 目录交互逻辑（添加目录动态滑动效果）          */
     /* =========================================== */
     
     // 获取所有目录链接元素
@@ -160,10 +250,11 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     /* =========================================== */
-    /* 4. highlight.js初始化                      */
+    /* 5. highlight.js初始化                        */
     /* =========================================== */
     
     // 初始化highlight.js代码高亮功能
+    setupCodeBlockSwitchers();
     hljs.highlightAll();
     
     // 为代码块添加行号显示
@@ -172,7 +263,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     /* =========================================== */
-    /* 5. 日历组件逻辑                             */
+    /* 6. 日历组件逻辑                               */
     /* =========================================== */
     
     // 获取日历相关DOM元素
@@ -267,7 +358,7 @@ window.addEventListener('DOMContentLoaded', () => {
     renderCalendar(currentYear, currentMonth);
 
     /* =========================================== */
-    /* 6. 回到顶部按钮逻辑                         */
+    /* 7. 回到顶部按钮逻辑                           */
     /* =========================================== */
     
     // 获取回到顶部按钮元素
