@@ -103,12 +103,6 @@ function generateDynamicCatalog() {
     // 获取文章内容区域中的所有H2-H5标题元素
     const articleTitles = document.querySelectorAll('.article-content h2, .article-content h3, .article-content h4, .article-content h5');
     
-    // 层级容器栈：用于构建嵌套目录结构
-    const levelUlStack = [catalogList]; 
-    
-    // 层级创建标记：记录每个层级是否已创建子容器
-    const levelCreated = {2: false, 3: false, 4: false, 5: false};
-
     // 清空原有目录内容
     catalogList.innerHTML = '';
 
@@ -121,53 +115,61 @@ function generateDynamicCatalog() {
         return;
     }
 
+    // 初始化父级容器指针：索引0不用，1对应H1(不用)，2对应H2的父容器，以此类推
+    // 初始时，所有层级的父容器都是根目录列表
+    const parentContainers = {
+        1: catalogList,
+        2: catalogList,
+        3: catalogList,
+        4: catalogList,
+        5: catalogList
+    };
+
     // 遍历所有标题元素，生成目录项
     articleTitles.forEach(title => {
-        // 为没有ID的标题自动生成唯一ID
+        // 1. 准备 ID 和链接
         let titleId = title.getAttribute('id');
         if (!titleId) {
             titleId = 'title-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
             title.setAttribute('id', titleId);
         }
 
-        // 创建目录链接元素
         const catalogLink = document.createElement('a');
         catalogLink.className = 'catalog-link';
         catalogLink.href = '#' + titleId;
         catalogLink.textContent = title.textContent;
 
-        // 获取当前标题层级（H2=2，H3=3，H4=4，H5=5）
+        // 2. 获取当前标题层级
         const currentLevel = parseInt(title.tagName.replace('H', ''));
-        
-        // 定义目录项类名
         const itemClassName = `catalog-item-level${currentLevel}`;
 
-        // 创建目录列表项元素
+        // 3. 创建列表项
         const catalogItem = document.createElement('li');
         catalogItem.className = itemClassName;
         catalogItem.appendChild(catalogLink);
 
-        // 处理层级嵌套：裁剪栈，找到正确的父级ul容器
-        while (levelUlStack.length > currentLevel - 1) {
-            levelUlStack.pop();
-            levelCreated[levelUlStack.length] = false;
-        }
-
-        // 获取父级ul容器（栈中最后一个元素）
-        const parentUl = levelUlStack[levelUlStack.length - 1];
-        
-        // 将当前目录项添加到父级ul中
+        // 4. 找到正确的父级容器并添加
+        // 父级容器就是上一级(parentContainers[currentLevel - 1])
+        // 注意：如果是H2，currentLevel-1=1，parentContainers[1] 是 catalogList，正确。
+        const parentUl = parentContainers[currentLevel - 1];
         parentUl.appendChild(catalogItem);
 
-        // 为当前层级创建子ul容器（仅H2-H4需要，H5是最后一级）
-        if (!levelCreated[currentLevel] && currentLevel < 5) {
+        // 5. 为当前层级准备容器（供下一级使用）
+        // 只要不是最后一级(H5)，我们就创建一个空的 ul 挂在当前 item 下，
+        // 并更新 parentContainers 指针，让后面更高的层级指向这里。
+        if (currentLevel < 5) {
             const childUl = document.createElement('ul');
             childUl.className = 'catalog-list';
             catalogItem.appendChild(childUl);
             
-            // 将新创建的子ul加入栈中并标记为已创建
-            levelUlStack.push(childUl);
-            levelCreated[currentLevel] = true;
+            // 更新指针：当前层级(currentLevel)的子元素，应该放在这里
+            parentContainers[currentLevel] = childUl;
+        }
+        
+        // 6. 清理工作：重置比当前层级更高的指针
+        // 防止后面出现低级标题时，错误地挂载到之前的高级标题下
+        for (let i = currentLevel + 1; i <= 5; i++) {
+            parentContainers[i] = parentContainers[currentLevel];
         }
     });
 }

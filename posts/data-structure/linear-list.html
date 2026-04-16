@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 座右铭 -->
+                <div class="author-quote">
+                    Talk is cheap. Show me the code.
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Go并发编程实战：Goroutine与Channel详解</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">分布式系统设计：一致性协议与实现</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">微服务架构下的Go语言实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Kubernetes中Go应用部署最佳实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">高性能Go程序优化技巧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文（整合markdown内容） -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+                <h1 id="linear-list">（二）线性表</h1>
+                
+                <h2 id="linear-list-definition">线性表的定义</h2>
+                <p>线性表：由 n(n≥0) 个相同数据类型的数据元素构成的有限序列。其中 n 为表长，n=0 时称为空表。</p>
+                
+                <h2 id="linear-list-features">线性表的特点</h2>
+                <ul>
+                    <li>有限：线性表的元素个数必须是有限的。事实上，计算机处理的对象都是有限的，那种无限的序列，只存在于数学的概念中。</li>
+                    <li>有序：不同于<code class="code-inline">数字0-9</code>或者<code class="code-inline">字符a-z</code>这种由元素本身属性值决定的属性有序，线性表的有序是一种基于元素插入的先后顺序的逻辑上的位置有序——线性表存在唯一一个被称作“第一个”的数据元素，又称表头元素；存在唯一一个被称作“最后一个”的数据元素，又称表尾元素。除第一个元素外，每个元素均有且仅有一个直接前驱；除最后一个元素外，每个元素均有且仅有一个直接后继。</li>
+                    <li>类型相同：线性表的元素必须具有相同的数据类型。就像排队买票的队列里，所有成员都是需要购票的人，书包、雨伞等物品本质上不属于这个队列的合格成员，售票员不可能把票卖给书包、雨伞等物品。</li>
+                </ul>
+                
+                <h2 id="linear-list-adt">线性表的抽象数据类型</h2>
+                <pre><code class="language-cpp">ADT List {
+    数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
+    数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
+    基本操作：
+        // 1. 初始化
+        InitList(&amp;L)
+        // 2. 销毁
+        DestroyList(&amp;L)
+        // 3. 清空
+        ClearList(&amp;L)
+        // 4. 判空
+        ListEmpty(L)
+        // 5. 求表长
+        ListLength(L)
+        // 6. 查找
+        LocateElem(L,e)
+        // 7. 取值
+        GetElem(L,i,&amp;e)
+        // 8. 获取前驱
+        PriorElem(L,cur_e,&amp;pre_e)
+        // 9. 获取后继
+        NextElem(L,cur_e,&amp;next_e)
+        // 10. 插入
+        ListInsert(&amp;L,i,e)
+        // 11. 删除
+        ListDelete(&amp;L,i)
+        // 12. 遍历
+        TraverseList(L)
+} ADT List</code></pre>
+                
+                <h2 id="sequential-storage">线性表的顺序存储结构</h2>
+                <h3 id="sequential-list-definition">顺序表的定义</h3>
+                <p>用一段地址连续的存储单元依次存储线性表中的数据元素，从而使逻辑上相邻的元素在存储地址上也相邻。这种存储结构称为线性表的顺序存储结构，采用顺序存储结构的线性表通常称为顺序表。</p>
+                
+                <h3 id="sequential-list-random-access">顺序表的随机存取</h3>
+                <p>顺序表在内存中占用连续的存储空间，且每个元素占用相同大小的存储空间。假设顺序表的基地址（第一个元素的存储地址）为 <i>LOC(a₁)</i>，每个元素占用的存储空间为 <i>sizeof(ElemType)</i>，则：</p>
+                <ul>
+                    <li>相邻元素的存储关系：<i>LOC(aᵢ₊₁) = LOC(aᵢ) + sizeof(ElemType)</i></li>
+                    <li>第 <i>i</i> 个元素的存储地址为：<i>LOC(aᵢ) = LOC(a₁) + (i-1) × sizeof(ElemType)</i></li>
+                </ul>
+                <p>因此，顺序表中的任意一个元素的存储地址都能在 <i>O(1)</i> 时间内通过基地址和序号 <i>i</i> 直接计算得出，而无需经过其他元素。这种基于地址计算的直接访问特性，使得顺序表成为一种支持随机存取的数据结构。</p>
+                
+                <h3 id="sequential-list-code">顺序表的代码实现</h3>
+<h4 id="sequential-list-struct">定义</h4>
+<pre><code class="language-cpp">typedef struct {
+    // 1. 一个用来存储顺序表元素的一维数组
+    ElemType *elem;
+    // 2. 一个用来表示顺序表当前长度的整型变量
+    int length;
+} SeqList;</code></pre>
+
+<h4 id="sequential-list-init">初始化</h4>
+<pre><code class="language-cpp">// InitList 初始化顺序表
+Status InitList(SeqList &L) {
+    // 1. 新建一个 ElemType 类型的一维数组，并为该数组申请一块指定大小的内存空间，让顺序表的数组指针 elem 指向该数组
+    L.elem = new ElemType[LIST_INIT_SIZE];
+    // 2. 判断顺序表的数组指针是否为空，为空则空间分配失败，直接退出
+    // if (!L.elem) exit(OVERFLOW);  // C++ 中无需判断
+    // 3. 将顺序表的当前长度置为 0
+    L.length = 0;
+    return OK;
+}</code></pre>
+
+<h4 id="sequential-list-destroy">销毁</h4>
+<pre><code class="language-cpp">// DestroyList 销毁顺序表
+void DestroyList(SeqList &L) {
+    // 1. 判断顺序表的数组指针是否为空，为空则没有需要销毁的空间，直接返回
+    if (L.elem) {
+        // 2. 释放顺序表的数组占用的内存空间
+        delete[] L.elem;
+        // 3. 将顺序表的数组指针置为 NULL
+        L.elem = NULL;
+        // 4. 将顺序表的长度置为 0
+        L.length = 0;
+    }
+}</code></pre>
+
+<h4 id="sequential-list-clear">清空</h4>
+<pre><code class="language-cpp">// ClearList 清空顺序表
+void ClearList(SeqList &L) {
+    // 直接将表长置为 0 即可
+    L.length = 0;
+}</code></pre>
+
+<h4 id="sequential-list-empty">判空</h4>
+<pre><code class="language-cpp">// ListEmpty 判断顺序表是否为空
+Status ListEmpty(SeqList L) {
+    // 直接判断 length 的值是否为 0 返回结果即可
+    if (L.length == 0) return TRUE;
+    else return FALSE;
+}</code></pre>
+
+<h4 id="sequential-list-length">求表长</h4>
+<pre><code class="language-cpp">// ListLength 返回顺序表的长度
+int ListLength(SeqList L) {
+    // 直接返回 length 的值即可
+    return (L.length);
+}</code></pre>
+
+<h4 id="sequential-list-locate">查找</h4>
+<pre><code class="language-cpp">// LocateElem 按值查找元素
+int LocateElem(SeqList L, ElemType e) {
+    // 1. 遍历顺序表
+    for (int i = 0; i < L.length; i++) {
+        // 2. 判断当前元素的值是否等于目标值
+        if (L.elem[i] == e) 
+            // 3. 如果有等于目标值的元素，则返回其下标
+            return i + 1;
+    }
+    // 4. 如果没有等于目标值的元素，则返回 0
+    return 0;
+}
+
+// LocateElem 按值查找元素（自定义比较函数）
+int LocateElem(SeqList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
+    for (int i = 0; i < L.length; i++) {
+        if (compare(L.elem[i], e)) 
+            return i + 1;
+    }
+    return 0;
+}</code></pre>
+
+<h4 id="sequential-list-get">取值</h4>
+<pre><code class="language-cpp">// GetElem 按位查找
+Status GetElem(SeqList L, int i, ElemType &e) {
+    // 1. 判断要查找的位置 i 是否合法，如果不合法则返回 ERROR
+    if (i < 1 || i > L.length) return ERROR;
+    // 2. 如果位置合法，则将第 i 个元素的值赋给 e
+    e = L.elem[i - 1];
+    return OK;
+}</code></pre>
+
+<h4 id="sequential-list-insert">插入</h4>
+<pre><code class="language-cpp">// ListInsert 在顺序表的第 i 个位置插入新元素 e
+Status ListInsert(SeqList &L, int i, ElemType e) {
+    // 1. 检查插入位置是否合法，如果不合法则返回 ERROR
+    if (i < 1 || i > L.length + 1) return ERROR;
+    // 2. 检查顺序表是否已满，如果已满则返回 ERROR
+    if (L.length >= LIST_INIT_SIZE) return ERROR;
+    // 3. 将第 i 个位置及之后的元素依次后移一位
+    for (int j = L.length-1; j >= i-1; j--) {
+        L.elem[j + 1] = L.elem[j];
+    }
+    // 4. 将新元素放入第 i 个位置
+    L.elem[i - 1] = e;
+    // 5. 表长加 1
+    L.length++;
+    return OK;
+}</code></pre>
+
+<h4 id="sequential-list-delete">删除</h4>
+<pre><code class="language-cpp">// ListDelete 删除顺序表的第 i 个元素，并用 e 返回其值
+Status ListDelete(SeqList &L, int i, ElemType &e) {
+    // 1. 检查删除位置是否合法，如果不合法则返回 ERROR
+    if (i < 1 || i > L.length) return ERROR;
+    // 2. 将第 i 个元素的值保存到 e 中
+    e = L.elem[i - 1];
+    // 3. 将第 i+1 个元素及其后的所有元素依次前移一位
+    for (int j = i; j <= L.length-1; j++) {
+        L.elem[j - 1] = L.elem[j];
+    }
+    // 4. 表长减 1
+    L.length--;
+    return OK;
+}</code></pre>
+
+<h4 id="sequential-list-traverse">遍历</h4>
+<pre><code class="language-cpp">// ListTraverse 遍历顺序表并打印每个元素
+void ListTraverse(SeqList L) {
+    // 1. 遍历顺序表
+    for (int i = 0; i < L.length; i++) {
+        // 2. 打印当前元素
+        printf("%c ", L.elem[i]);
+    }
+    // 换行
+    printf("\n");
+}
+
+// ListTraverse 遍历顺序表（自定义访问函数）
+void ListTraverse(SeqList L, void (*visit)(ElemType)) {
+    for (int i = 0; i < L.length; i++) {
+        visit(L.elem[i]);
+    }
+}</code></pre>
+                
+                <h2 id="linked-storage">线性表的链式存储结构</h2>
+                <h3 id="linked-list-definition">链表的定义</h3>
+                <p>用一组任意地址的存储单元存储线性表中的数据元素。为表示每个数据元素之间的逻辑关系，每个数据元素（又称结点）除存储本身的数据外，还要存储一个或多个指针，通过这些指针来指示其前驱和/或后继元素的位置。这种存储结构称为线性表的链式存储结构，采用链式存储结构的线性表通常称为链表。</p>
+                <ul>
+                    <li>结点：线性表链式存储结构中的每个数据元素，由数据域和指针域两部分组成。</li>
+                    <li>数据域：结点中用于存储元素数据的部分。</li>
+                    <li>指针域：结点中用于存放指向其他结点地址的指针的部分，用来维护元素间的逻辑关系。</li>
+                    <li>链表：由一系列结点通过指针依次连接而成的线性结构。</li>
+                    <li>头指针：指向链表中第一个结点的指针，是访问链表的入口。</li>
+                    <li>首元结点：链表中第一个存储有效数据的结点。</li>
+                    <li>头结点：为了操作方便，在首元结点之前附加的一个结点，其数据域通常不存储实际数据，头结点的指针域指向首元结点。</li>
+                </ul>
+                <p><strong>在链表中设置头结点有什么好处？</strong></p>
+                <p><strong>1. 统一操作逻辑</strong></p>
+                <p>如果不使用头结点，链表的插入、删除操作会存在表头和其他位置操作不一致的情况。如果在表头进行插入/删除操作，除了要新增或者删除结点以外，还要让头指针指向新的首元结点，而其他位置则不需要动头指针，因此每次操作需要先判断操作的位置是不是表头来分情况处理。</p>
+                <p>另外，通过尾插法来建立链表的操作也会存在插入链表的第一个结点和后续结点操作不同的情况。</p>
+                <p>而如果使用头结点的话，链表的插入、删除以及通过尾插法来建立链表的操作就都可以进行统一处理，不需要先判断然后再分情况处理了。</p>
+                <p>对于链表的头插法，由于头插法在不使用头结点的情况下本来就是统一操作，使用头结点只是让头指针不再随插入元素而变动，而是固定指向头结点。</p>
+                <p>而对于链表的初始化、销毁、清空、判空、求表长、查找、取值这些操作，相比于插入、删除以及通过尾插法来建立链表的操作来说，有无头结点差异不大。</p>
+                <p><strong>2. 简化边界处理</strong></p>
+                <p>如果不使用头结点，那么在对链表进行操作时，就可能需要先判断链表是否为空，以免直接解引用空指针（如 L-&gt;next 或 L-&gt;data）造成程序崩溃。</p>
+                <p>有头结点时，由于头指针永远不为 NULL（始终指向有效的头结点），因此对链表的操作避免了因头指针为 NULL 导致的空指针异常。</p>
+                <p><strong>3. 保持头指针的稳定性</strong></p>
+                <p>有头结点的链表，头指针始终指向固定的头结点，不会因任何插入、删除数据结点的操作而变动，这降低了 "链表入口丢失" 的风险，即使函数参数没有使用引用，只要能访问到头指针，就能找到整个链表。</p>
+                <p><strong>4. 简化算法的实现</strong></p>
+                <p>在处理合并、逆序、排序等复杂链表算法时，头结点可以作为一个固定的 "哨兵结点"，提供一个稳定的起点，避免频繁修改头指针，让算法逻辑更简洁、更不易出错。例如：合并两个有序链表时，直接创建一个结果链表的头结点，所有结点的插入逻辑完全统一，无需单独处理结果链表为空的情况。</p>
+                
+                <h3 id="linked-list-sequential-access">链表的顺序存取</h3>
+                <p>对于单链表，任意一个未知结点的地址只有通过其前驱结点才能获得，而前驱结点的地址只有通过该前驱结点的前驱结点才能获得，逻辑上需要一直追溯到某个已知地址的结点，才能从这个已知结点出发，依次遍历后继结点，最终逐步找到目标结点的地址。而这个已知地址的结点通常只有头指针指向的头结点。</p>
+                <p>双向链表同理，任意一个未知结点的地址只有通过其前驱或后继结点才能获得，即使双向链表支持双向遍历，但仍然无法直接计算出任意未知结点的地址。</p>
+                <p>因此链表中任意一个未知结点的访问都需要通过已知结点依次遍历，无法像顺序表那样通过地址计算直接访问，其访问任意未知结点的时间复杂度为 O(n)。</p>
+                <p>这种访问目标结点需要通过已知结点依次遍历的特性，使得链表成为一种只支持顺序存取而不支持随机存取的数据结构。</p>
+                
+                <h3 id="singly-linked-list-definition">单链表的定义</h3>
+                <p>每个结点中只包含一个指向后继结点的指针域的链表，称为单链表。</p>
+                
+                <h3 id="singly-linked-list-code">单链表的代码实现</h3>
+                <h4 id="singly-linked-list-struct">定义</h4>
+                <pre><code class="language-cpp">typedef struct LNode{
+    // 1. 结点的数据域
+    ElemType data;
+    // 2. 结点的指针域（包括一个指向后继结点的指针）
+    struct LNode *next;
+} LNode, *LinkedList;</code></pre>
+
+                <h4 id="singly-linked-list-init">初始化</h4>
+                <pre><code class="language-cpp">// InitList 初始化单链表
+Status InitList(LinkedList &L) {
+    // 1. 新建一个结点（头结点）并分配内存空间，让头指针指向该结点
+    L = new LNode;
+    // 2. 判断头指针是否为空，为空则空间分配失败，直接退出
+    // if (!L) exit(OVERFLOW);  // C++ 中无需判断
+    // 3. 将头结点的指针域置为空
+    L->next = NULL;
+    return OK;
+}</code></pre>
+
+                <h4 id="singly-linked-list-destroy">销毁</h4>
+                <pre><code class="language-cpp">// DestroyList 销毁单链表
+void DestroyList(LinkedList &L) {
+    // 1. 声明一个临时存储结点地址的辅助指针 p，用来暂存当前要释放的结点地址，辅助完成结点的释放
+    LNode *p;
+    // 2. 循环移动头指针，并用辅助指针 p 释放每个结点占用的内存空间，直到头指针为空
+    while (L) {
+        // 2.1 将当前结点的地址暂存到辅助指针中
+        p = L;
+        // 2.2 将头指针指向下一个结点
+        L = L->next;
+        // 2.3 释放辅助指针指向的结点占用的内存空间
+        delete p;
+    }
+}</code></pre>
+
+                <h4 id="singly-linked-list-clear">清空</h4>
+                <pre><code class="language-cpp">// ClearList 清空单链表
+void ClearList(LinkedList &L) {
+    // 1. 声明两个辅助指针 p 和 q，一个用来暂存当前要释放的结点地址，另一个用来暂存下一个结点的地址
+    LNode *p, *q;
+    // 2. 让辅助指针 p 指向首元结点，清空操作从首元结点开始进行，保留头结点
+    p = L->next;
+    // 3. 循环移动辅助指针 p，并用辅助指针 q 释放每个结点占用的内存空间，直到辅助指针 p 为空
+    while (p) {
+        // 3.1 将下一个结点的地址暂存到辅助指针 q 中
+        q = p->next;
+        // 3.2 释放辅助指针 p 指向的结点占用的内存空间
+        delete p;
+        // 3.3 将辅助指针 p 指向下一个结点
+        p = q;
+    }
+    // 4. 将头结点的指针域置为空
+    L->next = NULL;
+}</code></pre>
+
+                <h4 id="singly-linked-list-empty">判空</h4>
+                <pre><code class="language-cpp">// ListEmpty 判断单链表是否为空
+Status ListEmpty(LinkedList L) {
+    // 直接判断头结点的指针域是否为空返回结果即可
+    if (L->next == NULL) return TRUE;
+    else return FALSE;
+}</code></pre>
+
+                <h4 id="singly-linked-list-length">求表长</h4>
+                <pre><code class="language-cpp">// ListLength 求单链表的表长
+int ListLength(LinkedList L) {
+    // 1. 定义一个整型变量 length 用来计数，初始值为 0
+    int length = 0;
+    // 2. 定义一个辅助指针 p，指向首元结点
+    LNode *p = L->next;
+    // 3. 循环移动辅助指针 p，每移动一次 length 加 1，直到 p 为空
+    while (p) {
+        // 3.1 length 加 1
+        length++;
+        // 3.2 将辅助指针 p 指向下一个结点
+        p = p->next;
+    }
+    // 4. 返回 length 的值
+    return length;
+}</code></pre>
+
+                <h4 id="singly-linked-list-locate">查找</h4>
+                <pre><code class="language-cpp">// LocateElem 按值查找元素
+int LocateElem(LinkedList L, ElemType e) {
+    // 1. 定义一个整型变量 i 用来表示当前查找到的位置，初始值为 1
+    int i = 1;
+    // 2. 定义一个辅助指针 p，指向首元结点
+    LNode *p = L->next;
+    // 3. 循环移动辅助指针 p，判断当前结点的数据域值是否等于目标值，如果不满足条件则继续执行查找操作
+    while (p && p->data != e) {
+        // 3.1 将辅助指针 p 指向下一个结点
+        p = p->next;
+        // 3.2 位置 i 加 1
+        i++;
+    }
+    // 4. 如果找到目标值，返回其位置
+    if (p) return i;
+    // 5. 如果未找到，返回 0
+    else return 0;
+}
+
+// LocateElem 按值查找元素（自定义比较函数）
+int LocateElem(LinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
+    int i = 1;
+    LNode *p = L->next;
+    while (p && !compare(p->data, e)) {  
+        p = p->next;
+        i++;
+    }
+    if (p) return i;
+    else return 0;
+}</code></pre>
+
+                <h4 id="singly-linked-list-get">取值</h4>
+                <pre><code class="language-cpp">// GetElem 按位查找
+Status GetElem(LinkedList L, int i, ElemType &e) {
+    // 1. 定义一个整型变量 j 用来表示当前查找到的位置，初始值为 1
+    int j = 1;
+    // 2. 定义一个辅助指针 p，指向首元结点
+    LNode *p = L->next;
+    // 3. 循环移动辅助指针 p，直到找到第 i 个结点或遍历完
+    while (p && j < i) {
+        // 3.1 将辅助指针 p 指向下一个结点
+        p = p->next;
+        // 3.2 位置 j 加 1
+        j++;
+    }
+    // 4. 判断位置是否合法，如果不合法则返回 ERROR
+    if (!p || j > i) return ERROR;
+    // 5. 将第 i 个结点的数据域值赋给 e
+    e = p->data;
+    return OK;
+}</code></pre>
+
+                <h4 id="singly-linked-list-insert">插入</h4>
+                <pre><code class="language-cpp">// ListInsert 在单链表的第 i 个位置插入新元素 e
+Status ListInsert(LinkedList &L, int i, ElemType e) {
+    // 1. 定义一个整型变量 j 用来表示当前查找到的位置，初始值为 1
+    int j = 1;
+    // 2. 定义一个辅助指针 p，指向头结点
+    LNode *p = L;
+    // 3. 循环移动辅助指针 p，直到找到第 i-1 个结点或遍历完
+    while (p && j < i) {
+        p = p->next;
+        j++;
+    }
+    // 4. 判断插入位置是否合法，如果不合法则返回 ERROR
+    if (!p || j > i) return ERROR;
+    // 5. 创建一个新结点 s
+    LNode *s = new LNode;
+    // 6. 将新元素的值赋给新结点的数据域
+    s->data = e;
+    // 7. 将新结点的指针域指向第 i 个结点
+    s->next = p->next;
+    // 8. 将第 i-1 个结点的指针域指向新结点
+    p->next = s;
+    return OK;
+}</code></pre>
+
+                <h4 id="singly-linked-list-delete">删除</h4>
+                <pre><code class="language-cpp">// ListDelete 删除单链表的第 i 个元素，并用 e 返回其值
+Status ListDelete(LinkedList &L, int i, ElemType &e) {
+    // 1. 定义一个整型变量 j 用来表示当前查找到的位置，初始值为 1
+    int j = 1;
+    // 2. 定义一个辅助指针 p，指向头结点
+    LNode *p = L;
+    // 3. 循环移动辅助指针 p，直到找到第 i-1 个结点或遍历完
+    while (p->next && j < i) {
+        p = p->next;
+        j++;
+    }
+    // 4. 判断删除位置是否合法，如果不合法则返回 ERROR
+    if (!p->next || j > i) return ERROR;
+    // 5. 用 q 指向待删除的第 i 个结点
+    LNode *q = p->next;
+    // 6. 将待删除结点的数据域值赋给 e
+    e = q->data;
+    // 7. 将第 i-1 个结点的指针域指向第 i+1 个结点
+    p->next = q->next;
+    // 8. 释放待删除结点的内存空间
+    delete q;
+    return OK;
+}</code></pre>
+
+                <h4 id="singly-linked-list-traverse">遍历</h4>
+                <pre><code class="language-cpp">// ListTraverse 遍历单链表并打印每个元素
+void ListTraverse(LinkedList L) {
+    // 1. 定义一个辅助指针 p，指向首元结点
+    LNode *p = L->next;
+    // 2. 循环移动辅助指针 p，打印每个结点的数据域值
+    while (p) {
+        printf("%c ", p->data);
+        p = p->next;
+    }
+    // 换行
+    printf("\n");
+}
+
+// ListTraverse 遍历单链表（自定义访问函数）
+void ListTraverse(LinkedList L, void (*visit)(ElemType)) {
+    LNode *p = L->next;
+    while (p) {
+        visit(p->data);
+        p = p->next;
+    }
+    printf("\n");
+}</code></pre>
+
+                <h4 id="singly-linked-list-create-head">头插法创建单链表</h4>
+                <pre><code class="language-cpp">// CreateListHead 头插法创建单链表
+void CreateListHead(LinkedList &L, int n) {
+    // 1. 新建一个结点（头结点）并分配内存空间，让头指针指向该结点
+    L = new LNode;
+    // 2. 将头结点的指针域置为空
+    L->next = NULL;
+    // 3. 循环 n 次，每次头插一个新结点
+    for (int i = 0; i < n; i++) {
+        // 3.1 新建一个结点并分配内存空间
+        LNode *s = new LNode;
+        // 3.2 从标准输入读取一个元素值赋给新结点的数据域
+        std::cin>>s->data;
+        // 3.3 将新结点的指针域指向当前首元结点
+        s->next = L->next;
+        // 3.4 将头结点的指针域指向新结点
+        L->next = s;
+    }
+}</code></pre>
+
+                <h4 id="singly-linked-list-create-tail">尾插法创建单链表</h4>
+                <pre><code class="language-cpp">// CreateListTail 尾插法创建单链表
+void CreateListTail(LinkedList &L, int n) {
+    // 1. 新建一个结点（头结点）并分配内存空间，让头指针指向该结点
+    L = new LNode;
+    // 2. 将头结点的指针域置为空
+    L->next = NULL;
+    // 3. 用尾指针 r 指向当前尾结点（初始为头结点）
+    LNode *r = L;
+    // 4. 循环 n 次，每次尾插一个新结点
+    for (int i = 0; i < n; i++) {
+        // 4.1 新建一个结点并分配内存空间
+        LNode *s = new LNode;
+        // 4.2 从标准输入读取一个元素值赋给新结点的数据域
+        std::cin>>s->data;
+        // 4.3 将新结点的指针域置为空
+        s->next = NULL;
+        // 4.4 将当前尾结点的指针域指向新结点
+        r->next = s;
+        // 4.5 更新尾指针为新结点
+        r = s;
+    }
+}</code></pre>
+                
+                <h3 id="circular-singly-linked-list-definition">单循环链表的定义</h3>
+                <p>将单链表的尾结点的指针域指向链表的第一个结点（带头结点时为头结点，不带头结点时为首元结点），使整个单链表形成一个首尾相接的闭合环状结构，称为单循环链表。</p>
+                
+                <h3 id="circular-singly-linked-list-code">单循环链表的代码实现</h3>
+<h4 id="circular-singly-linked-list-struct">定义</h4>
+<pre><code class="language-cpp">typedef struct LNode {
+    ElemType data;
+    struct LNode *next;
+} LNode, *LinkedList;</code></pre>
+
+<h4 id="circular-singly-linked-list-init">初始化</h4>
+<pre><code class="language-cpp">Status InitList(LinkedList &L) {
+    L = new LNode;
+    // if (!L) exit(OVERFLOW);
+    // 将头结点的指针域指向自身
+    L->next = L;
+    return OK;
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-destroy">销毁</h4>
+<pre><code class="language-cpp">void DestroyList(LinkedList &L) {
+    LNode *p, *q;
+    // 先跳过头结点，最后再单独释放头结点
+    p = L->next;
+    // 循环结束的条件是辅助指针 p 回到头结点
+    while (p != L) {
+        q = p->next;
+        delete p;
+        p = q;
+    }
+     // 最后释放头结点
+    delete L;
+    // 将头指针置空
+    L = NULL; 
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-clear">清空</h4>
+<pre><code class="language-cpp">void ClearList(LinkedList &L) {
+    LNode *p, *q;
+    p = L->next;
+    // 循环结束的条件是辅助指针 p 回到头结点
+    while (p != L) {
+        q = p->next;
+        delete p;
+        p = q;
+    }
+    // 最后将头结点的指针域重新指向自身
+    L->next = L;
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-empty">判空</h4>
+<pre><code class="language-cpp">Status ListEmpty(LinkedList L) {
+    // 判断头结点的指针域是否指向自身
+    if (L->next == L) return TRUE;
+    else return FALSE;
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-length">求表长</h4>
+<pre><code class="language-cpp">int ListLength(LinkedList L) {
+    int length = 0;
+    LNode *p = L->next;
+    // 循环结束的条件是辅助指针 p 回到头结点
+    while (p != L) {
+        length++;
+        p = p->next;
+    }
+    return length;
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-locate">查找</h4>
+<pre><code class="language-cpp">int LocateElem(LinkedList L, ElemType e) {
+    int i = 1;
+    LNode *p = L->next;
+    // 循环结束的条件是辅助指针 p 回到头结点，或者找到目标元素
+    while (p != L && p->data != e) {
+        p = p->next;
+        i++;
+    }
+    // 判断辅助指针 p 是否回到头结点来确定是否找到目标元素
+    if (p != L) return i;
+    else return 0;
+}
+
+int LocateElem(LinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
+    int i = 1;
+    LNode *p = L->next;
+    while (p != L && !compare(p->data, e)) {
+        p = p->next;
+        i++;
+    }
+    if (p != L) return i;
+    else return 0;
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-get">取值</h4>
+<pre><code class="language-cpp">Status GetElem(LinkedList L, int i, ElemType &e) {
+    int j = 1;
+    LNode *p = L->next;
+    // 循环结束的条件是辅助指针 p 回到头结点，或者找到第 i 个结点
+    while (p != L && j < i) {
+        p = p->next;
+        j++;
+    }
+    // 判断辅助指针 p 是否回到头结点来确定位置是否合法
+    if (p == L || j > i) return ERROR;
+    e = p->data;
+    return OK;
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-insert">插入</h4>
+<pre><code class="language-cpp">Status ListInsert(LinkedList &L, int i, ElemType e) {
+    int j = 1;
+    LNode *p = L;
+    // 循环结束的条件是辅助指针 p 回到头结点，或者找到第 i-1 个结点
+    while (p->next != L && j < i) { 
+        p = p->next;
+        j++;
+    }
+    // 判断插入位置是否合法，只有 j 大于 i 时不合法
+    if (j > i) return ERROR;
+    
+    LNode *s = new LNode;
+    s->data = e;
+    s->next = p->next;
+    p->next = s;
+    return OK;
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-delete">删除</h4>
+<pre><code class="language-cpp">Status ListDelete(LinkedList &L, int i, ElemType &e) {
+    int j = 1;
+    LNode *p = L;
+    // 循环结束的条件是辅助指针 p 回到头结点，或者找到第 i-1 个结点
+    while (p->next != L && j < i) {
+        p = p->next;
+        j++;
+    }
+    // 判断删除位置是否合法，当辅助指针 p 的下一个结点回到头结点或者 j > i 时不合法
+    if (p->next == L || j > i) return ERROR;
+    
+    LNode *q = p->next;
+    e = q->data;
+    p->next = q->next;
+    delete q;
+    return OK;
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-traverse">遍历</h4>
+<pre><code class="language-cpp">void ListTraverse(LinkedList L) {
+    LNode *p = L->next;
+    // 循环结束的条件是辅助指针 p 回到头结点
+    while (p != L) {
+        printf("%c ", p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
+
+void ListTraverse(LinkedList L, void (*visit)(ElemType)) {
+    LNode *p = L->next;
+    while (p != L) {
+        visit(p->data);
+        p = p->next;
+    }
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-create-head">头插法创建单循环链表</h4>
+<pre><code class="language-cpp">void CreateListHead(LinkedList &L, int n) {
+    L = new LNode;
+    // 将头结点的指针域指向自身
+    L->next = L;
+    for (int i = 0; i < n; i++) {
+        LNode *s = new LNode;
+        std::cin>>s->data;
+        s->next = L->next;
+        L->next = s;
+    }
+}</code></pre>
+
+<h4 id="circular-singly-linked-list-create-tail">尾插法创建单循环链表</h4>
+<pre><code class="language-cpp">void CreateListTail(LinkedList &L, int n) {
+    L = new LNode;
+    // 将头结点的指针域指向自身
+    L->next = L;
+    LNode *r = L;
+    for (int i = 0; i < n; i++) {
+        LNode *s = new LNode;
+        std::cin>>s->data;
+        // 将新结点的指针域指向头结点
+        s->next = L;
+        r->next = s;
+        r = s;
+    }
+}</code></pre>
+                
+                <h3 id="doubly-linked-list-definition">双向链表的定义</h3>
+                <p>每个结点中包含两个指针域，分别指向其前驱结点和后继结点的链表，称为双向链表。</p>
+                <h3 id="doubly-linked-list-code">双向链表的代码实现</h3>
+                <h4 id="doubly-linked-list-struct">定义</h4>
+                <pre><code class="language-cpp">typedef struct DNode {
+    ElemType data;
+    // 结点的指针域（包括一个指向前驱结点的指针和一个指向后继结点的指针）
+    struct DNode *prev;
+    struct DNode *next;
+} DNode, *DLinkedList;</code></pre>
+
+                <h4 id="doubly-linked-list-init">初始化</h4>
+                <pre><code class="language-cpp">Status InitDList(DLinkedList &L) {
+    L = new DNode;
+    // if (!L) exit(OVERFLOW);
+    // 将头结点的前驱和后继指针都置空
+    L->prev = NULL;
+    L->next = NULL;
+    return OK;
+}</code></pre>
+
+                <h4 id="doubly-linked-list-destroy">销毁</h4>
+                <pre><code class="language-cpp">void DestroyDList(DLinkedList &L) {
+    DNode *p;
+    while (L) {
+        p = L;
+        L = L->next;
+        delete p;
+    }
+}</code></pre>
+
+                <h4 id="doubly-linked-list-clear">清空</h4>
+                <pre><code class="language-cpp">void ClearDList(DLinkedList &L) {
+    DNode *p, *q;
+    p = L->next;
+    while (p) {
+        q = p->next;
+        delete p;
+        p = q;
+    }
+    L->next = NULL;
+}</code></pre>
+
+                <h4 id="doubly-linked-list-empty">判空</h4>
+                <pre><code class="language-cpp">Status DListEmpty(DLinkedList L) {
+    if (L->next == NULL) return TRUE;
+    else return FALSE;
+}</code></pre>
+
+                <h4 id="doubly-linked-list-length">求表长</h4>
+                <pre><code class="language-cpp">int DListLength(DLinkedList L) {
+    int length = 0;
+    DNode *p = L->next;
+    while (p) {
+        length++;
+        p = p->next;
+    }
+    return length;
+}</code></pre>
+
+                <h4 id="doubly-linked-list-locate">查找</h4>
+                <pre><code class="language-cpp">int LocateElem(DLinkedList L, ElemType e) {
+    int i = 1;
+    DNode *p = L->next;
+    while (p && p->data != e) {
+        p = p->next;
+        i++;
+    }
+    if (p) return i;
+    else return 0;
+}
+
+int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
+    int i = 1;
+    DNode *p = L->next;
+    while (p && !compare(p->data, e)) {
+        p = p->next;
+        i++;
+    }
+    if (p) return i;
+    else return 0;
+}</code></pre>
+
+                <h4 id="doubly-linked-list-get">取值</h4>
+                <pre><code class="language-cpp">Status GetElem(DLinkedList L, int i, ElemType &e) {
+    int j = 1;
+    DNode *p = L->next;
+    while (p && j < i) {
+        p = p->next;
+        j++;
+    }
+    if (!p || j > i) return ERROR;
+    e = p->data;
+    return OK;
+}</code></pre>
+
+                <h4 id="doubly-linked-list-insert">插入</h4>
+                <pre><code class="language-cpp">Status DListInsert(DLinkedList &L, int i, ElemType e) {
+    int j = 1;
+    DNode *p = L;
+    while (p && j < i) {
+        p = p->next;
+        j++;
+    }
+    if (!p || j > i) return ERROR;
+
+    DNode *s = new DNode;
+    s->data = e;
+    // 双向链表的插入
+    s->next = p->next;
+    s->prev = p;
+    if (p->next != NULL)
+        p->next->prev = s;
+    p->next = s;
+    return OK;
+}</code></pre>
+
+                <h4 id="doubly-linked-list-delete">删除</h4>
+                <pre><code class="language-cpp">Status DListDelete(DLinkedList &L, int i, ElemType &e) {
+    int j = 1;
+    DNode *p = L;
+    while (p->next && j < i) {
+        p = p->next;
+        j++;
+    }
+    if (!p->next || j > i) return ERROR;
+
+    DNode *q = p->next;
+    e = q->data;
+    // 双向链表的删除
+    p->next = q->next;
+    if (q->next != NULL)
+        q->next->prev = p;
+    delete q;
+    return OK;
+}</code></pre>
+
+                <h4 id="doubly-linked-list-traverse">遍历</h4>
+                <pre><code class="language-cpp">void DListTraverse(DLinkedList L) {
+    DNode *p = L->next;
+    while (p) {
+        printf("%c ", p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
+
+void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
+    DNode *p = L->next;
+    while (p) {
+        visit(p->data);
+        p = p->next;
+    }
+    printf("\n");
+}</code></pre>
+
+                <h4 id="doubly-linked-list-create-head">头插法创建双向链表</h4>
+                <pre><code class="language-cpp">void CreateDListHead(DLinkedList &L, int n) {
+    L = new DNode;
+    // 将头结点的前驱和后继指针都置空
+    L->prev = NULL;
+    L->next = NULL;
+    for (int i = 0; i < n; i++) {
+        DNode *s = new DNode;
+        std::cin >> s->data;
+        // 头插法：新结点插入到头结点之后
+        s->next = L->next;
+        s->prev = L;
+        if (L->next != NULL)
+            L->next->prev = s;
+        L->next = s;
+    }
+}</code></pre>
+
+                <h4 id="doubly-linked-list-create-tail">尾插法创建双向链表</h4>
+                <pre><code class="language-cpp">void CreateDListTail(DLinkedList &L, int n) {
+    L = new DNode;
+    // 将头结点的前驱和后继指针都置空
+    L->prev = NULL;
+    L->next = NULL;
+    DNode *r = L;
+    for (int i = 0; i < n; i++) {
+        DNode *s = new DNode;
+        std::cin >> s->data;
+        // 尾插法：新结点插入到当前尾结点之后
+        s->next = NULL;
+        s->prev = r;
+        r->next = s;
+        r = s; 
+    }
+}</code></pre>
+                
+                <h3 id="doubly-circular-linked-list-definition">双向循环链表的定义</h3>
+                <p>将双向链表的第一个结点（带头结点时为头结点，不带头结点时为首元结点）的前驱指针指向尾结点，尾结点的后继指针指向第一个结点，使整个双向链表形成一个首尾相接的闭合环状结构，称为双向循环链表。</p>
+                
+                <h3 id="doubly-circular-linked-list-code">双向循环链表的代码实现</h3>
+                <h4 id="doubly-circular-linked-list-struct">定义</h4>
+                <pre><code class="language-cpp">typedef struct DNode {
+    ElemType data;
+    struct DNode *prev;
+    struct DNode *next;
+} DNode, *DLinkedList;</code></pre>
+
+                <h4 id="doubly-circular-linked-list-init">初始化</h4>
+                <pre><code class="language-cpp">Status InitDList(DLinkedList &L) {
+    L = new DNode;
+    // if (!L) exit(OVERFLOW);
+    // 将头结点的前驱和后继指针都指向自身
+    L->prev = L; 
+    L->next = L;
+    return OK;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-destroy">销毁</h4>
+                <pre><code class="language-cpp">void DestroyDList(DLinkedList &L) {
+    DNode *p, *q;
+    p = L->next;
+    while (p != L) {
+        q = p->next;
+        delete p;
+        p = q;
+    }
+    delete L;
+    L = NULL;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-clear">清空</h4>
+                <pre><code class="language-cpp">void ClearDList(DLinkedList &L) {
+    DNode *p, *q;
+    p = L->next;
+    while (p != L) {
+        q = p->next;
+        delete p;
+        p = q;
+    }
+    // 最后将头结点的前驱和后继指针都重新指向自身
+    L->next = L;
+    L->prev = L;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-empty">判空</h4>
+                <pre><code class="language-cpp">Status DListEmpty(DLinkedList L) {
+    if (L->next == L) return TRUE;
+    else return FALSE;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-length">求表长</h4>
+                <pre><code class="language-cpp">int DListLength(DLinkedList L) {
+    int length = 0;
+    DNode *p = L->next;
+    while (p != L) {
+        length++;
+        p = p->next;
+    }
+    return length;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-locate">查找</h4>
+                <pre><code class="language-cpp">int LocateElem(DLinkedList L, ElemType e) {
+    int i = 1;
+    DNode *p = L->next;
+    while (p != L && p->data != e) {
+        p = p->next;
+        i++;
+    }
+    if (p != L) return i;
+    else return 0;
+}
+
+// LocateElem 按值查找元素（自定义比较函数）
+int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
+    int i = 1;
+    DNode *p = L->next;
+    while (p != L && !compare(p->data, e)) {
+        p = p->next;
+        i++;
+    }
+    if (p != L) return i;
+    else return 0;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-get">取值</h4>
+                <pre><code class="language-cpp">Status GetElem(DLinkedList L, int i, ElemType &e) {
+    int j = 1;
+    DNode *p = L->next;
+    while (p != L && j < i) {
+        p = p->next;
+        j++;
+    }
+    if (p == L || j > i) return ERROR;
+    e = p->data;
+    return OK;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-insert">插入</h4>
+                <pre><code class="language-cpp">Status DListInsert(DLinkedList &L, int i, ElemType e) {
+    int j = 1;
+    DNode *p = L;
+    while (p->next != L && j < i) {
+        p = p->next;
+        j++;
+    }
+    if (j > i) return ERROR;
+
+    DNode *s = new DNode;
+    s->data = e;
+    // 双向循环链表的插入
+    s->next = p->next;
+    p->next->prev = s;
+    s->prev = p;
+    p->next = s;
+    return OK;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-delete">删除</h4>
+                <pre><code class="language-cpp">Status DListDelete(DLinkedList &L, int i, ElemType &e) {
+    int j = 1;
+    DNode *p = L;
+    while (p->next != L && j < i) {
+        p = p->next;
+        j++;
+    }
+    if (p->next == L || j > i) return ERROR;
+
+    DNode *q = p->next;
+    e = q->data;
+    // 双向循环链表的删除
+    p->next = q->next;
+    q->next->prev = p;
+    delete q;
+    return OK;
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-traverse">遍历</h4>
+                <pre><code class="language-cpp">void DListTraverse(DLinkedList L) {
+    DNode *p = L->next;
+    while (p != L) {
+        printf("%c ", p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
+
+// DListTraverse 遍历单链表（自定义访问函数）
+void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
+    DNode *p = L->next;
+    while (p != L) {
+        visit(p->data);
+        p = p->next;
+    }
+    printf("\n");
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-create-head">头插法创建双向循环链表</h4>
+                <pre><code class="language-cpp">void CreateDListHead(DLinkedList &L, int n) {
+    L = new DNode;
+    // 将头结点的前驱和后继指针都指向自身
+    L->prev = L;
+    L->next = L;
+    for (int i = 0; i < n; i++) {
+        DNode *s = new DNode;
+        std::cin >> s->data;
+        // 头插法：新结点插入到头结点之后
+        s->next = L->next;
+        s->prev = L;
+        L->next->prev = s;
+        L->next = s;
+    }
+}</code></pre>
+
+                <h4 id="doubly-circular-linked-list-create-tail">尾插法创建双向循环链表</h4>
+                <pre><code class="language-cpp">void CreateDListTail(DLinkedList &L, int n) {
+    L = new DNode;
+    // 将头结点的前驱和后继指针都指向自身
+    L->prev = L;
+    L->next = L;
+    DNode *r = L;
+    for (int i = 0; i < n; i++) {
+        DNode *s = new DNode;
+        std::cin >> s->data;
+        // 尾插法：新结点插入到当前尾结点之后
+        s->next = r->next;
+        s->prev = r;
+        r->next->prev = s;
+        r->next = s;
+        r = s;
+    }
+}</code></pre>
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>

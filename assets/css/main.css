@@ -782,41 +782,40 @@ h6 .code-inline {
 /* 17. 目录列表样式                              */
 /* =========================================== */
 
-/* 目录列表容器 */
+/* 目录列表容器：核心缩进控制 */
 .catalog-list {
     list-style: none;                /* 无列表标记 */
+    padding-left: 14px;              /* 左侧内边距14px（控制每一层级的缩进距离） */
+    margin: 0;                       /* 外边距归零 */
 }
 
-/* 不同层级目录项样式 */
-.catalog-item-level2 {
-    margin: 6px 0 6px 0;             /* 上下外边距6px，左右为0 */
-    font-size: 15px;                 /* 字体大小15px */
+/* 根目录列表不需要左内边距，紧贴左侧 */
+.right-catalog > .catalog-list {
+    padding-left: 0;                 /* 左侧内边距归零 */
 }
 
-.catalog-item-level3 {
-    margin: 5px 0 5px 8px;           /* 上下外边距5px，左侧8px */
-    font-size: 15px;                 /* 字体大小15px */
-}
-
-.catalog-item-level4 {
-    margin: 4px 0 4px 16px;          /* 上下外边距4px，左侧16px */
-    font-size: 15px;                 /* 字体大小15px */
-}
-
+/* 所有层级的目录项通用样式 */
+.catalog-item-level2,
+.catalog-item-level3,
+.catalog-item-level4,
 .catalog-item-level5 {
-    margin: 4px 0 4px 24px;          /* 上下外边距4px，左侧24px */
+    margin: 4px 0;                   /* 上下外边距4px，左右为0（只保留上下间距，保持紧凑） */
     font-size: 15px;                 /* 字体大小15px */
+    line-height: 1.4;                /* 行高1.4倍 */
 }
 
 /* 目录链接样式 */
 .catalog-link {
     color: #666;                     /* 中灰色字体 */
-    text-decoration: none;           /* 无下划线 */
-    display: block;                  /* 块级显示 */
-    padding: 3px 6px;                /* 内边距3px 6px */
-    border-radius: 4px;              /* 圆角4px */
-    transition: all 0.2s ease;       /* 所有属性0.2秒缓动过渡 */
-    font-size: inherit;              /* 继承父元素字体大小 */
+    text-decoration: none;            /* 无下划线 */
+    display: block;                   /* 块级显示 */
+    padding: 3px 6px;                 /* 内边距3px 6px */
+    border-radius: 4px;               /* 圆角4px */
+    transition: all 0.2s ease;        /* 所有属性0.2秒缓动过渡 */
+    font-size: inherit;               /* 继承父元素字体大小 */
+    white-space: normal;              /* 保留空白符并允许换行 */
+    overflow: hidden;                 /* 溢出隐藏 */
+    text-overflow: ellipsis;          /* 文本溢出时显示省略号 */
 }
 
 /* 目录链接悬停效果 */
