@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 座右铭 -->
+                <div class="author-quote">
+                    Talk is cheap. Show me the code.
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Go并发编程实战：Goroutine与Channel详解</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">分布式系统设计：一致性协议与实现</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">微服务架构下的Go语言实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Kubernetes中Go应用部署最佳实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">高性能Go程序优化技巧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文（整合markdown内容） -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+                <h1 id="stack-queue">（三）栈和队列</h1>
+                
+                <h2 id="stack-definition">栈的定义</h2>
+                <p>栈是仅在表尾进行插入、删除操作的线性表。表尾称为栈顶（Top），表头称为栈底（Base）。</p>
+                <p>插入元素到栈顶的操作，称为入栈。</p>
+                <p>从栈顶删除元素的操作，称为出栈。</p>
+                
+                <h2 id="stack-features">栈的特点</h2>
+                <p>后进先出（LIFO）</p>
+                
+                <h2 id="stack-adt">栈的抽象数据类型</h2>
+                <pre><code class="language-cpp">ADT Stack {
+    数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
+    数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
+    基本操作：
+        // 1. 初始化
+        InitStack(&amp;S)
+        // 2. 销毁
+        DestroyStack(&amp;S)
+        // 3. 清空
+        ClearStack(&amp;S)
+        // 4. 判空
+        StackEmpty(S)
+        // 5. 求表长
+        StackLength(S)
+        // 6. 取栈顶元素
+        GetTop(S)
+        // 7. 入栈
+        Push(&amp;S, e)
+        // 8. 出栈
+        Pop(&amp;S, &amp;e)
+        // 9. 遍历
+        StackTraverse(S)
+} ADT Stack</code></pre>
+                
+                <h2 id="stack-sequential-storage">栈的顺序存储结构</h2>
+                <h3 id="seq-stack-definition">定义</h3>
+                <pre><code class="language-cpp">typedef struct {
+    // 1. 栈底指针，指向动态分配的数组首地址
+    ElemType *base;
+    // 2. 栈顶指针，指向栈顶元素的下一个位置
+    ElemType *top;
+    // 3. 栈的最大容量
+    int stacksize;
+} SeqStack;</code></pre>
+                
+                <h3 id="seq-stack-init">初始化</h3>
+                <pre><code class="language-cpp">// InitStack 初始化顺序栈
+Status InitStack(SeqStack &amp;S) {
+    // 1. 新建一个 ElemType 类型的一维数组，并为该数组申请一块指定大小的内存空间，让栈底指针 base 指向该数组
+    S.base = new ElemType[MAXSIZE];
+    // 2. 判断栈底指针是否为空，为空则空间分配失败，直接退出
+    if (!S.base) exit(OVERFLOW);
+    // 3. 将栈顶指针 top 初始化为栈底指针，表示空栈
+    S.top = S.base;
+    // 4. 将栈的最大容量设置为 MAXSIZE
+    S.stacksize = MAXSIZE;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-stack-destroy">销毁</h3>
+                <pre><code class="language-cpp">// DestroyStack 销毁顺序栈
+Status DestroyStack(SeqStack &amp;S) {
+    // 1. 判断栈底指针是否为空，为空则没有需要销毁的空间，直接返回
+    if (S.base) {
+        // 2. 释放栈底指针指向的数组占用的内存空间
+        delete[] S.base;
+        // 3. 将栈的最大容量置为 0
+        S.stacksize = 0;
+        // 4. 将栈底指针和栈顶指针都置为 NULL
+        S.base = S.top = NULL;
+    }
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-stack-clear">清空</h3>
+                <pre><code class="language-cpp">// ClearStack 清空顺序栈
+Status ClearStack(SeqStack &amp;S) {
+    // 1. 判断栈底指针是否为空，为空则无需清空
+    if (S.base) 
+        // 2. 将栈顶指针重置为栈底指针，表示空栈
+        S.top = S.base;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-stack-empty">判空</h3>
+                <pre><code class="language-cpp">// StackEmpty 判断顺序栈是否为空
+Status StackEmpty(const SeqStack &amp;S) {
+    // 1. 判断栈顶指针是否等于栈底指针，是则返回 TRUE，否则返回 FALSE
+    if (S.top == S.base)
+        return TRUE;
+    else
+        return FALSE;
+}</code></pre>
+                
+                <h3 id="seq-stack-length">求表长</h3>
+                <pre><code class="language-cpp">// StackLength 返回顺序栈的长度
+int StackLength(const SeqStack &amp;S) {
+    // 1. 直接返回栈顶指针与栈底指针的差值，即为栈中元素个数
+    return S.top - S.base;
+}</code></pre>
+                
+                <h3 id="seq-stack-gettop">取栈顶元素</h3>
+                <pre><code class="language-cpp">// GetTop 获取顺序栈的栈顶元素，并用 e 返回其值
+Status GetTop(const SeqStack &amp;S, ElemType &amp;e) {
+    // 1. 判断栈是否为空，若空则返回 ERROR
+    if (S.top == S.base) return ERROR;
+    // 2. 将栈顶元素（栈顶指针前一个位置的元素）的值赋给 e
+    e = *(S.top - 1);
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-stack-push">入栈</h3>
+                <pre><code class="language-cpp">// Push 向顺序栈中插入元素 e 作为新的栈顶元素
+Status Push(SeqStack &amp;S, ElemType e) {
+    // 1. 判断栈是否已满，若满则返回 ERROR
+    if (S.top - S.base == S.stacksize) return ERROR;
+    // 2. 将元素 e 放入栈顶指针指向的位置
+    *S.top = e;
+    // 3. 栈顶指针上移一位
+    S.top++;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-stack-pop">出栈</h3>
+                <pre><code class="language-cpp">// Pop 删除顺序栈的栈顶元素，并用 e 返回其值
+Status Pop(SeqStack &amp;S, ElemType &amp;e) {
+    // 1. 判断栈是否为空，若空则返回 ERROR
+    if (S.top == S.base) return ERROR;
+    // 2. 栈顶指针下移一位，指向栈顶元素
+    S.top--;
+    // 3. 将栈顶元素的值赋给 e
+    e = *S.top;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-stack-traverse">遍历</h3>
+                <pre><code class="language-cpp">// StackTraverse 遍历顺序栈（从栈底到栈顶依次访问每个元素）
+void StackTraverse(const SeqStack &amp;S) {
+    // 1. 定义临时指针，从栈底开始遍历
+    ElemType *p = S.base;
+    // 2. 循环遍历，直到临时指针到达栈顶位置
+    while (p != S.top) {
+        // 3. 访问当前元素（这里以打印为例）
+        printf("%c ", *p);
+        // 4. 指针后移，访问下一个元素
+        p++;
+    }
+    // 换行，格式化输出
+    printf("\n");
+}
+
+// StackTraverse 遍历顺序栈（自定义访问函数，更通用）
+void StackTraverse(const SeqStack &amp;S, void (*visit)(ElemType)) {
+    // 1. 定义临时指针，从栈底开始遍历
+    ElemType *p = S.base;
+    // 2. 循环遍历所有栈元素
+    while (p != S.top) {
+        // 3. 调用自定义函数访问元素
+        visit(*p);
+        // 4. 指针后移
+        p++;
+    }
+}</code></pre>
+                
+                <h2 id="stack-linked-storage">栈的链式存储结构</h2>
+                <h3 id="link-stack-definition">定义</h3>
+                <pre><code class="language-cpp">typedef struct StackNode{
+    // 1. 结点数据域，存储栈元素
+    ElemType data;
+    // 2. 结点指针域，指向后继结点
+    struct StackNode *next;
+} StackNode, *LinkStack;</code></pre>
+                
+                <h3 id="link-stack-init">初始化</h3>
+                <pre><code class="language-cpp">// InitStack 初始化链栈
+Status InitStack(LinkStack &amp;S) {
+    // 1. 将栈顶指针置为 NULL，表示空栈
+    S.top = NULL;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-stack-destroy">销毁</h3>
+                <pre><code class="language-cpp">// DestroyStack 销毁链栈
+Status DestroyStack(LinkStack &amp;S) {
+    // 1. 定义临时指针，用于遍历释放结点
+    StackNode *p;
+    // 2. 循环释放所有结点，直到栈顶指针为 NULL
+    while (S.top) {
+        // 3. 临时指针指向当前栈顶结点
+        p = S.top;
+        // 4. 栈顶指针下移，指向下一个结点
+        S.top = S.top->next;
+        // 5. 释放临时指针指向的结点
+        delete p;
+    }
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-stack-clear">清空</h3>
+                <pre><code class="language-cpp">// ClearStack 清空链栈
+Status ClearStack(LinkStack &amp;S) {
+    // 1. 链栈的清空操作与销毁操作逻辑一致，释放所有结点并将栈顶指针置为 NULL
+    // 定义临时指针，用于遍历释放结点
+    StackNode *p;
+    // 2. 循环释放所有结点，直到栈顶指针为 NULL
+    while (S.top) {
+        // 3. 临时指针指向当前栈顶结点
+        p = S.top;
+        // 4. 栈顶指针下移，指向下一个结点
+        S.top = S.top->next;
+        // 5. 释放临时指针指向的结点
+        delete p;
+    }
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-stack-empty">判空</h3>
+                <pre><code class="language-cpp">// StackEmpty 判断链栈是否为空
+Status StackEmpty(const LinkStack &amp;S) {
+    // 1. 判断栈顶指针是否为 NULL，是则返回 TRUE，否则返回 FALSE
+    if (S.top == NULL)
+        return TRUE;
+    else
+        return FALSE;
+}</code></pre>
+                
+                <h3 id="link-stack-length">求表长</h3>
+                <pre><code class="language-cpp">// StackLength 返回链栈的长度
+int StackLength(const LinkStack &amp;S) {
+    // 1. 定义计数器，初始化为 0
+    int len = 0;
+    // 2. 定义临时指针，从栈顶开始遍历
+    StackNode *p = S.top;
+    // 3. 循环遍历所有结点
+    while (p) {
+        // 4. 计数器加 1
+        len++;
+        // 5. 指针后移，访问下一个结点
+        p = p->next;
+    }
+    // 6. 返回栈的长度
+    return len;
+}</code></pre>
+                
+                <h3 id="link-stack-gettop">取栈顶元素</h3>
+                <pre><code class="language-cpp">// GetTop 获取链栈的栈顶元素，并用 e 返回其值
+Status GetTop(const LinkStack &amp;S, ElemType &amp;e) {
+    // 1. 判断栈是否为空，若空则返回 ERROR
+    if (S.top == NULL) return ERROR;
+    // 2. 将栈顶结点的数据域的值赋给 e
+    e = S.top->data;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-stack-push">入栈</h3>
+                <pre><code class="language-cpp">// Push 向链栈中插入元素 e 作为新的栈顶元素
+Status Push(LinkStack &amp;S, ElemType e) {
+    // 1. 新建一个结点，为其分配内存空间
+    StackNode *p = new StackNode;
+    // 2. 判断新结点是否分配成功，失败则退出
+    if (!p) exit(OVERFLOW);
+    // 3. 将元素 e 赋给新结点的数据域
+    p->data = e;
+    // 4. 将新结点的指针域指向当前的栈顶结点
+    p->next = S.top;
+    // 5. 将栈顶指针更新为新结点
+    S.top = p;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-stack-pop">出栈</h3>
+                <pre><code class="language-cpp">// Pop 删除链栈的栈顶元素，并用 e 返回其值
+Status Pop(LinkStack &amp;S, ElemType &amp;e) {
+    // 1. 判断栈是否为空，若空则返回 ERROR
+    if (S.top == NULL) return ERROR;
+    // 2. 定义临时指针，指向当前栈顶结点
+    StackNode *p = S.top;
+    // 3. 将栈顶结点的数据域的值赋给 e
+    e = p->data;
+    // 4. 将栈顶指针下移，指向下一个结点
+    S.top = S.top->next;
+    // 5. 释放临时指针指向的结点
+    delete p;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-stack-traverse">遍历</h3>
+                <pre><code class="language-cpp">// StackTraverse 遍历链栈（从栈顶到栈底依次访问每个元素）
+void StackTraverse(const LinkStack &amp;S) {
+    // 1. 定义临时指针，从栈顶开始遍历
+    StackNode *p = S.top;
+    // 2. 循环遍历所有结点
+    while (p) {
+        // 3. 访问当前元素（这里以打印为例）
+        printf("%c ", p->data);
+        // 4. 指针后移，访问下一个结点
+        p = p->next;
+    }
+    // 换行，格式化输出
+    printf("\n");
+}
+
+// StackTraverse 遍历链栈（自定义访问函数，更通用）
+void StackTraverse(const LinkStack &amp;S, void (*visit)(ElemType)) {
+    // 1. 定义临时指针，从栈顶开始遍历
+    StackNode *p = S.top;
+    // 2. 循环遍历所有结点
+    while (p) {
+        // 3. 调用自定义函数访问元素
+        visit(p->data);
+        // 4. 指针后移
+        p = p->next;
+    }
+}</code></pre>
+                
+                <h2 id="queue-definition">队列的定义</h2>
+                <p>队列是仅在表尾插入元素，仅在在表头删除元素的线性表。</p>
+                <p>插入元素到表尾的操作，称为入队。</p>
+                <p>从表头删除元素的操作，称为出队。</p>
+                
+                <h2 id="queue-features">队列的特点</h2>
+                <p>先进先出（FIFO）</p>
+                
+                <h2 id="queue-adt">队列的抽象数据类型</h2>
+                <pre><code class="language-cpp">ADT Queue {
+    数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
+    数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
+    基本操作：
+        // 1. 初始化
+        InitQueue(&amp;Q)
+        // 2. 销毁
+        DestroyQueue(&amp;Q)
+        // 3. 清空
+        ClearQueue(&amp;Q)
+        // 4. 判空
+        QueueEmpty(Q)
+        // 5. 求表长
+        QueueLength(Q)
+        // 6. 取队头元素
+        GetHead(Q)
+        // 7. 入队
+        EnQueue(&amp;Q, e)
+        // 8. 出队
+        DeQueue(&amp;Q, &amp;e)
+        // 9. 遍历
+        QueueTraverse(Q)
+} ADT Queue</code></pre>
+                
+                <h2 id="queue-sequential-storage">队列的顺序存储结构</h2>
+                <h3 id="seq-queue-definition">定义</h3>
+                <pre><code class="language-cpp">typedef struct {
+    // 1. 动态分配的数组首地址，存储队列所有元素
+    QElemType *base;
+    // 2. 队头指针，指向队列的头元素
+    int front;
+    // 3. 队尾指针，指向队列尾元素的下一个位置
+    int rear;
+} SqQueue;</code></pre>
+                
+                <h3 id="seq-queue-init">初始化</h3>
+                <pre><code class="language-cpp">// InitQueue 初始化顺序循环队列
+Status InitQueue(SqQueue &amp;Q) {
+    // 1. 新建一个 QElemType 类型的一维数组，申请指定大小的内存空间
+    Q.base = new QElemType[MAXQSIZE];
+    // 2. 判断内存分配是否失败，失败则直接退出程序
+    if (!Q.base) exit(OVERFLOW);
+    // 3. 队头和队尾指针都置为 0，表示空队列
+    Q.front = Q.rear = 0;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-queue-destroy">销毁</h3>
+                <pre><code class="language-cpp">// DestroyQueue 销毁顺序循环队列
+Status DestroyQueue(SqQueue &amp;Q) {
+    // 1. 判断数组指针是否为空，不为空则释放其占用的内存
+    if (Q.base) {
+        delete[] Q.base;
+        // 2. 将数组指针置为 NULL
+        Q.base = NULL;
+    }
+    // 3. 队头和队尾指针都置为 0
+    Q.front = Q.rear = 0;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-queue-clear">清空</h3>
+                <pre><code class="language-cpp">// ClearQueue 清空顺序循环队列
+Status ClearQueue(SqQueue &amp;Q) {
+    // 1. 直接将队头和队尾指针都置为 0，即可清空队列
+    Q.front = Q.rear = 0;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-queue-empty">判空</h3>
+                <pre><code class="language-cpp">// QueueEmpty 判断顺序循环队列是否为空
+Status QueueEmpty(const SqQueue &amp;Q) {
+    // 1. 判断队头指针是否等于队尾指针，是则返回 TRUE，否则返回 FALSE
+    if (Q.front == Q.rear)
+        return TRUE;
+    else
+        return FALSE;
+}</code></pre>
+                
+                <h3 id="seq-queue-length">求表长</h3>
+                <pre><code class="language-cpp">// QueueLength 返回顺序循环队列的长度
+int QueueLength(const SqQueue &amp;Q) {
+    // 1. 循环队列长度计算公式：(队尾指针 - 队头指针 + 最大容量) % 最大容量
+    return (Q.rear - Q.front + MAXQSIZE) % MAXQSIZE;
+}</code></pre>
+                
+                <h3 id="seq-queue-gethead">取队头元素</h3>
+                <pre><code class="language-cpp">// GetHead 获取顺序循环队列的队头元素，并用 e 返回其值
+Status GetHead(const SqQueue &amp;Q, QElemType &amp;e) {
+    // 1. 判断队列是否为空，为空则返回 ERROR
+    if (Q.front == Q.rear) return ERROR;
+    // 2. 将队头元素的值赋给 e
+    e = Q.base[Q.front];
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-queue-enqueue">入队</h3>
+                <pre><code class="language-cpp">// EnQueue 向顺序循环队列中插入元素 e 作为新的队尾元素
+Status EnQueue(SqQueue &amp;Q, QElemType e) {
+    // 1. 判断队列是否已满，满则返回 ERROR
+    if ((Q.rear + 1) % MAXQSIZE == Q.front) return ERROR;
+    // 2. 将元素 e 放入队尾指针指向的位置
+    Q.base[Q.rear] = e;
+    // 3. 队尾指针循环后移一位
+    Q.rear = (Q.rear + 1) % MAXQSIZE;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-queue-dequeue">出队</h3>
+                <pre><code class="language-cpp">// DeQueue 删除顺序循环队列的队头元素，并用 e 返回其值
+Status DeQueue(SqQueue &amp;Q, QElemType &amp;e) {
+    // 1. 判断队列是否为空，为空则返回 ERROR
+    if (Q.front == Q.rear) return ERROR;
+    // 2. 将队头元素的值赋给 e
+    e = Q.base[Q.front];
+    // 3. 队头指针循环后移一位
+    Q.front = (Q.front + 1) % MAXQSIZE;
+    return OK;
+}</code></pre>
+                
+                <h3 id="seq-queue-traverse">遍历</h3>
+                <pre><code class="language-cpp">// QueueTraverse 遍历顺序循环队列（从队头到队尾依次访问每个元素）
+void QueueTraverse(const SqQueue &amp;Q) {
+    // 1. 定义临时指针，从队头开始遍历
+    int p = Q.front;
+    // 2. 循环遍历，直到临时指针到达队尾位置
+    while (p != Q.rear) {
+        // 3. 访问当前元素（这里以打印为例）
+        printf("%c ", Q.base[p]);
+        // 4. 临时指针循环后移一位
+        p = (p + 1) % MAXQSIZE;
+    }
+    // 换行，格式化输出
+    printf("\n");
+}
+
+// QueueTraverse 遍历顺序循环队列（自定义访问函数，更通用）
+void QueueTraverse(const SqQueue &amp;Q, void (*visit)(QElemType)) {
+    // 1. 定义临时指针，从队头开始遍历
+    int p = Q.front;
+    // 2. 循环遍历所有队列元素
+    while (p != Q.rear) {
+        // 3. 调用自定义函数访问元素
+        visit(Q.base[p]);
+        // 4. 临时指针循环后移一位
+        p = (p + 1) % MAXQSIZE;
+    }
+}</code></pre>
+                
+                <h2 id="queue-linked-storage">队列的链式存储结构</h2>
+                <h3 id="link-queue-definition">定义</h3>
+                <pre><code class="language-cpp">// 链队结点结构
+typedef struct QNode {
+    // 1. 结点数据域，存储队列元素
+    QElemType data;
+    // 2. 结点指针域，指向后继结点
+    struct QNode *next;
+} QNode;
+
+// 链队结构
+typedef struct {
+    // 1. 队头指针，指向头结点
+    QNode *front;
+    // 2. 队尾指针，指向队尾结点
+    QNode *rear;
+} LinkQueue;</code></pre>
+                
+                <h3 id="link-queue-init">初始化</h3>
+                <pre><code class="language-cpp">// InitQueue 初始化链队（带头结点）
+Status InitQueue(LinkQueue &amp;Q) {
+    // 1. 新建一个头结点，为其分配内存空间
+    Q.front = Q.rear = new QNode;
+    // 2. 判断头结点是否分配成功，失败则退出
+    if (!Q.front) exit(OVERFLOW);
+    // 3. 将头结点的指针域置为 NULL，表示空队列
+    Q.front->next = NULL;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-queue-destroy">销毁</h3>
+                <pre><code class="language-cpp">// DestroyQueue 销毁链队
+Status DestroyQueue(LinkQueue &amp;Q) {
+    // 1. 定义临时指针，用于遍历释放结点
+    QNode *p;
+    // 2. 循环释放所有结点，包括头结点
+    while (Q.front) {
+        // 3. 临时指针指向当前头结点
+        p = Q.front;
+        // 4. 队头指针后移，指向下一个结点
+        Q.front = Q.front->next;
+        // 5. 释放临时指针指向的结点
+        delete p;
+    }
+    // 6. 释放后头结点指针已为 NULL，队尾指针也置为 NULL
+    Q.rear = NULL;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-queue-clear">清空</h3>
+                <pre><code class="language-cpp">// ClearQueue 清空链队（保留头结点）
+Status ClearQueue(LinkQueue &amp;Q) {
+    // 1. 定义临时指针，指向队头结点的下一个结点（第一个数据结点）
+    QNode *p = Q.front->next;
+    // 2. 定义临时指针，用于释放结点
+    QNode *q;
+    // 3. 循环释放所有数据结点
+    while (p) {
+        // 4. 临时指针 q 指向当前要释放的结点
+        q = p;
+        // 5. 指针 p 后移，指向下一个结点
+        p = p->next;
+        // 6. 释放临时指针 q 指向的结点
+        delete q;
+    }
+    // 7. 队头结点的指针域置为 NULL
+    Q.front->next = NULL;
+    // 8. 队尾指针重新指向头结点
+    Q.rear = Q.front;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-queue-empty">判空</h3>
+                <pre><code class="language-cpp">// QueueEmpty 判断链队是否为空
+Status QueueEmpty(const LinkQueue &amp;Q) {
+    // 1. 判断队头指针的下一个结点是否为 NULL，是则返回 TRUE，否则返回 FALSE
+    if (Q.front->next == NULL)
+        return TRUE;
+    else
+        return FALSE;
+}</code></pre>
+                
+                <h3 id="link-queue-length">求表长</h3>
+                <pre><code class="language-cpp">// QueueLength 返回链队的长度
+int QueueLength(const LinkQueue &amp;Q) {
+    // 1. 定义计数器，初始化为 0
+    int len = 0;
+    // 2. 定义临时指针，从第一个数据结点开始遍历
+    QNode *p = Q.front->next;
+    // 3. 循环遍历所有数据结点
+    while (p) {
+        // 4. 计数器加 1
+        len++;
+        // 5. 指针后移，访问下一个结点
+        p = p->next;
+    }
+    // 6. 返回队列的长度
+    return len;
+}</code></pre>
+                
+                <h3 id="link-queue-gethead">取队头元素</h3>
+                <pre><code class="language-cpp">// GetHead 获取链队的队头元素，并用 e 返回其值
+Status GetHead(const LinkQueue &amp;Q, QElemType &amp;e) {
+    // 1. 判断队列是否为空，为空则返回 ERROR
+    if (Q.front->next == NULL) return ERROR;
+    // 2. 将第一个数据结点的数据域的值赋给 e
+    e = Q.front->next->data;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-queue-enqueue">入队</h3>
+                <pre><code class="language-cpp">// EnQueue 向链队中插入元素 e 作为新的队尾元素
+Status EnQueue(LinkQueue &amp;Q, QElemType e) {
+    // 1. 新建一个结点，为其分配内存空间
+    QNode *p = new QNode;
+    // 2. 判断新结点是否分配成功，失败则退出
+    if (!p) exit(OVERFLOW);
+    // 3. 将元素 e 赋给新结点的数据域
+    p->data = e;
+    // 4. 将新结点的指针域置为 NULL
+    p->next = NULL;
+    // 5. 将新结点插入到队尾结点的后面
+    Q.rear->next = p;
+    // 6. 将队尾指针更新为新结点
+    Q.rear = p;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-queue-dequeue">出队</h3>
+                <pre><code class="language-cpp">// DeQueue 删除链队的队头元素，并用 e 返回其值
+Status DeQueue(LinkQueue &amp;Q, QElemType &amp;e) {
+    // 1. 判断队列是否为空，为空则返回 ERROR
+    if (Q.front->next == NULL) return ERROR;
+    // 2. 定义临时指针，指向第一个数据结点（队头元素所在结点）
+    QNode *p = Q.front->next;
+    // 3. 将队头元素的数据域的值赋给 e
+    e = p->data;
+    // 4. 将头结点的指针域指向第二个数据结点
+    Q.front->next = p->next;
+    // 5. 判断删除的是否为队尾结点，若是则将队尾指针重新指向头结点
+    if (Q.rear == p)
+        Q.rear = Q.front;
+    // 6. 释放临时指针指向的结点
+    delete p;
+    return OK;
+}</code></pre>
+                
+                <h3 id="link-queue-traverse">遍历</h3>
+                <pre><code class="language-cpp">// QueueTraverse 遍历链队（从队头到队尾依次访问每个元素）
+void QueueTraverse(const LinkQueue &amp;Q) {
+    // 1. 定义临时指针，从第一个数据结点开始遍历
+    QNode *p = Q.front->next;
+    // 2. 循环遍历所有数据结点
+    while (p) {
+        // 3. 访问当前元素（这里以打印为例）
+        printf("%c ", p->data);
+        // 4. 指针后移，访问下一个结点
+        p = p->next;
+    }
+    // 换行，格式化输出
+    printf("\n");
+}
+
+// QueueTraverse 遍历链队（自定义访问函数，更通用）
+void QueueTraverse(const LinkQueue &amp;Q, void (*visit)(QElemType)) {
+    // 1. 定义临时指针，从第一个数据结点开始遍历
+    QNode *p = Q.front->next;
+    // 2. 循环遍历所有数据结点
+    while (p) {
+        // 3. 调用自定义函数访问元素
+        visit(p->data);
+        // 4. 指针后移
+        p = p->next;
+    }
+}</code></pre>
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
