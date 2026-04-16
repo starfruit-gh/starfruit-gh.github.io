@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构：串、数组与广义表</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 座右铭 -->
+                <div class="author-quote">
+                    Talk is cheap. Show me the code.
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Go并发编程实战：Goroutine与Channel详解</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">分布式系统设计：一致性协议与实现</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">微服务架构下的Go语言实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Kubernetes中Go应用部署最佳实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">高性能Go程序优化技巧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文（整合markdown内容 - 串、数组、广义表） -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+                <!-- 串的定义 -->
+                <h2 id="string-definition">串的定义</h2>
+                <p>串：由 n(n≥0) 个任意字符组成的有限序列。其中 n 为串长，n=0 时称为空串。空串用 Φ 表示。</p>
+                <p><strong>串名</strong>：s是串的名。</p>
+                <p><strong>串值</strong>：用双引号括起来的字符序列是串的值。</p>
+                <p><strong>子串</strong>：串中任意个连续的字符组成的子序列称为该串的子串。</p>
+                <p><strong>主串</strong>：包含子串的串相应地称为主串。</p>
+                <p><strong>字符位置</strong>：字符在序列中的序号为该字符在串中的位置。</p>
+                <p><strong>子串位置</strong>：子串在主串中的位置则以子串的第一个字符在主串中的位置来表示。</p>
+                <p><strong>空格串</strong>：由一个或多个空格组成的串称为空格串。</p>
+                <p><strong>串相等</strong>：当且仅当两个串的长度相等并且各个对应位置上的字符都相同时，这两个串才是相等的。</p>
+                
+                <!-- 串的抽象数据类型 -->
+                <h2 id="string-adt">串的抽象数据类型</h2>
+                <pre><code class="language-cpp">ADT String {
+    数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
+    数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
+    基本操作：
+        // 1. 赋值
+        StrAssign(&amp;T, chars)
+        // 2. 销毁
+        DestroyString(&amp;S)
+        // 3. 清空
+        ClearString(&amp;S)
+        // 4. 判空
+        StrEmpty(S)
+        // 5. 求串长
+        StrLength(S)
+        // 6. 比较
+        StrCompare(S, T)
+        // 7. 拼接
+        Concat(&amp;T, S1, S2)
+        // 8. 拷贝
+        StrCopy(&amp;T, S)
+        // 9. 子串的位置
+        Index(S, T, pos)
+        // 10. 取子串
+        SubString(&amp;Sub, S, pos, len)
+        // 11. 替换子串
+        Replace(&amp;S, T, V)
+        // 12. 插入子串
+        StrInsert(&amp;S, pos, T)
+        // 13. 删除子串
+        StrDelete(&amp;S, pos, len)
+} ADT String</code></pre>
+                
+                <!-- 数组的定义 -->
+                <h2 id="array-definition">数组的定义</h2>
+                <p>数组就是定长的线性表。</p>
+                <p><strong>一维数组</strong>：若线性表中的数据元素为非结构的简单元素，则称为一维数组。</p>
+                <p><strong>二维数组</strong>：若一维数组中的数据元素又是一维数组结构，则称为二维数组。</p>
+                
+                <!-- 广义表的定义 -->
+                <h2 id="generalized-list-definition">广义表的定义</h2>
+                <p>广义表：由 n(n≥0) 个元素构成的有限序列。其中 n 为表长，n=0 时称为空表。其中每一个元素 a<sub>i</sub> 可能是原子，或者是一个广义表。</p>
+                <p>广义表是线性表的推广，又称列表(Lists)。</p>
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
