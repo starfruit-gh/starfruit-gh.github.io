@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构：树与二叉树</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 座右铭 -->
+                <div class="author-quote">
+                    Talk is cheap. Show me the code.
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Go并发编程实战：Goroutine与Channel详解</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">分布式系统设计：一致性协议与实现</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">微服务架构下的Go语言实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">Kubernetes中Go应用部署最佳实践</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="#" class="related-article-link">高性能Go程序优化技巧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文（树与二叉树） -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+                <h1 id="tree-binarytree">🌳 树与二叉树</h1>
+                
+                <h2 id="tree-definition">树的定义</h2>
+                <p><strong>树</strong>：是 n(n≥0) 个结点的有限集。</p>
+                <ul>
+                    <li>若 n = 0，称为<strong>空树</strong>；</li>
+                    <li>若 n &gt; 0，则它满足如下两个条件：
+                        <ul>
+                            <li>(1) 有且仅有一个特定的称为<strong>根</strong>的结点；</li>
+                            <li>(2) 其余结点可分为 m (m≥0) 个互不相交的有限集 T<sub>1</sub>, T<sub>2</sub>, T<sub>3</sub>, …, T<sub>m</sub>，其中每一个集合本身又是一棵树，并称为根的<strong>子树</strong>。</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h2 id="tree-terminology">树的基本术语</h2>
+                <ul>
+                    <li><strong>结点</strong>：树中的每个数据元素，包含数据项及指向子树的链接。</li>
+                    <li><strong>结点的度</strong>：一个结点拥有的子树个数。</li>
+                    <li><strong>树的度</strong>：树中所有结点的度的最大值。</li>
+                    <li><strong>非终端结点</strong>：度不为 0 的结点。除根结点之外，非终端结点也称为内部结点。</li>
+                    <li><strong>叶子结点</strong>：度为 0 的结点。</li>
+                    <li><strong>双亲和孩子</strong>：结点的子树的根称为该结点的孩子；相应地，该结点称为孩子的双亲。</li>
+                    <li><strong>兄弟</strong>：同一个双亲的孩子结点之间互称兄弟。</li>
+                    <li><strong>堂兄弟</strong>：双亲在同一层次的结点之间互称堂兄弟。</li>
+                    <li><strong>祖先</strong>：从根结点到该结点所经过的所有分支上的结点，包含该结点的双亲、双亲的双亲，直到根。</li>
+                    <li><strong>子孙</strong>：以某结点为根的子树中的所有结点，包含该结点的孩子、孩子的孩子等所有后代。</li>
+                    <li><strong>层次</strong>：从根结点开始定义，根为第 1 层，根的孩子为第 2 层，以此类推。</li>
+                    <li><strong>树的深度</strong>：树中结点的最大层次数。</li>
+                    <li><strong>有序树</strong>：树中结点的各子树从左到右有次序关系（不可互换）。</li>
+                    <li><strong>无序树</strong>：树中结点的各子树没有次序，可以任意互换。</li>
+                    <li><strong>森林</strong>：由 m（m≥0）棵互不相交的树组成的集合。</li>
+                </ul>
+                
+                <h2 id="binarytree-definition">二叉树的定义</h2>
+                <p><strong>二叉树</strong>：是 n(n≥0) 个结点的有限集。</p>
+                <ul>
+                    <li>若 n = 0，称为空树；</li>
+                    <li>若 n &gt; 0，则它满足如下两个条件：
+                        <ul>
+                            <li>(1) 有且仅有一个特定的称为根的结点；</li>
+                            <li>(2) 其余结点分为两个互不相交的子集 T<sub>1</sub> 和 T<sub>2</sub>，分别称为 T 的<strong>左子树</strong>和<strong>右子树</strong>，且 T<sub>1</sub> 和 T<sub>2</sub> 本身又都是二叉树。</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h2 id="binarytree-adt">二叉树的抽象数据类型</h2>
+                <pre><code class="language-cpp">ADT BinaryTree {
+   数据对象：D = { a_i | a_i ∈ ElemSet, i = 1,2,...,n, n ≥ 0 }
+    数据关系：R = {
+        若D = ∅，则R = ∅，对应空二叉树；
+        若D ≠ ∅，则R = {H}，H为满足以下规则的二元关系：
+        1. D中存在唯一的根结点root，root在H下无前驱结点；
+        2. 若D - {root} ≠ ∅，则可划分为互不相交的两个子集D_L（左子树结点集）和D_R（右子树结点集）；
+        3. 若D_L非空，则D_L中存在唯一结点lchild，满足&lt;root, lchild&gt; ∈ H，且D_L上的关系H_L ⊂ H同样符合二叉树的关系定义；
+        4. 若D_R非空，则D_R中存在唯一结点rchild，满足&lt;root, rchild&gt; ∈ H，且D_R上的关系H_R ⊂ H同样符合二叉树的关系定义。
+    }
+    基本操作：
+        // 1. 先序遍历
+        PreOrderTraverse()
+        // 2. 中序遍历
+        InOrderTraverse()
+        // 3. 后序遍历
+        PostOrderTraverse()
+        // 4. 层序遍历    
+        LevelOrderTraverse()
+        // 5. 构造二叉树
+        CreateBiTree()
+        // 6. 销毁二叉树
+        DestroyBiTree()
+        // 7. 复制二叉树    
+        Copy()
+        // 8. 计算二叉树深度
+        Depth()
+        // 9. 计算二叉树结点总数
+        NodeCount()
+        // 10. 计算叶子结点总数
+        LeafCount()
+} ADT BinaryTree</code></pre>
+                
+                <h2 id="binarytree-properties">二叉树的性质</h2>
+                <ul>
+                    <li><strong>性质1</strong>：在二叉树的第 i 层上至多有 2<sup>i-1</sup> 个结点 (i ≥ 1)。</li>
+                    <li><strong>性质2</strong>：深度为 k 的二叉树至多有 2<sup>k</sup> - 1 个结点 (k ≥ 1)。</li>
+                    <li><strong>性质3</strong>：对任何一棵二叉树 T，如果其叶子数为 n<sub>0</sub>，度为 2 的结点数为 n<sub>2</sub>，则 <strong>n<sub>0</sub> = n<sub>2</sub> + 1</strong>。</li>
+                </ul>
+                
+                <h2 id="full-binarytree">满二叉树</h2>
+                <p>一棵深度为 k 且有 2<sup>k</sup> - 1 个结点的二叉树称为<strong>满二叉树</strong>。</p>
+                <h3>满二叉树的特点</h3>
+                <ul>
+                    <li>每层都满</li>
+                    <li>叶子节点全部在最底层</li>
+                </ul>
+                
+                <h2 id="complete-binarytree">完全二叉树</h2>
+                <p>深度为 k 的具有 n 个结点的二叉树，当且仅当其每一个结点都与深度为 k 的满二叉树中编号为 1~n 的结点一一对应时，称之为<strong>完全二叉树</strong>。</p>
+                <h3>完全二叉树的特点</h3>
+                <ul>
+                    <li>前 k-1 层全满，最后一层左满右空。</li>
+                </ul>
+                <h3>完全二叉树的性质</h3>
+                <ul>
+                    <li>1. 具有 n 个结点的完全二叉树的深度为 ⌊log<sub>2</sub>n⌋ + 1。<br>
+                    （注：⌊x⌋ 称作 x 的底，表示不大于 x 的最大整数）</li>
+                    <li>2. 如果对一棵有 n 个结点的完全二叉树（其深度为 ⌊log<sub>2</sub>n⌋+1）的结点按层序编号（从第1层到第⌊log<sub>2</sub>n⌋+1层，每层从左到右），则对任一结点 i（1 ≤ i ≤ n），有：
+                        <ul>
+                            <li>（1）如果 i=1，则结点 i 是二叉树的根，无双亲；如果 i&gt;1，则其双亲 PARENT(i) 是结点 ⌊i/2⌋。</li>
+                            <li>（2）如果 2i &gt; n，则结点 i 无左孩子（结点 i 为叶子结点）；否则其左孩子 LCHILD(i) 是结点 2i。</li>
+                            <li>（3）如果 2i+1 &gt; n，则结点 i 无右孩子；否则其右孩子 RCHILD(i) 是结点 2i+1。</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h2 id="sequential-storage">二叉树的顺序存储结构</h2>
+                <pre><code class="language-cpp">#define MAXTSIZE 100
+typedef ElemType SeqBiTree[MAXTSIZE];
+SeqBiTree bt;</code></pre>
+                <p>二叉树的顺序存储结构比较浪费存储空间，仅适于存满二叉树和完全二叉树。</p>
+                
+                <h2 id="linked-storage">二叉树的链式存储结构</h2>
+                <pre><code class="language-cpp">typedef struct BiNode{
+    ElemType data;
+    struct BiNode *lchild, *rchild;
+} BiNode, *BiTree;</code></pre>
+                
+                <h2 id="traversal">二叉树的遍历</h2>
+                <p>假设：L：遍历左子树 D：访问根结点 R：遍历右子树。则遍历整个二叉树方案共有 DLR、LDR、LRD、DRL、RDL、RLD 六种。</p>
+                <p>若规定先左后右，则只有三种情况：</p>
+                <ul>
+                    <li><strong>DLR 先序遍历</strong></li>
+                    <li><strong>LDR 中序遍历</strong></li>
+                    <li><strong>LRD 后序遍历</strong></li>
+                </ul>
+                
+                <h3 id="recursive-traversal">二叉树的递归遍历</h3>
+                <pre><code class="language-cpp">// 先序遍历
+Status PreOrderTraverse(BiTree T) {
+    if(T==NULL) return OK;
+    else {
+        visit(T);
+        PreOrderTraverse(T->lchild);
+        PreOrderTraverse(T->rchild);
+    }
+}
+
+// 中序遍历
+Status InOrderTraverse(BiTree T) {
+    if(T==NULL) return OK;
+    else {
+        InOrderTraverse(T->lchild);
+        visit(T);
+        InOrderTraverse(T->rchild);
+    }
+}
+
+// 后序遍历
+Status PostOrderTraverse(BiTree T) {
+    if(T==NULL) return OK;
+    else {
+        PostOrderTraverse(T->lchild);
+        PostOrderTraverse(T->rchild);
+        visit(T);
+    }
+}</code></pre>
+                <p><strong>遍历算法的效率</strong><br>
+                时间效率：O(n)  //每个结点只访问一次<br>
+                空间效率：O(n)  //栈占用的最大辅助空间</p>
+                
+                <h3 id="iterative-traversal">二叉树的迭代遍历</h3>
+                <pre><code class="language-cpp">// 中序遍历（迭代）
+Status InOrderTraverse(BiTree T) {
+    BiTree p; 
+    InitStack(S); 
+    p = T;
+    while(p || !StackEmpty(S)) {
+        if(p) {
+            Push(S, p);
+            p = p->lchild;
+        } else {
+            Pop(S, q);
+            printf(" %c", q->data);
+            p = q->rchild;
+        }
+    }
+    return OK;
+}</code></pre>
+                
+                <h3 id="uniform-iterative">二叉树的统一迭代遍历</h3>
+                <pre><code class="language-cpp">// 统一迭代框架（标记法，此处略作示意）
+// 可参考标准实现</code></pre>
+                
+                <h3 id="level-order">层序遍历</h3>
+                <pre><code class="language-cpp">void LevelOrder(BiNode *b) {
+    BiNode *p;
+    SeqQueue *qu;
+    InitQueue(qu);
+    enQueue(qu, b);
+    while (!QueueEmpty(qu)) {
+        deQueue(qu, p);
+        printf("%c ", p->data);
+        if (p->lchild != NULL)
+            enQueue(qu, p->lchild);
+        if (p->rchild != NULL)
+            enQueue(qu, p->rchild);
+    }
+}</code></pre>
+                
+                <h2 id="create-binarytree">构造二叉树</h2>
+                <pre><code class="language-cpp">void CreateBiTree(BiTree &T) {
+    char ch;
+    cin >> ch;
+    if (ch == '#') {
+        T = nullptr;
+    } else {
+        T = new BiTNode;
+        T->data = ch;
+        CreateBiTree(T->lchild);
+        CreateBiTree(T->rchild);
+    }
+}</code></pre>
+                
+                <h2 id="destroy-binarytree">销毁二叉树</h2>
+                <pre><code class="language-cpp">void DestroyTree(BiTree &T) {
+    if (T) {
+        DestroyTree(T->lchild);
+        DestroyTree(T->rchild);
+        delete T;
+        T = nullptr;
+    }
+}</code></pre>
+                
+                <h2 id="copy-binarytree">复制二叉树</h2>
+                <pre><code class="language-cpp">int Copy(BiTree T, BiTree &NewT) {
+    if (T == nullptr) {
+        NewT = nullptr;
+        return 0;
+    } else {
+        NewT = new BiTNode;
+        NewT->data = T->data;
+        Copy(T->lchild, NewT->lchild);
+        Copy(T->rchild, NewT->rchild);
+        return 1;
+    }
+}</code></pre>
+                
+                <h2 id="depth-binarytree">计算二叉树深度</h2>
+                <pre><code class="language-cpp">int Depth(BiTree T) {
+    if (T == nullptr) {
+        return 0;
+    } else {
+        int m = Depth(T->lchild);
+        int n = Depth(T->rchild);
+        return (m > n) ? (m + 1) : (n + 1);
+    }
+}</code></pre>
+                
+                <h2 id="nodecount-binarytree">计算二叉树结点总数</h2>
+                <pre><code class="language-cpp">int NodeCount(BiTree T) {
+    if (T == nullptr) {
+        return 0;
+    } else {
+        return NodeCount(T->lchild) + NodeCount(T->rchild) + 1;
+    }
+}</code></pre>
+                
+                <h2 id="leafcount-binarytree">计算叶子结点总数</h2>
+                <pre><code class="language-cpp">int LeafCount(BiTree T) {
+    if (T == nullptr) {
+        return 0;
+    }
+    if (T->lchild == nullptr && T->rchild == nullptr) {
+        return 1;
+    } else {
+        return LeafCount(T->lchild) + LeafCount(T->rchild);
+    }
+}</code></pre>
+                
+                <h2 id="threaded-binarytree">线索二叉树</h2>
+                <p>（利用空链域存放前驱/后继线索，提升遍历效率，此处为基础概念，实现细节待补充）</p>
+                
+                <h2 id="huffman-tree">哈夫曼树</h2>
+                <p>（带权路径长度最短的二叉树，又称最优二叉树，广泛应用于编码压缩。详细构造算法和代码实现可进一步扩展）</p>
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+    <!-- 额外确保高亮和行号对新内容生效 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 重新高亮新插入的代码块
+            if (typeof hljs !== 'undefined') {
+                document.querySelectorAll('.article-content pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+                // 启用行号（如果插件存在）
+                if (typeof hljs.lineNumbersBlock !== 'undefined') {
+                    document.querySelectorAll('.article-content pre code').forEach((block) => {
+                        hljs.lineNumbersBlock(block);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
