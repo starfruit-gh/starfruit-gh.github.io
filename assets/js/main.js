@@ -175,7 +175,63 @@ function generateDynamicCatalog() {
 }
 
 /* =========================================== */
-/* 3. 页面初始化函数                            */
+/* 3. 自动编号图片（图）和表格（表）                */
+/* =========================================== */
+
+/**
+ * 自动为所有 figure 的 figcaption 生成图编号
+ * 支持去除的前缀格式：
+ *   - "图N"、"图N."、"图N："、"图N " (N为数字)
+ *   - "图 " (图后跟空格，无数字)
+ * 若无上述前缀，则直接添加编号
+ */
+function autoNumberFigures() {
+    const figures = document.querySelectorAll('figure');
+    figures.forEach((figure, index) => {
+        const figcaption = figure.querySelector('figcaption');
+        if (!figcaption) return;
+
+        let originalText = figcaption.innerText.trim();
+        // 匹配两种前缀：
+        // 1. "图" + 数字 + 可选标点/空白
+        // 2. "图" + 至少一个空白（无数字）
+        const regex = /^图\s*(?:\d+\s*[.:：]?\s*|\s+)/;
+        let description = originalText.replace(regex, '').trim();
+        // 如果去除后为空（原内容只有“图”和数字/空格），则保留原描述但去掉前缀
+        if (description === '') {
+            description = originalText.replace(regex, '').trim();
+        }
+        const newText = `图${index + 1} ${description}`;
+        figcaption.innerText = newText;
+    });
+}
+
+/**
+ * 自动为所有 class="table-caption" 的元素生成表编号
+ * 支持去除的前缀格式：
+ *   - "表N"、"表N."、"表N："、"表N " (N为数字)
+ *   - "表 " (表后跟空格，无数字)
+ * 若无上述前缀，则直接添加编号
+ */
+function autoNumberTables() {
+    const tableCaptions = document.querySelectorAll('.table-caption');
+    tableCaptions.forEach((captionElem, index) => {
+        let originalText = captionElem.innerText.trim();
+        // 匹配两种前缀：
+        // 1. "表" + 数字 + 可选标点/空白
+        // 2. "表" + 至少一个空白（无数字）
+        const regex = /^表\s*(?:\d+\s*[.:：]?\s*|\s+)/;
+        let description = originalText.replace(regex, '').trim();
+        if (description === '') {
+            description = originalText.replace(regex, '').trim();
+        }
+        const newText = `表${index + 1} ${description}`;
+        captionElem.innerText = newText;
+    });
+}
+
+/* =========================================== */
+/* 4. 页面初始化函数                            */
 /* =========================================== */
 
 /**
@@ -186,8 +242,12 @@ window.addEventListener('DOMContentLoaded', () => {
     // 动态生成目录
     generateDynamicCatalog();
 
+    // 自动编号图片和表格
+    autoNumberFigures();
+    autoNumberTables();
+
     /* =========================================== */
-    /* 4. 目录交互逻辑（添加目录动态滑动效果）          */
+    /* 5. 目录交互逻辑（添加目录动态滑动效果）          */
     /* =========================================== */
     
     // 获取所有目录链接元素
@@ -252,7 +312,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     /* =========================================== */
-    /* 5. highlight.js初始化                        */
+    /* 6. highlight.js初始化                        */
     /* =========================================== */
     
     // 初始化highlight.js代码高亮功能
@@ -265,7 +325,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     /* =========================================== */
-    /* 6. 日历组件逻辑                               */
+    /* 7. 日历组件逻辑                               */
     /* =========================================== */
     
     // 获取日历相关DOM元素
@@ -360,7 +420,7 @@ window.addEventListener('DOMContentLoaded', () => {
     renderCalendar(currentYear, currentMonth);
 
     /* =========================================== */
-    /* 7. 回到顶部按钮逻辑                           */
+    /* 8. 回到顶部按钮逻辑                           */
     /* =========================================== */
     
     // 获取回到顶部按钮元素
