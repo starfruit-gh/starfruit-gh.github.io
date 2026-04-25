@@ -83,24 +83,30 @@
             </div>
         </div>
         
-        <!-- 中间正文（整合markdown内容 - 串、数组、广义表） -->
+        <!-- 中间正文（整合markdown内容） -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <!-- 串的定义 -->
+                <h1 id="stack-queue">（四）串、数组和广义表</h1>
+
                 <h2 id="string-definition">串的定义</h2>
-                <p>串：由 n(n≥0) 个任意字符组成的有限序列。其中 n 为串长，n=0 时称为空串。空串用 Φ 表示。</p>
-                <p><strong>串名</strong>：s是串的名。</p>
-                <p><strong>串值</strong>：用双引号括起来的字符序列是串的值。</p>
-                <p><strong>子串</strong>：串中任意个连续的字符组成的子序列称为该串的子串。</p>
-                <p><strong>主串</strong>：包含子串的串相应地称为主串。</p>
-                <p><strong>字符位置</strong>：字符在序列中的序号为该字符在串中的位置。</p>
-                <p><strong>子串位置</strong>：子串在主串中的位置则以子串的第一个字符在主串中的位置来表示。</p>
-                <p><strong>空格串</strong>：由一个或多个空格组成的串称为空格串。</p>
-                <p><strong>串相等</strong>：当且仅当两个串的长度相等并且各个对应位置上的字符都相同时，这两个串才是相等的。</p>
+                <div>
+                    $$ s = a_1a_2...a_n $$
+                </div>
+                <p>串（String）：由 n(n≥0) 个任意字符组成的有限序列。</p>
+                <ul>
+                    <li>其中 n 为串长，n=0 时称为空串。空串用 \(Φ\) 表示。</li>
+                    <li>串名：s 是串的名。</li>
+                    <li>串值：用双引号括起来的字符序列是串的值。</li>
+                    <li>子串：串中任意个连续的字符组成的子序列称为该串的子串。</li>
+                    <li>主串：包含子串的串相应地称为主串。</li>
+                    <li>字符位置：字符在序列中的序号为该字符在串中的位置。</li>
+                    <li>子串位置：子串在主串中的位置则以子串的第一个字符在主串中的位置来表示。</li>
+                    <li>空格串：由一个或多个空格组成的串称为空格串。</li>
+                    <li>串相等：当且仅当两个串的长度相等并且各个对应位置上的字符都相同时，这两个串才是相等的。</li>
+                </ul>
                 
-                <!-- 串的抽象数据类型 -->
-                <h2 id="string-adt">串的抽象数据类型</h2>
-                <pre><code class="language-cpp">ADT String {
+<h2 id="string-adt">串的抽象数据类型</h2>
+<pre><code class="language-cpp">ADT String {
     数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
     数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
     基本操作：
@@ -131,17 +137,147 @@
         // 13. 删除子串
         StrDelete(&amp;S, pos, len)
 } ADT String</code></pre>
+
+<h2 id="string-sequential-storage">串的顺序存储结构</h2>
+<pre><code class="language-cpp">//静态数组（定长顺序存储）
+#define MAXSIZE 255
+typedef struct {
+    char ch[MaxSize];
+    int length;
+} SString;
+
+//动态数组（堆分配存储）
+typedef struct {
+    char *ch;
+    int length;
+} HString;</code></pre>
+
+<h2 id="string-linked-storage">串的链式存储结构</h2>
+<pre><code class="language-cpp">//一个节点存放一个字符
+typedef struct StringNode {
+    char ch;
+    struct StringNode *next;
+} StringNode,*String;
+
+//一个节点存放多个字符
+#define CHUNKSIZE 80
+typedef struct Chunk {
+    char ch[CHUNKSIZE];
+    struct Chunk *next;
+} Chunk;
+
+typedef struct {
+    Chunk *head,*tail;
+    int length;
+} String;
+</code></pre>
                 
-                <!-- 数组的定义 -->
                 <h2 id="array-definition">数组的定义</h2>
-                <p>数组就是定长的线性表。</p>
-                <p><strong>一维数组</strong>：若线性表中的数据元素为非结构的简单元素，则称为一维数组。</p>
-                <p><strong>二维数组</strong>：若一维数组中的数据元素又是一维数组结构，则称为二维数组。</p>
+                <div style="text-align: center; margin-bottom: 10px;">
+                    arr1 = [1,2,3,4,5]
+                </div>
+                <figcaption>一维数组</figcaption>
+                <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+<div style="white-space: pre-wrap; text-align: left;">
+arr2 = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+</div>
+                </div>
+                <figcaption>二维数组</figcaption>
+                <p>数组（Array）：是由类型相同的数据元素构成的有序集合，是线性表的推广。</p>
+                <ul>
+                    <li>数组中的每个元素称为数组元素。</li>
+                    <li>维数：数组中每个元素受 n(n≥1) 个线性关系的约束，n 就是数组的维数。（n = 1 就是一维数组，n = 2 就是二维数组，以此类推。）</li>
+                    <li>维界：数组在某一维度上可容纳元素的总个数（即该维的长度）。</li>
+                    <li>下标：数组元素在数组中的位置\(i_1, i_2, ..., i_n\)称为下标，可以通过下标访问该数据元素。（下标从 0 开始。）</li>
+                </ul>
+                <p>举个例子：</p>
+                <ol>
+                    <li><code class="code-inline">int a[10];</code></li>
+                </ol>
+                <ul style="margin-left: 35px;">
+                    <li>维数：1</li>
+                    <li>维界：10</li>
+                    <li>下标范围：[0, 9]</li>
+                </ul>
+                <ol start="2">
+                    <li><code class="code-inline">int b[3][5];</code></li>
+                </ol>
+                <ul style="margin-left: 35px;">
+                    <li>维数：2</li>
+                    <li>第一维界：3 ，第二维界：5</li>
+                    <li>下标范围：</li>
+                        <ul>
+                            <li>第一维下标范围：[0, 2]</li>
+                            <li>第二维下标范围：[0, 4]</li>
+                        </ul>
+                </ul>
                 
-                <!-- 广义表的定义 -->
+<h2 id="array-adt">数组的抽象数据类型</h2>
+<pre><code class="language-cpp">ADT Array {
+    数据对象：D = { a_{j₁j₂…jₙ} | a_{j₁j₂…jₙ} ∈ ElemSet, jᵢ = 0,1,…,bᵢ-1, i=1,2,…,n, n≥1, bᵢ为第i维的界长 }
+    数据关系：R = { &lt;a_{j₁…jᵢ…jₙ}, a_{j₁…jᵢ+1…jₙ}&gt; | a_{j₁…jᵢ…jₙ}, a_{j₁…jᵢ+1…jₙ} ∈ D, 0≤jₖ≤bₖ-1(k≠i), 0≤jᵢ≤bᵢ-2, i=1,2,…,n }
+    基本操作：
+        // 1. 初始化
+        InitArray(&A, n, bound1, …, boundn)
+        // 2. 销毁
+        DestroyArray(&A)
+        // 3. 求维数
+        GetArrayDim(A, &dim)
+        // 4. 求维界（数组某一维的长度）
+        GetArrayBound(A, dim, &bound)
+        // 5. 取数组元素值
+        Value(A, &e, index1, …, indexn)
+        // 6. 给数组元素赋值
+        Assign(&A, e, index1, …, indexn)
+        // 7. 拷贝数组
+        CopyArray(A, &B)
+} ADT Array</code></pre>
+
+                <h2 id="array-sequential-storage">数组的顺序存储</h2>
+                <p>由于数组一般不做插入或删除操作，也就是说，一旦建立了数组，则结构中的数据元素个数和元素之间的关系就不再发生变动。因此，采用顺序存储结构表示数组比较合适。</p>
+                <p>另外，由于数组可以是多维的，但存储数据元素的内存单元地址是一维的，因此，在存储数组结构之前，需要解决将多维关系映射到一维关系的问题。</p>
+
+                <h3>一维数组的顺序存储</h3>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/string-array-and-glist/一维数组的存储.svg" alt="一维数组的存储">
+                    <figcaption>图 一维数组的存储</figcaption>
+                </figure>
+                <p>对于一维数组，直接将数组元素依次存储在连续的内存单元中即可。</p>
+                <p>数组元素 \(a[i]\) 的存储地址为：\(LOC(a[i]) = LOC(a[0]) + (i-1) \times sizeof(ElemType)\)</p>
+
+                <h3>二维数组的顺序存储</h3>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/string-array-and-glist/二维数组的存储.png" alt="二维数组的存储">
+                    <figcaption>图 二维数组的存储</figcaption>
+                </figure>
+                <p>对于二维数组，可有两种存储方式：一种是以列序为主序的存储方式，另一种是以行序为主序的存储方式。</p>
+                <ul>
+                    <li>以行序为主序时，数组元素 \(a[i][j]\) 的存储地址为：\(LOC(a[i][j]) = LOC(a[0][0]) + (i×n+j) \times sizeof(ElemType)\)</li>
+                    <li>以列序为主序时，数组元素 \(a[i][j]\) 的存储地址为：\(LOC(a[i][j]) = LOC(a[0][0]) + (j×m+i) \times sizeof(ElemType)\)</li>
+                </ul>
+
                 <h2 id="generalized-list-definition">广义表的定义</h2>
-                <p>广义表：由 n(n≥0) 个元素构成的有限序列。其中 n 为表长，n=0 时称为空表。其中每一个元素 a<sub>i</sub> 可能是原子，或者是一个广义表。</p>
-                <p>广义表是线性表的推广，又称列表(Lists)。</p>
+                <div>
+                    $$ LS = (a_1,a_2,...,a_n) $$
+                </div>
+                <p>广义表：是 n(n≥0) 个数据元素构成的有限序列，是线性表的推广。</p>
+                <ul>
+                    <li>在线性表中，\(a_i(1 ≤ i ≤ n)\) 只限于是单个元素。而在广义表中，\(a_i\) 可以是单个元素，也可以是广义表，分别称为广义表LS的原子和子表。</li>
+                </ul>
+                <p>习惯上，用大写字母表示广义表的名称，用小写字母表示原子。</p>
+                <p>举个例子：</p>
+                <ul>
+                    <li><code class="code-inline">A = ()</code>。A 是一个空表，长度为 0。</li>
+                    <li><code class="code-inline">B = (())</code>。B 是含有一个元素的广义表，长度为 1，这个元素是一个空的广义表。</li>
+                    <li><code class="code-inline">C = (a, b, c)</code>。C 是一个长度为 3 的广义表，这三个元素a、b、c都是原子。</li>
+                    <li><code class="code-inline">D = (A, B ,C)</code>。D 是一个长度为 3 的广义表，这三个元素A、B、C都是子表。</li>
+                    <li><code class="code-inline">E = (a, (b, c), D)</code>。E 是一个长度为 3 的广义表，这三个元素分别是原子a、子表(b, c)和子表D。</li>
+                    <li><code class="code-inline">F = (a, F)</code>。F 是一个递归的表，长度为 2。F 相当于一个无限的广义表 F = (a,(a,(a,...)))。</li>
+                </ul>
             </div>
         </div>
         

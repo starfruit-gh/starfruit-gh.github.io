@@ -65,7 +65,7 @@
                         <a href="/posts/data-structure/03_stack-and-queue.html" class="related-article-link">（三）栈和队列</a>
                     </li>
                     <li class="related-article-item">
-                        <a href="/posts/data-structure/04_string-array-and-glist.html" class="related-article-link">（四）字符串、数组和广义表</a>
+                        <a href="/posts/data-structure/04_string-array-and-glist.html" class="related-article-link">（四）串、数组和广义表</a>
                     </li>
                     <li class="related-article-item">
                         <a href="/posts/data-structure/05_linear-list-supplement.html" class="related-article-link">（补充）其他线性表</a>
@@ -86,17 +86,17 @@
         <!-- 中间正文（树与二叉树） -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1 id="tree-binarytree">🌳 树与二叉树</h1>
+                <h1 id="tree-binarytree">（五）树与二叉树</h1>
                 
                 <h2 id="tree-definition">树的定义</h2>
-                <p><strong>树</strong>：是 n(n≥0) 个结点的有限集。</p>
+                <p><strong>树（Tree）</strong>：是 n(n≥0) 个结点的有限集。</p>
                 <ul>
                     <li>若 n = 0，称为<strong>空树</strong>；</li>
                     <li>若 n &gt; 0，则它满足如下两个条件：
-                        <ul>
-                            <li>(1) 有且仅有一个特定的称为<strong>根</strong>的结点；</li>
-                            <li>(2) 其余结点可分为 m (m≥0) 个互不相交的有限集 T<sub>1</sub>, T<sub>2</sub>, T<sub>3</sub>, …, T<sub>m</sub>，其中每一个集合本身又是一棵树，并称为根的<strong>子树</strong>。</li>
-                        </ul>
+                        <ol>
+                            <li>有且仅有一个特定的称为<strong>根</strong>的结点；</li>
+                            <li>其余结点可分为 m (m≥0) 个互不相交的有限集 T<sub>1</sub>, T<sub>2</sub>, T<sub>3</sub>, …, T<sub>m</sub>，其中每一个集合本身又是一棵树，并称为根的<strong>子树</strong>。</li>
+                        </ol>
                     </li>
                 </ul>
                 
@@ -113,21 +113,21 @@
                     <li><strong>祖先</strong>：从根结点到该结点所经过的所有分支上的结点，包含该结点的双亲、双亲的双亲，直到根。</li>
                     <li><strong>子孙</strong>：以某结点为根的子树中的所有结点，包含该结点的孩子、孩子的孩子等所有后代。</li>
                     <li><strong>层次</strong>：从根结点开始定义，根为第 1 层，根的孩子为第 2 层，以此类推。</li>
-                    <li><strong>树的深度</strong>：树中结点的最大层次数。</li>
-                    <li><strong>有序树</strong>：树中结点的各子树从左到右有次序关系（不可互换）。</li>
+                    <li><strong>树的深度</strong>：树中结点的最大层次。</li>
+                    <li><strong>有序树</strong>：树中结点的各子树从左到右有次序关系，不可互换。</li>
                     <li><strong>无序树</strong>：树中结点的各子树没有次序，可以任意互换。</li>
                     <li><strong>森林</strong>：由 m（m≥0）棵互不相交的树组成的集合。</li>
                 </ul>
                 
                 <h2 id="binarytree-definition">二叉树的定义</h2>
-                <p><strong>二叉树</strong>：是 n(n≥0) 个结点的有限集。</p>
+                <p><strong>二叉树（Binary Tree）</strong>：是 n(n≥0) 个结点的有限集。</p>
                 <ul>
                     <li>若 n = 0，称为空树；</li>
                     <li>若 n &gt; 0，则它满足如下两个条件：
-                        <ul>
-                            <li>(1) 有且仅有一个特定的称为根的结点；</li>
-                            <li>(2) 其余结点分为两个互不相交的子集 T<sub>1</sub> 和 T<sub>2</sub>，分别称为 T 的<strong>左子树</strong>和<strong>右子树</strong>，且 T<sub>1</sub> 和 T<sub>2</sub> 本身又都是二叉树。</li>
-                        </ul>
+                        <ol>
+                            <li>有且仅有一个特定的称为根的结点；</li>
+                            <li>其余结点分为两个互不相交的子集 T<sub>1</sub> 和 T<sub>2</sub>，分别称为 T 的<strong>左子树</strong>和<strong>右子树</strong>，且 T<sub>1</sub> 和 T<sub>2</sub> 本身又都是二叉树。</li>
+                        </ol>
                     </li>
                 </ul>
                 
