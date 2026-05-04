@@ -1136,6 +1136,179 @@ void CreatHuffmanCode(HuffmanTree HT, HuffmanCode &HC, int n) {
     }
     decoded[idx] = '\0';  // 添加字符串结束符
 }</code></pre>
+
+            <h2 id="union-find-set">并查集</h2>
+            <p>并：合并。查：查询。集：集合。</p>
+            <p>并查集：一种用来高效处理集合的合并和查询操作的数据结构。</p>
+            <figure>
+                <img src="/assets/images/posts/data-structure/tree/集合.svg" alt="集合"/>
+                <figcaption>图 集合</figcaption>
+            </figure>
+            <p>并查集最核心的两个操作：</p>
+            <ul>
+                <li>Find 操作：查询一个元素所属的集合。</li>
+                <li>Union 操作：合并两个元素所属的集合。</li>
+            </ul>
+            <figure>
+                <img src="/assets/images/posts/data-structure/tree/集合元素用树来组织.svg" alt="集合元素用树来组织"/>
+                <figcaption>图 集合元素用树来组织</figcaption>
+            </figure>
+            <figure>
+                <img src="/assets/images/posts/data-structure/tree/并查集树的规定.svg" alt="并查集树的规定"/>
+                <figcaption>图 并查集树的规定</figcaption>
+            </figure>
+            <p>为了实现这两个操作，可以将集合中的元素用树组织。并规定：</p>
+            <ul>
+                <li>每个根结点唯一地表示一个集合。</li>
+                <li>除根结点外，其他结点都直接或间接地指向根结点。</li>
+                <li>根结点指向自身。</li>
+            </ul>
+            <figure>
+                <img src="/assets/images/posts/data-structure/tree/并查集树的存储.svg" alt="并查集树的存储"/>
+                <figcaption>图 并查集树的存储</figcaption>
+            </figure>
+            <p>并查集可以用一个 p 数组进行存储。</p>
+            <ul>
+                <li>数组的下标 i 代表结点编号。</li>
+                <li>数组的值 p[i] 代表结点 i 的父结点编号。</li>
+            </ul>
+            <p>这样，</p>
+            <ul>
+                <li>Find 操作，只需要找结点对应的根结点即可。</li>
+                <li>Union 操作，只需要先通过 Find 操作找到两个元素所属的集合，然后将一个集合的根结点指向另一个集合的根结点即可。</li>
+            </ul>
+            <pre><code class="language-cpp">int p[MAXN];
+void Initial(int n) {
+    for(int i = 0; i < n; i++) {
+        p[i] = i;
+    }
+}
+
+int Find(int x) {
+    if(p[x] == x) 
+        return x;
+    else
+        return Find(p[x]);
+}
+
+void Union(int x, int y) {
+    int rootx = Find(x);
+    int rooty = Find(y);
+    if(rootx != rooty) {
+        p[rootx] = rooty;
+    }
+}</code></pre>
+
+            <h3 id="path-compression">路径压缩</h3>
+            <figure>
+                <img src="/assets/images/posts/data-structure/tree/并查集树的合并.svg" alt="并查集树的合并"/>
+                <figcaption>图 并查集树的合并</figcaption>
+            </figure>
+            <p>并查集在合并后，会导致树的高度增加。这会导致 Find 操作的时间复杂度增加。</p>
+            <p>路径压缩：在 Find 操作中，可以将访问过的结点都直接指向根结点，这样后续的 Find 操作可以在 O(1) 的时间完成。</p>
+            <p>实现路径压缩非常简单，只需要在 Find 操作中，找到根结点后，将访问过的结点都直接指向根结点即可。</p>
+            <pre><code class="language-cpp">int Find(int x) {
+    if(p[x] == x) 
+        return x;
+    else
+        return p[x] = Find(p[x]);
+}
+</code></pre>
+
+            <h3 id="union-by-rank">按秩合并</h3>
+            <figure>
+                <img src="/assets/images/posts/data-structure/tree/高度不同的树的合并.svg" alt="高度不同的树的合并"/>
+                <figcaption>图 高度不同的树的合并</figcaption>
+            </figure>
+            <p>在合并操作中，如果两个树的高度不同，那将低树合并到高树上会比将高树合并到低树上得到的树的高度小。</p>
+            <p>按秩合并：在 Union 操作中，可以将秩较小的树的根结点指向秩较大的树的根结点，若两树秩相等则任选一个根作为新根并将其秩加一。这样合并后的树高度不会无故增加，从而保证后续 Find 操作的时间复杂度为 O(log n)。</p>
+            <p>秩的两种常见定义：</p>
+            <ul>
+                <li>标准定义：树的高度（深度）。</li>
+                <ul>
+                    <li>可以用一个 h 数组存储树的高度。例如，\(h[root_i] = 2\)。在使用路径压缩的并查集中，由于路径压缩可能会改变树的高度，所以 h 数组记录的是估计的高度。</li>
+                </ul>
+                <li>等价变体：树的大小（结点总数）。</li>
+                <ul>
+                    <li>可以用一个 s 数组存储树的大小。例如，\(s[root_i] = 3\)。</li>
+                </ul>
+            </ul>
+<pre><code class="language-cpp">// 秩为树的高度
+void Union(int x, int y) {
+    int rootx = Find(x);
+    int rooty = Find(y);
+    if(rootx != rooty) {
+        if(h[rootx] < h[rooty]) {
+            p[rootx] = rooty;
+        } else if(h[rootx] > h[rooty]) {
+            p[rooty] = rootx;
+        } else {
+            p[rootx] = rooty;
+            h[rooty]++;
+        }
+    }
+}
+
+// 秩为树的大小
+void Union(int x, int y) {
+    int rootx = Find(x);
+    int rooty = Find(y);
+    if(rootx != rooty) {
+        if(s[rootx] <= s[rooty]) {
+            p[rootx] = rooty;
+            s[rooty] += s[rootx];
+        } else {
+            p[rooty] = rootx;
+            s[rootx] += s[rooty];
+        }
+    }
+}</code></pre>
+            <p>使用路径压缩 + 按秩合并，并查集的查找效率为：\(O(α(n))\)，\(α(n)\)为阿克曼函数的反函数，近似为 \(O(1)\)。</p>
+            <p>另外，可以通过将 p 数组中根结点的值修改为负的树的高度或大小，这样既可以区分根结点又可以通过根结点来存储树的高度或大小。这样就省去了额外的 h 数组或 s 数组。</p>
+            <pre><code class="language-cpp">int p[MAXN];
+void Initial(int n) {
+    for(int i = 0; i < n; i++) {
+        p[i] = -1;
+    }
+}
+
+int Find(int x) {
+    if(p[x] < 0)
+        return x;
+    else
+        return p[x] = Find(p[x]);
+}
+
+// 秩为树的高度
+void Union(int x,int y) {
+    int rootx = Find(x);
+    int rooty = Find(y);
+    if(rootx != rooty) {
+        if(p[rootx] < p[rooty]) {
+            p[rooty] = rootx;
+        } else if(p[rootx] > p[rooty]) {
+            p[rootx] = rooty;
+        } else {
+            p[rootx] = rooty;
+            p[rooty]--;
+        }
+    }
+}
+
+// 秩为树的大小
+void Union(int x,int y) {
+    int rootx = Find(x);
+    int rooty = Find(y);
+    if(rootx != rooty) {
+        if(p[rootx] < p[rooty]) {
+            p[rootx] += p[rooty];
+            p[rooty] = rootx;
+        } else {
+            p[rooty] += p[rootx];
+            p[rootx] = rooty;
+        }
+    }
+}</code></pre>
             </div>
         </div>
         

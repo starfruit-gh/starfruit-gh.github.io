@@ -83,82 +83,295 @@
             </div>
         </div>
         
-        <!-- 中间正文（整合图论完整笔记） -->
+        <!-- 中间正文 -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1 id="graph-overview">图 (Graph) —— 数据结构核心详解与Go语言实现</h1>
+                <h1 id="graph-overview">（六）图</h1>
                 
                 <h2 id="graph-definition">图的定义</h2>
-                <p>图(Graph)由两个集合构成，分别是顶点集合V和边集合E，记为 <strong>G = (V, E)</strong>。<br>
-                顶点集合 V = {A, B, C, D, E}，边集合 E = {(A,B), (A,C), (A,D), (B,C), (B,E), (C,D), (C,E)}。<br>
-                顶点集合不能为空，边集合可以为空。线性表可以是空表，树可以是空树，但图至少要有一个顶点。</p>
+                <p>图（Graph）：由两个集合 V 和 E 组成，记为 G = (V, E)。</p>
+				<ul>
+					<li>V 是顶点（Vertex）的有穷非空集合。</li>
+					<li>E 是边（Edge）的有穷集合。</li>
+				</ul>
+				<p>图的顶点集合不能为空，边集合可以为空。线性表可以是空表，树可以是空树，但图至少要有一个顶点。</p>
+				<ul>
+					<li>无向边：如果顶点 \(V_i\) 到 \(V_j\) 之间的边没有方向，则称这条边为无向边，用无序偶对 \((V_i,V_j)\) 来表示。</li>
+					<li>无向图：如果图中任意两个顶点之间的边都是无向边，则称该图为无向图。</li>
+					<li>有向边：如果从顶点 \(V_i\) 到 \(V_j\) 之间的边有方向，则称这条边为有向边，也称弧（Arc），用有序偶对 \(&lt;V_i,V_j&gt;\) 来表示，\(V_i\) 称为弧尾（Tail），\(V_j\) 称为弧头（Head）。</li>
+					<li>有向图：如果图中任意两个顶点之间的边都是有向边，则称该图为有向图。</li>
+				</ul>
+				<p>举个例子：</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/无向图.svg" alt="无向图">
+					<figcaption>图 无向图</figcaption>
+				</figure>
+				<ul>
+					<li>V = {A,B,C,D}</li>
+					<li>E = {(A,B),(A,C),(B,C),(B,D)}</li>
+					<li>无向图的边用圆括号表示，(A,B) 等同于 (B,A)。</li>
+				</ul>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/有向图.svg" alt="有向图">
+					<figcaption>图 有向图</figcaption>
+				</figure>
+				<ul>
+					<li>V = {A,B,C,D}</li>
+					<li>E = {&lt;A,B&gt;,&lt;A,C&gt;,&lt;B,C&gt;,&lt;B,D&gt;}</li>
+					<li>有向图的边用尖括号表示，&lt;A,B&gt; 不等于 &lt;B,A&gt;。</li>
+				</ul>
                 
                 <h2 id="graph-terminology">图的术语</h2>
                 <ul class="graph-term-list">
-                    <li><strong>无向图</strong>：每条边都是无方向的。</li>
-                    <li><strong>有向图</strong>：每条边都是有方向的。</li>
-                    <li><strong>完全图</strong>：任意两个点之间都有一条边相连。</li>
-                    <li><strong>稀疏图</strong>：有很少边或弧的图（e &lt; n log n）。</li>
-                    <li><strong>稠密图</strong>：有较多边或弧的图。</li>
-                    <li><strong>网</strong>：边/弧带权的图。</li>
-                    <li><strong>邻接</strong>：有边/弧相连的两个顶点之间的关系。</li>
-                    <li><strong>关联(依附)</strong>：边/弧与顶点之间的关系。</li>
-                    <li><strong>顶点的度</strong>：与该顶点相关联的边的数目，记为 TD(V)。在有向图中，顶点的度等于入度与出度之和。顶点v的入度是以v为终点的有向边的条数，记作 ID(V)；出度是以v为始点的有向边的条数，记作 OD(V)。</li>
-                    <li><strong>路径</strong>：接续的边构成的顶点序列。</li>
-                    <li><strong>路径长度</strong>：路径上边或弧的数目/权值之和。</li>
-                    <li><strong>回路(环)</strong>：第一个顶点和最后一个顶点相同的路径。</li>
-                    <li><strong>简单路径</strong>：除路径起点和终点可以相同外，其余顶点均不相同的路径。</li>
-                    <li><strong>简单回路(简单环)</strong>：除路径起点和终点相同外，其余顶点均不相同的路径。</li>
-                    <li><strong>权与网</strong>：图中边或弧所具有的相关数称为权，带权的图称为网。</li>
-                    <li><strong>连通图 (强连通图)</strong>：在无(有)向图 G = (V, {E}) 中，若对任何两个顶点 v、u 都存在从 v 到 u 的路径，则称 G 是连通图（强连通图）。</li>
-                    <li><strong>连通分量（强连通分量）</strong>：无向图G的极大连通子图称为G的连通分量；有向图G的极大强连通子图称为G的强连通分量。</li>
-                    <li><strong>生成树</strong>：包含无向图G所有顶点的极小连通子图。</li>
-                    <li><strong>生成森林</strong>：对非连通图，由各个连通分量的生成树的集合。</li>
+					<figure>
+						<img src="/assets/images/posts/data-structure/graph/非简单图.svg" alt="非简单图">
+						<figcaption>图 非简单图</figcaption>
+					</figure>
+                    <li><strong>简单图</strong>：在图中，若不存在顶点到其自身的边，且同一条边不重复出现，则称这样的图为简单图。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/无向完全图.svg" alt="无向完全图">
+						<figcaption>图 无向完全图</figcaption>
+					</figure>
+					<li><strong>无向完全图</strong>：在无向图中，如果任意两个顶点之间都存在边，则称该图为无向完全图。含有 n 个顶点的无向完全图有 \(\frac{n(n-1)}{2}\) 条边。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/有向完全图.svg" alt="有向完全图">
+						<figcaption>图 有向完全图</figcaption>
+					</figure>
+					<li><strong>有向完全图</strong>：在有向图中，如果任意两个顶点之间都存在方向相反的两条弧，则称该图为有向完全图。含有 n 个顶点的有向完全图有 \(n(n-1)\) 条边。</li>
+					<figure>
+						<img src="/assets/images/posts/data-structure/graph/稀疏图和稠密图.svg" alt="稀疏图和稠密图">
+						<figcaption>图 稀疏图和稠密图</figcaption>
+					</figure>
+					<li><strong>稀疏图和稠密图</strong>：有很少条边或弧的图称为稀疏图，反之称为稠密图。这里稀疏和稠密是模糊的概念，都是相对而言的（例如 \(e < \log_2 n\)）。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/带权无向图和带权有向图.svg" alt="带权无向图和带权有向图">
+						<figcaption>图 带权无向图和带权有向图</figcaption>
+					</figure>
+					<li><strong>权和网</strong>：图的每条边可以标上具有某种含义的数值，该数值称为该边上的权。这些权可以表示从一个顶点到另一个顶点的距离或耗费。这种带权的图通常称为网。</li>
+                     <figure>
+						<img src="/assets/images/posts/data-structure/graph/子图.svg" alt="子图">
+						<figcaption>图 子图</figcaption>
+					</figure>
+					<li><strong>子图</strong>：假设有两个图 \(G = (V, E)\) 和 \(G' = (V', E')\)，如果 \(V' \subseteq V\) 且 \(E' \subseteq E\)，则称 \(G'\) 为 \(G\) 的子图。</li>
+					<figure>
+						<img src="/assets/images/posts/data-structure/graph/邻接.svg" alt="邻接">
+						<figcaption>图 邻接</figcaption>
+					</figure>
+					<li><strong>邻接</strong>：有边/弧相连的两个顶点之间的关系。</li>
+					<ul>
+						<li>在无向图中，如果图中存在边 \((v_i, v_j)\)，则称顶点 \(v_i\) 和 \(v_j\) 互为邻接点。</li>
+						<li>在有向图中，如果图中存在边 \(&lt;v_i, v_j&gt;\)，则称 \(v_i\) 邻接到 \(v_j\)，\(v_j\) 邻接自 \(v_i\)。</li>
+					</ul>
+					<figure>
+						<img src="/assets/images/posts/data-structure/graph/依附（关联）.svg" alt="依附（关联）">
+						<figcaption>图 依附（关联）</figcaption>
+					</figure>
+                    <li><strong>依附(关联)</strong>：边/弧与顶点之间的关系。</li>
+					<ul>
+						<li>如果图中存在边 \((v_i, v_j)\) 或 \(&lt;v_i, v_j&gt;\)，则称边 \((v_i, v_j)\) 或 \(&lt;v_i, v_j&gt;\) 依附于顶点 \(v_i\) 和 \(v_j\)，或者说边 \((v_i, v_j)\) 或 \(&lt;v_i, v_j&gt;\) 与顶点 \(v_i\) 和 \(v_j\) 相关联。</li>
+					</ul>
+					<div style="display: flex; gap: 10px; align-items: center;">
+						<figure>
+							<img src="/assets/images/posts/data-structure/graph/无向图的度.svg" alt="无向图的度">
+							<figcaption>图 无向图的度</figcaption>
+						</figure>
+						<figure>
+							<img src="/assets/images/posts/data-structure/graph/有向图的度.svg" alt="有向图的度">
+							<figcaption>图 有向图的度</figcaption>
+						</figure>
+					</div>
+                    <li><strong>度、入度、出度</strong>：顶点 \(ν\) 的度是指和 \(ν\) 相关联的边的数目，记为 \(TD(V)\)。在有向图中，顶点 \(v\) 的度分为入度和出度。入度是以顶点 \(v\) 为头的弧的数目，记为 \(ID(v)\)；出度是以顶点 \(v\) 为尾的弧的数目，记为 \(OD(v)\)。顶点 \(v\) 的度为 \(TD(v) = ID(v) + OD(v)\)。一般地，如果顶点 \(v_i\) 的度记为 \(TD(v_i)\)，那么一个有 \(n\) 个顶点，\(e\) 条边的图，满足：\(e = \frac{1}{2} \sum\limits_{i=1}^{n} TD(v_i)\)。</li>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+						<figure>
+							<img src="/assets/images/posts/data-structure/graph/无向图的路径.svg" alt="无向图的路径">
+							<figcaption>图 无向图的路径</figcaption>
+						</figure>
+						<figure>
+							<img src="/assets/images/posts/data-structure/graph/有向图的路径.svg" alt="有向图的路径">
+							<figcaption>图 有向图的路径</figcaption>
+						</figure>
+					</div>
+					<li><strong>路径</strong>：在无向图中，从顶点 \(v\) 到顶点 \(v'\) 的路径是一个顶点序列 \((v = v_{i,0},v_{i,1},...,v_{i,m} = v')\)，其中 \((v_{i,j-1}, v_{i,j}) \in E\)，\(1 \le j \le m\)。如果 \(G\) 是有向图，则路径也是有向的，顶点序列应满足\(&ltv_{i,j-1}, v_{i,j}&gt \in E\)，\(1 \le j \le m\)。树中根结点到任意结点的路径是唯一的，但是图中顶点与顶点之间的路径却是不唯一的。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/路径长度.svg" alt="路径长度">
+						<figcaption>图 路径长度</figcaption>
+					</figure>
+					<li><strong>路径长度</strong>：路径上边或弧的数目/权值之和。例如，对于上图路径 (A,C,B,D)，其不带权路径长度为：3，带权路径长度为：12。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/回路或环.svg" alt="回路或环">
+						<figcaption>图 回路或环</figcaption>
+					</figure>
+					<li><strong>回路或环</strong>：第一个顶点和最后一个顶点相同的路径称为回路或环。例如，上图 (A,C,B,A) 就是一个回路或环。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/简单路径.svg" alt="简单路径">
+						<figcaption>图 简单路径</figcaption>
+					</figure>
+					<li><strong>简单路径</strong>：序列中顶点不重复出现的路径称为简单路径。例如，上图 (A,C,B,D) 就是一个简单路径。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/简单回路或简单环.svg" alt="简单回路或简单环">
+						<figcaption>图 简单回路或简单环</figcaption>
+					</figure>
+					<li><strong>简单回路或简单环</strong>：除了第一个顶点和最后一个顶点之外，其余顶点不重复出现的回路，称为简单回路或简单环。例如，上图 (A,C,B,A) 就是一个简单回路或简单环。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/连通图与连通分量.svg" alt="连通图与连通分量">
+						<figcaption>图 连通图与连通分量</figcaption>
+					</figure>
+					<figure>
+						<img src="/assets/images/posts/data-structure/graph/非连通图与连通分量.svg" alt="非连通图与连通分量">
+						<figcaption>图 非连通图与连通分量</figcaption>
+					</figure>
+					<li><strong>连通、连通图和连通分量</strong>：在无向图 \(G\) 中，如果从顶点 \(v\) 到顶点 \(v'\) 有路径，则称 \(v\) 和 \(v'\) 是连通的。 如果对于图中任意两个顶点 \(v_i、v_j \in V\)，\(v_i\) 和 \(v_j\) 都是连通的，则称 \(G\) 是连通图。无向图中的极大连通子图称为连通分量。所谓极大连通子图就是图中含有极大顶点数的一个连通子图，这个子图不能再加入任何一个顶点，否则就会导致子图不再连通。对于连通图，只有一个连通分量(即它自己)；而对于非连通图，一定有多个连通分量。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/强连通图与强连通分量.svg" alt="强连通图与强连通分量">
+						<figcaption>图 强连通图与强连通分量</figcaption>
+					</figure>
+					<figure>
+						<img src="/assets/images/posts/data-structure/graph/非强连通图与强连通分量.svg" alt="非强连通图与强连通分量">
+						<figcaption>图 非强连通图与强连通分量</figcaption>
+					</figure>
+					<li><strong>强连通图和强连通分量</strong>：在有向图 \(G\) 中，如果对于每一对 \(v_i, v_j \in V,v_i \neq v_j\)，从 \(v_i\) 到 \(v_j\) 和从 \(v_j\) 到 \(v_i\) 都存在路径，则称 \(G\) 是强连通图。有向图中的极大强连通子图称作有向图的强连通分量。</li>
+                    <figure>
+						<img src="/assets/images/posts/data-structure/graph/生成树.svg" alt="生成树">
+						<figcaption>图 生成树</figcaption>
+					</figure>
+					<li><strong>极小连通子图和生成树</strong>：所谓极小连通子图就是图中含有极小边数的一个连通子图，这个子图不能再删除任何一条边，否则就会导致子图不再连通。包含连通图 \(G\) 所有顶点的极小连通子图称为 \(G\) 的生成树。</li>
+					<ul>
+						<li>生成树是相对于连通图而言的，如果图都不连通，那么就无法生成一棵连通所有点的树。</li>
+						<li>对于有 n 个结点的图，它的生成树只能有 n-1 条边。并且生成树还要连通所有的点，不能有环。</li>
+					</ul>
+					<figure>
+						<img src="/assets/images/posts/data-structure/graph/生成森林.svg" alt="生成森林">
+						<figcaption>图 生成森林</figcaption>
+					</figure>
+                    <li><strong>有向树和生成森林</strong>：有一个顶点的入度为 0，其余顶点的入度均为 1 的有向图称为有向树。一个有向图的生成森林是由若干棵有向树组成，含有图中全部顶点，但只有足以构成若干棵不相交的有向树的弧。</li>
                 </ul>
                 
-                <h2 id="graph-adt">图的抽象数据类型 (ADT)</h2>
-                <pre><code class="language-plaintext">ADT Graph {
-    数据对象V：具有相同特性的数据元素的集合，称为顶点集。
-    数据关系R：
-        R={VR}
-        VR={&lt;v,w&gt; | v,w∈V ∧ p(v,w) , &lt;v,w&gt;表示从v到w的弧，P(v,w)定义了弧&lt;v,w&gt;的信息}
+<h2 id="graph-adt">图的抽象数据类型</h2>
+<pre><code class="language-cpp">ADT Graph{
+    数据对象：V 是具有相同特性的数据元素的集合，称为顶点集。
+    数据关系：
+        R = {VR}
+        VR = {&ltv, w&gt; v, w ∈ V 且 P(v, w) &ltv, w&gt; 表示从 v 到 w 的弧，
+        谓词 P(v, w) 定义了弧 &ltv, w&gt; 的意义或信息}
     基本操作：
-        CreateGraph(&G,V,VR)   // 创建图
-        DFSTraverse(G)         // 深度优先遍历
-        BFSTraVerse(G)         // 广度优先遍历
-} ADT Graph</code></pre>
+    	// 1. 创建
+        CreateGraph(&G, V, vnum, VR, arnum)
+        // 2. 销毁
+        DestroyGraph(&G)
+        // 3. 获取顶点在图中的位置
+        LocateVex(G, u)
+        // 4. 获取顶点的值
+        GetVex(G, v, &value)
+        // 5. 修改顶点的值
+        PutVex(&G, v, value);
+        // 6. 获取顶点的第一个邻接顶点
+        FirstAdjVex(G, v)
+        // 7. 获取顶点的下一个邻接顶点
+        NextAdjVex(G, v, w)
+        // 8. 插入顶点
+        InsertVex(&G, v)
+        // 9. 删除顶点
+        DeleteVex(&G, v)
+        // 10. 插入弧
+        InsertArc(&G, v, w)
+        // 11. 删除弧
+        DeleteArc(&G, v, w)
+        // 12. 图的深度优先遍历
+        DFSTraverse(G)
+        // 13. 图的广度优先遍历
+        BFSTraverse(G)
+}ADT Graph</code></pre>
                 
                 <h2 id="graph-storage">图的存储结构</h2>
-                <h3 id="adjacency-matrix">邻接矩阵 (Adjacency Matrix)</h3>
-                <p>使用二维数组表示顶点之间相邻关系，示例矩阵（带权有向图，∞表示无穷大）：</p>
-                <div class="matrix-example">
-                    [
-                        [∞, 5, ∞, 7, ∞, ∞],
-                        [∞, ∞, 4, ∞, ∞, ∞],
-                        [8, ∞, ∞, ∞, ∞, 9],
-                        [∞, ∞, 5, ∞, ∞, 6],
-                        [∞, ∞, ∞, 5, ∞, ∞],
-                        [3, ∞, ∞, ∞, 1, ∞]
-                    ]
-                </div>
-                <pre><code class="language-c">#define MaxInt 32767                     // 极大值∞
+                <h3 id="adjacency-matrix">邻接矩阵</h3>
+                <p>邻接矩阵（Adjacency Matrix）：是用两个数组来表示图。一个一维数组存储图中顶点信息，一个二维数组（称为邻接矩阵）存储图中的边或弧的信息。</p>
+                <p>设图 \(G\) 有 \(n\) 个顶点，则邻接矩阵是一个 \(n \times n\)的方阵，定义为：</p>
+				<div>
+					$$
+					\text{arc}[i][j] = 
+					\begin{cases} 
+					1, & \text{若 } (v_i, v_j) \in E \text{ 或 } \langle v_i, v_j \rangle \in E \\
+					0, & \text{反之}
+					\end{cases}
+					$$
+				</div>
+				<p>举个例子：</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/无向图的邻接矩阵.png" alt="无向图的邻接矩阵">
+					<figcaption>图 无向图的邻接矩阵</figcaption>
+				</figure>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/有向图的邻接矩阵.png" alt="有向图的邻接矩阵">
+					<figcaption>图 有向图的邻接矩阵</figcaption>
+				</figure>
+				<p>设网 \(G\) 有 \(n\) 个顶点，则邻接矩阵是一个 \(n \times n\)的方阵，定义为：</p>
+				<div>
+					$$
+					\text{arc}[i][j] = 
+					\begin{cases}
+					W_{ij}, & \text{若 } (v_i, v_j) \in E \text{ 或 } \langle v_i, v_j \rangle \in E \\
+					0, & \text{若 } i = j \\
+					\infty, & \text{反之}
+					\end{cases}
+					$$
+				</div>
+				<p>举个例子：</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/网的邻接矩阵.png" alt="网的邻接矩阵">
+					<figcaption>图 网的邻接矩阵</figcaption>
+				</figure>
+<pre><code class="language-cpp">#define MaxInt 32767                     // 极大值∞
 #define MVNum 100                        // 最大顶点数
 typedef char VerTexType;                 // 顶点类型
-typedef int ArcType;                     // 权值类型
+typedef int ArcType;                     // 边的权值类型
+
 typedef struct {
     VerTexType vexs[MVNum];              // 顶点表
     ArcType arcs[MVNum][MVNum];          // 邻接矩阵
     int vexnum, arcnum;                  // 当前点数和边数
 } AMGraph;</code></pre>
+				<p>邻接矩阵的优缺点：</p>
+				<p>优点：</p>
+				<ul>
+					<li>便于判断两个顶点之间是否有边，即根据A[i][j] = 0 或 1 来判断。</li>
+					<li>便于计算各个顶点的度。对于无向图，邻接矩阵第 i 行元素之和就是顶点 i 的度；对于有向图，第 i 行元素之和就是顶点 i 的出度，第 i 列元素之和就是顶点 i 的入度。</li>
+				</ul>
+				<p>缺点：</p>
+				<ul>
+					<li>不便于增加和删除顶点。</li>
+					<li>不便于统计边的数目，需要扫描邻接矩阵所有元素才能统计完毕，时间复杂度为O(n²)。</li>
+					<li>空间复杂度高。如果是有向图，n 个顶点需要 n 个单元存储边。如果是无向图，因其邻接矩阵是对称的，所以对规模较大的邻接矩阵可以采用压缩存储的方法，仅存储下三角（或上三角）的元素，这样需要 n(n-1)/2 个单元即可。但无论以何种方式存储，邻接矩阵表示法的空间复杂度均为O(n²)，这对于稀疏图而言尤其浪费空间。</li>
+				</ul>
+				<p>现实中的图一般都是稀疏图，即边的数量 \(E\) 远小于顶点数量 \(V\) 的平方 \((E \ll V^2)\)，因此一般不使用邻接矩阵来表示图。但是由于邻接矩阵可以在 \(O(1)\) 时间内快速判断两个顶点之间是否有边以及边的权值，因此在图非常小、稠密图或者需要快速判断两点间是否有边的场景，邻接矩阵还是很有用的。</p>
                 
-                <h3 id="adjacency-list">邻接表 (Adjacency List)</h3>
-                <p>示例（顶点索引 0→V₁, 1→V₂, 2→V₃, 3→V₄, 4→V₅）：<br>
-                0号顶点（V₁）的边链：3 → 1 → ∧<br>
-                1号顶点（V₂）的边链：4 → 2 → 0 → ∧<br>
-                2号顶点（V₃）的边链：4 → 3 → 1 → ∧<br>
-                3号顶点（V₄）的边链：2 → 0 → ∧<br>
-                4号顶点（V₅）的边链：2 → 1 → ∧</p>
-                <pre><code class="language-c">#define MVNum 100
+                <h3 id="adjacency-list">邻接表</h3>
+				<p>邻接表（Adjacency List）：对图中每个顶点 \(v_i\) 建立一个单链表，把与 \(v_i\) 相邻接的顶点放在这个链表中。邻接表中每个单链表的第一个结点存放有关顶点的信息，把这一结点看成链表的表头，其余结点存放有关边的信息，这样邻接表便由两部分组成：表头结点表和边表。</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/表头结点和边结点.svg" alt="表头结点和边结点">
+					<figcaption>图 表头结点和边结点</figcaption>
+				</figure>
+				<ol>
+					<li>表头结点表：由所有表头结点以顺序结构的形式存储，以便可以随机访问任一顶点的边链表。表头结点包括数据域（data）和链域（firstarc）两部分。其中，数据域用于存储顶点 \(v_i\) 的名称或其他有关信息；链域用于指向链表中第一个结点（即与顶点 \(v_i\) 邻接的第一个邻接点）。</li>
+					<li>边表：由表示图中顶点间关系的 \(2n\) 个边链表组成。边链表中边结点包括邻接点域（adjvex）、数据域（info）和链域（nextarc）三部分。其中，邻接点域指示与顶点 \(v_i\) 邻接的点在图中的位置；数据域存储和边相关的信息，如权值等；链域指示与顶点 \(v_i\) 邻接的下一条边的结点。</li>
+				</ol>
+				<p>举个例子：</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/无向图的邻接表.svg" alt="无向图的邻接表">
+					<figcaption>图 无向图的邻接表</figcaption>
+				</figure>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/有向图的邻接表（方便确定出度）.svg" alt="有向图的邻接表（方便确定出度）">
+					<figcaption>图 有向图的邻接表（方便确定出度）</figcaption>
+				</figure>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/有向图的逆邻接表（方便确定入度）.svg" alt="有向图的逆邻接表（方便确定入度）">
+					<figcaption>图 有向图的逆邻接表（方便确定入度）</figcaption>
+				</figure>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/网的邻接表.svg" alt="网的邻接表">
+					<figcaption>图 网的邻接表</figcaption>
+				</figure>
+<pre><code class="language-cpp">#define MVNum 100
 typedef struct ArcNode {                 // 边结点
     int adjvex;
     struct ArcNode *nextarc;
@@ -174,431 +387,1403 @@ typedef struct {                         // 邻接表
     AdjList vertices;
     int vexnum, arcnum;
 } ALGraph;</code></pre>
-                
-                <h2 id="graph-traversal">图的遍历</h2>
-                <h3 id="dfs">深度优先遍历 (DFS)</h3>
-                <p>递归或借助栈实现，类似树的先序遍历。</p>
-                <h3 id="bfs">广度优先遍历 (BFS)</h3>
-                <p>借助队列实现，类似树的层序遍历。</p>
-                
-                <h2 id="graph-applications">图的应用</h2>
-                <h3 id="mst-prim">最小生成树 — Prim（普里姆）算法</h3>
-                <p>从某一顶点出发，每次选择代价最小的边扩展至顶点集，适用于稠密图。</p>
-                <h3 id="mst-kruskal">最小生成树 — Kruskal（克鲁斯卡尔）算法</h3>
-                <p>按权值递增顺序选择边，利用并查集避免环路，适用于稀疏图。</p>
-                <h3 id="shortest-dijkstra">最短路径 — Dijkstra（迪杰斯特拉）算法</h3>
-                <p>单源最短路径，贪心策略，要求权值非负。</p>
-                <h3 id="shortest-floyd">最短路径 — Floyd（弗洛伊德）算法</h3>
-                <p>多源最短路径，动态规划，可处理负权边（无负环）。</p>
-                <h3 id="topological-sort">拓扑排序 (Topological Sort)</h3>
-                <p>对有向无环图(DAG)顶点线性排序，常用Kahn算法（基于入度）或DFS。</p>
-                <h3 id="aoe-critical">AOE网和关键路径 (Critical Path)</h3>
-                <p>AOE网(Activity On Edge)中，关键路径是决定工程完工时间的最长路径，通过事件最早/最晚时间计算关键活动。</p>
-                
-                <h2 id="go-implementation">完整Go语言实现：图的基础算法集</h2>
-                <p>以下代码实现了无向/有向图的构建、DFS/BFS、Prim/Kruskal最小生成树、Dijkstra/Floyd最短路径、拓扑排序及AOE关键路径，并包含完整测试用例。</p>
-                <pre><code class="language-go">package main
+				<p>邻接表的优缺点：</p>
+				<p>优点：</p>
+				<ul>
+					<li>便于增加和删除顶点。</li>
+					<li>便于统计边的数目，按顶点表顺序扫描所有边表可得到边的数目，时间复杂度为 \(O(n+e)\)。</li>
+					<li> 空间效率高。对于一个具有 \(n\) 个顶点 \(e\) 条边的图 \(G\)，若 \(G\) 是无向图，则在其邻接表表示中有 \(n\) 个顶点表结点和 \(2e\) 个边表结点；若 \(G\) 是有向图，则在它的邻接表表示或逆邻接表表示中均有 \(n\) 个顶点表结点和 \(e\) 个边表结点。因此，邻接表或逆邻接表表示的空间复杂度为 \(O(n+e)\)，适合表示稀疏图。对于稠密图，考虑到邻接表中要附加链域，因此常采取邻接矩阵表示法。</li>
+				</ul>
+                <p>缺点：</p>
+                <ul>
+					<li>不便于判断顶点之间是否有边，要判定 \(v_i\) 和 \(v_j\) 之间是否有边，就需扫描第 \(i\) 个边表，最坏情况下要耗费 \(O(n)\) 时间。</li>
+					<li>不便于计算有向图各个顶点的度。对于无向图，在邻接表表示中顶点 \(v_i\) 的度是第 \(i\) 个边表中的结点个数。在有向图的邻接表中，第 \(i\) 个边表上的结点个数是顶点 \(v_i\) 的出度，但求 \(v_i\) 的入度较困难，需遍历各顶点的边表。若有向图采用逆邻接表表示，则与邻接表表示相反，求顶点的入度容易，而求顶点的出度较难。</li>
+				</ul>
 
-import (
-	"container/heap"
-	"fmt"
-	"math"
-)
+				<h3 id="cross-list">十字链表</h3>
+				<p>对于有向图来说，使用邻接表求顶点的出度容易，但求顶点的入度难，必须遍历整个图才能确定。使用逆邻接表则相反，求顶点的入度容易，而求顶点的出度较难。因此，可以把邻接表与逆邻接表结合起来，这就是十字链表。</p>
+                <figure>
+					<img src="/assets/images/posts/data-structure/graph/顶点结点和弧结点.svg" alt="顶点结点和弧结点">
+					<figcaption>图 顶点结点和弧结点</figcaption>
+				</figure>
+				<ol>
+					<li>顶点结点，由 3 个域组成：其中 data 域存储和顶点相关的信息，如顶点的名称等；firstin 和 firstout 为两个链域，分别指向以该顶点为弧头或弧尾的第一个弧结点。</li>
+					<li>弧结点，由 5 个域组成：其中尾域（tailvex）和头域（headvex）分别指示弧尾和弧头这两个顶点在图中的位置，链域 hlink 指向弧头相同的下一条弧，而链域 tlink 指向弧尾相同的下一条弧，info 域指向该弧的相关信息。弧头相同的弧在同一链表上，弧尾相同的弧也在同一链表上。</li>
+				</ol>
+				<p>举个例子：</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/有向图的十字链表.svg" alt="有向图的十字链表">
+					<figcaption>图 有向图的十字链表</figcaption>
+				</figure>
+<pre><code class="language-cpp">#define MAX_VERTEX_NUM 20
+typedef struct ArcBox {
+    int tailvex, headvex;          //该弧的尾和头顶点的位置
+    struct ArcBox *hlink, *tlink;  //分别为弧头相同和弧尾相同的弧的链域
+    InfoType *info;                //该弧相关信息的指针
+} ArcBox;
 
-// ---------------------------- 图的基础定义 ----------------------------
+typedef struct VexNode {
+    VertexType data;
+    ArcBox *firstin, *firstout;    //分别指向该顶点第一条入弧和出弧
+} VexNode;
 
-// Edge 表示图中的边
-type Edge struct {
-	to     int // 目标顶点
-	weight int // 边的权重（无权图可设为1）
-}
+typedef struct {
+    VexNode xlist[MAX_VERTEX_NUM]; //表头向量
+    int vexnum, arcnum;            //有向图的当前顶点数和弧数
+} OLGraph;</code></pre>
 
-// Graph 表示图，使用邻接表存储
-type Graph struct {
-	adjacency map[int][]Edge // 邻接表：顶点 -> 边列表
-	vertices  map[int]bool   // 存储所有顶点
-}
+				<h3 id="adjacency-multilist">邻接多重表</h3>
+				<p>对于无向图来说，使用邻接表会出现每条边被重复存储两次的情况。这就导致要删除一条边时，需要找到这条边的两个边表结点进行操作，这是比较麻烦的。使用邻接多重表可以避免这个问题。</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/顶点结点和边结点.svg" alt="顶点结点和边结点">
+					<figcaption>图 顶点结点和边结点</figcaption>
+				</figure>
+				<ol>
+					<li>顶点结点，由 6 个域组成。其中，mark 为标志域，可用以标记该条边是否被搜索过；ivex 和 jvex 为该边依附的两个顶点在图中的位置；ilink 指向下一条依附于顶点 ivex 的边；jlink 指向下一条依附于顶点 jvex 的边，info 为指向和边相关的各种信息的指针域。</li>
+					<li>边结点，由 2 个域组成。其中，data 域存储和该顶点相关的信息，firstedge 域指示第一条依附于该顶点的边。</li>
+				</ol>
+				<p>举个例子：</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/无向图的邻接多重表.svg" alt="无向图的邻接多重表">
+					<figcaption>图 无向图的邻接多重表</figcaption>
+				</figure>
+<pre><code class="language-cpp">#define MAX_VERTEX_NUM  20
+typedef enum{unvisited,visited} VisitIf;
+typedef struct EBox {
+    VisitIf mark;                  //访问标记
+    int ivex, jvex;                //该边依附的两个顶点的位置
+    struct EBox *ilink, *jlink;    //分别指向依附这两个顶点的下一条边
+    InfoType *info;                //该边信息指针
+} Ebox;
 
-// NewGraph 创建一个新的图
-func NewGraph() *Graph {
-	return &Graph{
-		adjacency: make(map[int][]Edge),
-		vertices:  make(map[int]bool),
-	}
-}
+typedef struct VexBox {
+    VertexType data;
+    EBox *firstedge;               //指向第一条依附该顶点的边
+} VexBox;
 
-// AddVertex 添加顶点
-func (g *Graph) AddVertex(v int) {
-	if !g.vertices[v] {
-		g.vertices[v] = true
-		g.adjacency[v] = []Edge{}
-	}
-}
+typedef struct{
+    VexBox adjmulist[MAX_VERTEX_NUM];
+    int vexnum, edgenum;           //无向图的当前顶点数和边数
+} AMLGraph;</code></pre>
 
-// AddEdge 添加有向边
-func (g *Graph) AddEdge(from, to, weight int) {
-	g.AddVertex(from)
-	g.AddVertex(to)
-	g.adjacency[from] = append(g.adjacency[from], Edge{to: to, weight: weight})
-}
+				<h2 id="graph-implementation-code">图的代码实现</h2>
+				<p>由于邻接矩阵仅适用于图非常小、稠密图或者需要快速判断两点间是否有边的场景，而十字链表专为有向图优化，邻接多重表专为无向图优化，因此在图的四种常见存储结构中，邻接表是最常用的。以下是基于邻接表的图的代码实现：</p>
 
-// AddUndirectedEdge 添加无向边
-func (g *Graph) AddUndirectedEdge(from, to, weight int) {
-	g.AddEdge(from, to, weight)
-	g.AddEdge(to, from, weight)
-}
+<h3 id="create-graph">创建</h3>
+<pre><code class="language-cpp">int LocateVex(ALGraph G, VerTexType u);
 
-// ---------------------------- 1. 深度优先遍历（DFS） ----------------------------
+bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int arnum) {
+    if (vnum > MVNum) return false;
+    G.vexnum = vnum;
+    G.arcnum = arnum;
 
-// DFS 深度优先遍历（递归实现）
-func (g *Graph) DFS(start int) []int {
-	visited := make(map[int]bool)
-	result := []int{}
-	var dfs func(v int)
-	dfs = func(v int) {
-		if visited[v] {
-			return
-		}
-		visited[v] = true
-		result = append(result, v)
-		for _, edge := range g.adjacency[v] {
-			dfs(edge.to)
-		}
-	}
-	dfs(start)
-	return result
-}
+    // 初始化顶点
+    for (int i = 0; i < G.vexnum; ++i) {
+        G.vertices[i].data = V[i];
+        G.vertices[i].firstarc = NULL;
+    }
 
-// DFSIterative 深度优先遍历（非递归实现，使用栈）
-func (g *Graph) DFSIterative(start int) []int {
-	visited := make(map[int]bool)
-	stack := []int{start}
-	result := []int{}
-	for len(stack) > 0 {
-		v := stack[len(stack)-1]
-		stack = stack[:len(stack)-1]
-		if !visited[v] {
-			visited[v] = true
-			result = append(result, v)
-			for i := len(g.adjacency[v]) - 1; i >= 0; i-- {
-				edge := g.adjacency[v][i]
-				if !visited[edge.to] {
-					stack = append(stack, edge.to)
-				}
-			}
-		}
-	}
-	return result
-}
+    // 构造弧（头插法）
+    for (int k = 0; k < G.arcnum; ++k) {
+        VerTexType v1 = VR[k][0];  // 弧尾顶点
+        VerTexType v2 = VR[k][1];  // 弧头顶点
+        OtherInfo info = VR[k][2]; // 弧附加信息
+        int i = LocateVex(G, v1);
+        int j = LocateVex(G, v2);
+        if (i == -1 || j == -1) return false;
 
-// ---------------------------- 2. 广度优先遍历（BFS） ----------------------------
+        // 生成边结点并插入v的边链表
+        ArcNode *p = new ArcNode;
+        p->adjvex = j;
+        p->info = info;
+        p->nextarc = G.vertices[i].firstarc;
+        G.vertices[i].firstarc = p;
 
-// BFS 广度优先遍历（使用队列）
-func (g *Graph) BFS(start int) []int {
-	visited := make(map[int]bool)
-	queue := []int{start}
-	visited[start] = true
-	result := []int{}
-	for len(queue) > 0 {
-		v := queue[0]
-		queue = queue[1:]
-		result = append(result, v)
-		for _, edge := range g.adjacency[v] {
-			if !visited[edge.to] {
-				visited[edge.to] = true
-				queue = append(queue, edge.to)
-			}
-		}
-	}
-	return result
-}
-
-// ---------------------------- 3. 最小生成树：Prim算法 ----------------------------
-
-type PrimItem struct {
-	key    int
-	vertex int
-}
-type PrimHeap []PrimItem
-func (h PrimHeap) Len() int           { return len(h) }
-func (h PrimHeap) Less(i, j int) bool { return h[i].key < h[j].key }
-func (h PrimHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-func (h *PrimHeap) Push(x interface{}) { *h = append(*h, x.(PrimItem)) }
-func (h *PrimHeap) Pop() interface{} {
-	old := *h; n := len(old); x := old[n-1]; *h = old[0:n-1]; return x
-}
-
-// Prim 普里姆算法，返回MST的父节点映射和总权重
-func (g *Graph) Prim(start int) (map[int]int, int) {
-	key := make(map[int]int)
-	parent := make(map[int]int)
-	inMST := make(map[int]bool)
-	for v := range g.vertices {
-		key[v] = math.MaxInt32
-		parent[v] = -1
-	}
-	key[start] = 0
-	h := &PrimHeap{}
-	heap.Init(h)
-	heap.Push(h, PrimItem{key: 0, vertex: start})
-	totalWeight := 0
-	for h.Len() > 0 {
-		item := heap.Pop(h).(PrimItem)
-		u := item.vertex
-		if inMST[u] { continue }
-		inMST[u] = true
-		totalWeight += key[u]
-		for _, edge := range g.adjacency[u] {
-			v := edge.to
-			if !inMST[v] && edge.weight < key[v] {
-				key[v] = edge.weight
-				parent[v] = u
-				heap.Push(h, PrimItem{key: edge.weight, vertex: v})
-			}
-		}
-	}
-	return parent, totalWeight
-}
-
-// ---------------------------- 4. 最小生成树：Kruskal算法 ----------------------------
-
-type UnionFind struct {
-	parent []int
-	rank   []int
-}
-func NewUnionFind(size int) *UnionFind {
-	p := make([]int, size)
-	r := make([]int, size)
-	for i := range p { p[i] = i; r[i] = 1 }
-	return &UnionFind{parent: p, rank: r}
-}
-func (uf *UnionFind) Find(x int) int {
-	if uf.parent[x] != x {
-		uf.parent[x] = uf.Find(uf.parent[x])
-	}
-	return uf.parent[x]
-}
-func (uf *UnionFind) Union(x, y int) bool {
-	rx, ry := uf.Find(x), uf.Find(y)
-	if rx == ry { return false }
-	if uf.rank[rx] < uf.rank[ry] {
-		uf.parent[rx] = ry
-	} else if uf.rank[rx] > uf.rank[ry] {
-		uf.parent[ry] = rx
-	} else {
-		uf.parent[ry] = rx
-		uf.rank[rx]++
-	}
-	return true
-}
-
-type KruskalEdge struct { from, to, weight int }
-func (g *Graph) Kruskal() ([]KruskalEdge, int) {
-	edges := []KruskalEdge{}
-	for from, adj := range g.adjacency {
-		for _, e := range adj {
-			edges = append(edges, KruskalEdge{from: from, to: e.to, weight: e.weight})
-		}
-	}
-	for i := 0; i < len(edges); i++ {
-		for j := i+1; j < len(edges); j++ {
-			if edges[i].weight > edges[j].weight {
-				edges[i], edges[j] = edges[j], edges[i]
-			}
-		}
-	}
-	maxV := 0
-	for v := range g.vertices { if v > maxV { maxV = v } }
-	uf := NewUnionFind(maxV+1)
-	mst := []KruskalEdge{}
-	total := 0
-	for _, e := range edges {
-		if uf.Union(e.from, e.to) {
-			mst = append(mst, e)
-			total += e.weight
-			if len(mst) == len(g.vertices)-1 { break }
-		}
-	}
-	return mst, total
-}
-
-// ---------------------------- 5. 最短路径：Dijkstra算法 ----------------------------
-
-type DijkstraItem struct { distance int; vertex int }
-type DijkstraHeap []DijkstraItem
-func (h DijkstraHeap) Len() int            { return len(h) }
-func (h DijkstraHeap) Less(i, j int) bool  { return h[i].distance < h[j].distance }
-func (h DijkstraHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
-func (h *DijkstraHeap) Push(x interface{}) { *h = append(*h, x.(DijkstraItem)) }
-func (h *DijkstraHeap) Pop() interface{} {
-	old := *h; n := len(old); x := old[n-1]; *h = old[0:n-1]; return x
-}
-func (g *Graph) Dijkstra(start int) (map[int]int, map[int]int) {
-	dist := make(map[int]int)
-	parent := make(map[int]int)
-	visited := make(map[int]bool)
-	for v := range g.vertices {
-		dist[v] = math.MaxInt32
-		parent[v] = -1
-	}
-	dist[start] = 0
-	pq := &DijkstraHeap{}
-	heap.Init(pq)
-	heap.Push(pq, DijkstraItem{distance: 0, vertex: start})
-	for pq.Len() > 0 {
-		item := heap.Pop(pq).(DijkstraItem)
-		u := item.vertex
-		if visited[u] { continue }
-		visited[u] = true
-		for _, edge := range g.adjacency[u] {
-			v := edge.to
-			if dist[u]+edge.weight < dist[v] {
-				dist[v] = dist[u] + edge.weight
-				parent[v] = u
-				heap.Push(pq, DijkstraItem{distance: dist[v], vertex: v})
-			}
-		}
-	}
-	return dist, parent
-}
-
-// ---------------------------- 6. 最短路径：Floyd算法 ----------------------------
-func (g *Graph) Floyd() [][]int {
-	maxV := 0
-	for v := range g.vertices { if v > maxV { maxV = v } }
-	n := maxV + 1
-	dist := make([][]int, n)
-	for i := range dist {
-		dist[i] = make([]int, n)
-		for j := range dist[i] {
-			if i == j { dist[i][j] = 0 } else { dist[i][j] = math.MaxInt32 }
-		}
-	}
-	for from, edges := range g.adjacency {
-		for _, e := range edges {
-			if e.weight < dist[from][e.to] { dist[from][e.to] = e.weight }
-		}
-	}
-	for k := 0; k < n; k++ {
-		for i := 0; i < n; i++ {
-			for j := 0; j < n; j++ {
-				if dist[i][k] != math.MaxInt32 && dist[k][j] != math.MaxInt32 && dist[i][k]+dist[k][j] < dist[i][j] {
-					dist[i][j] = dist[i][k] + dist[k][j]
-				}
-			}
-		}
-	}
-	return dist
-}
-
-// ---------------------------- 7. 拓扑排序 Kahn算法 ----------------------------
-func (g *Graph) TopologicalSort() ([]int, bool) {
-	inDeg := make(map[int]int)
-	for v := range g.vertices { inDeg[v] = 0 }
-	for _, adj := range g.adjacency {
-		for _, e := range adj { inDeg[e.to]++ }
-	}
-	queue := []int{}
-	for v, d := range inDeg { if d == 0 { queue = append(queue, v) } }
-	res := []int{}
-	for len(queue) > 0 {
-		u := queue[0]; queue = queue[1:]
-		res = append(res, u)
-		for _, e := range g.adjacency[u] {
-			inDeg[e.to]--
-			if inDeg[e.to] == 0 { queue = append(queue, e.to) }
-		}
-	}
-	if len(res) != len(g.vertices) { return res, false }
-	return res, true
-}
-
-// ---------------------------- 8. AOE关键路径 ----------------------------
-type AOEActivity struct { from, to, weight int }
-func (g *Graph) CriticalPath() ([]AOEActivity, map[int]int, map[int]int) {
-	topo, ok := g.TopologicalSort()
-	if !ok {
-		fmt.Println("AOE网有环，无法计算关键路径")
-		return nil, nil, nil
-	}
-	ve := make(map[int]int)
-	for _, u := range topo {
-		ve[u] = 0
-	}
-	for _, u := range topo {
-		for _, e := range g.adjacency[u] {
-			if ve[u]+e.weight > ve[e.to] {
-				ve[e.to] = ve[u] + e.weight
-			}
-		}
-	}
-	maxVe := 0
-	for _, v := range topo { if ve[v] > maxVe { maxVe = ve[v] } }
-	vl := make(map[int]int)
-	for _, v := range topo { vl[v] = maxVe }
-	for i := len(topo)-1; i >= 0; i-- {
-		u := topo[i]
-		for _, e := range g.adjacency[u] {
-			if vl[e.to]-e.weight < vl[u] {
-				vl[u] = vl[e.to] - e.weight
-			}
-		}
-	}
-	critical := []AOEActivity{}
-	for u, edges := range g.adjacency {
-		for _, e := range edges {
-			if ve[u] == vl[e.to]-e.weight {
-				critical = append(critical, AOEActivity{from: u, to: e.to, weight: e.weight})
-			}
-		}
-	}
-	return critical, ve, vl
-}
-
-// ---------------------------- 测试用例 ----------------------------
-func main() {
-	fmt.Println("=== 图的遍历测试 ===")
-	g1 := NewGraph()
-	g1.AddEdge(0, 1, 1); g1.AddEdge(0, 2, 1); g1.AddEdge(1, 3, 1); g1.AddEdge(2, 3, 1); g1.AddEdge(3, 4, 1)
-	fmt.Println("DFS(0):", g1.DFS(0))
-	fmt.Println("BFS(0):", g1.BFS(0))
-
-	fmt.Println("\n=== 最小生成树测试 ===")
-	g2 := NewGraph()
-	g2.AddUndirectedEdge(0,1,4); g2.AddUndirectedEdge(0,7,8); g2.AddUndirectedEdge(1,2,8); g2.AddUndirectedEdge(1,7,11)
-	g2.AddUndirectedEdge(2,3,7); g2.AddUndirectedEdge(2,5,4); g2.AddUndirectedEdge(2,8,2); g2.AddUndirectedEdge(3,4,9)
-	g2.AddUndirectedEdge(3,5,14); g2.AddUndirectedEdge(4,5,10); g2.AddUndirectedEdge(5,6,2); g2.AddUndirectedEdge(6,7,1)
-	g2.AddUndirectedEdge(6,8,6); g2.AddUndirectedEdge(7,8,7)
-	_, primTotal := g2.Prim(0)
-	fmt.Println("Prim算法总权重:", primTotal)
-	kruskalMST, kruskalTotal := g2.Kruskal()
-	fmt.Println("Kruskal算法MST边数:", len(kruskalMST), "总权重:", kruskalTotal)
-
-	fmt.Println("\n=== 最短路径测试 ===")
-	g3 := NewGraph()
-	g3.AddEdge(0,1,4); g3.AddEdge(0,2,2); g3.AddEdge(1,2,1); g3.AddEdge(1,3,5); g3.AddEdge(2,3,8); g3.AddEdge(2,4,10); g3.AddEdge(3,4,2)
-	dist, _ := g3.Dijkstra(0)
-	fmt.Println("Dijkstra距离:", dist)
-	floyd := g3.Floyd()
-	fmt.Println("Floyd[0][4]:", floyd[0][4])
-
-	fmt.Println("\n=== 拓扑排序测试 ===")
-	g4 := NewGraph()
-	g4.AddEdge(0,1,1); g4.AddEdge(0,2,1); g4.AddEdge(1,3,1); g4.AddEdge(2,3,1); g4.AddEdge(3,4,1)
-	topo, ok := g4.TopologicalSort()
-	fmt.Println("拓扑序列:", topo, "无环:", ok)
-
-	fmt.Println("\n=== 关键路径测试 ===")
-	g5 := NewGraph()
-	g5.AddEdge(0,1,6); g5.AddEdge(0,2,4); g5.AddEdge(0,3,5); g5.AddEdge(1,4,1); g5.AddEdge(2,4,1); g5.AddEdge(3,5,2)
-	g5.AddEdge(4,6,9); g5.AddEdge(4,7,7); g5.AddEdge(5,7,4); g5.AddEdge(6,8,2); g5.AddEdge(7,8,4)
-	critical, ve, vl := g5.CriticalPath()
-	fmt.Println("ve:", ve, "vl:", vl)
-	fmt.Println("关键活动:", critical)
+        // 【无向图专用】取消注释以添加反向弧&ltv2, v1&gt;（无向图就是每条边都是两条相反方向的弧的有向图）
+        /*
+        ArcNode *q = new ArcNode;
+        q->adjvex = i;
+        q->info = info;
+        q->nextarc = G.vertices[j].firstarc;
+        G.vertices[j].firstarc = q;
+        */
+    }
+    return true;
 }</code></pre>
+
+<h3 id="destroy-graph">销毁</h3>
+<pre><code class="language-cpp">void DestroyGraph(ALGraph &G) {
+    ArcNode *p, *q;
+    for (int i = 0; i < G.vexnum; ++i) {
+        p = G.vertices[i].firstarc;
+        while (p) {
+            q = p->nextarc;
+            delete p;
+            p = q;
+        }
+        G.vertices[i].firstarc = NULL;
+    }
+    G.vexnum = 0;
+    G.arcnum = 0;
+}</code></pre>
+
+<h3 id="locate-vex">获取顶点在图中的位置</h3>
+<pre><code class="language-cpp">int LocateVex(ALGraph G, VerTexType u) {
+    for (int i = 0; i < G.vexnum; ++i) {
+        if (G.vertices[i].data == u) return i;
+    }
+    return -1;
+}</code></pre>
+
+<h3 id="get-vex">获取顶点的值</h3>
+<pre><code class="language-cpp">bool GetVex(ALGraph G, int v, VerTexType &value) {
+    if (v < 0 || v >= G.vexnum) return false;
+    value = G.vertices[v].data;
+    return true;
+}</code></pre>
+
+<h3 id="put-vex">修改顶点的值</h3>
+<pre><code class="language-cpp">bool PutVex(ALGraph &G, int v, VerTexType value) {
+    if (v < 0 || v >= G.vexnum) return false;
+    G.vertices[v].data = value;
+    return true;
+}</code></pre>
+
+<h3 id="first-adj-vex">获取顶点的第一个邻接顶点</h3>
+<pre><code class="language-cpp">int FirstAdjVex(ALGraph G, int v) {
+    if (v < 0 || v >= G.vexnum) return -1;
+    if (G.vertices[v].firstarc) {
+        return G.vertices[v].firstarc->adjvex;
+    }
+    return -1;
+}</code></pre>
+
+<h3 id="next-adj-vex">获取顶点的下一个邻接顶点</h3>
+<pre><code class="language-cpp">int NextAdjVex(ALGraph G, int v, int w) {
+    if (v < 0 || v >= G.vexnum) return -1;
+    ArcNode *p = G.vertices[v].firstarc;
+    while (p && p->adjvex != w) p = p->nextarc;
+    if (p && p->nextarc) return p->nextarc->adjvex;
+    return -1;
+}</code></pre>
+
+<h3 id="insert-vex">插入顶点</h3>
+<pre><code class="language-cpp">bool InsertVex(ALGraph &G, VerTexType v) {
+    if (G.vexnum >= MVNum) return false;
+    G.vertices[G.vexnum].data = v;
+    G.vertices[G.vexnum].firstarc = NULL;
+    G.vexnum++;
+    return true;
+}</code></pre>
+
+<h3 id="delete-vex">删除顶点</h3>
+<pre><code class="language-cpp">bool DeleteVex(ALGraph &G, VerTexType v) {
+    int pos = LocateVex(G, v);
+    if (pos == -1) return false;
+
+    // 1. 删除所有以该顶点为弧尾的边（出边），同时减少arcnum
+    ArcNode *p = G.vertices[pos].firstarc;
+    while (p) {
+        ArcNode *q = p->nextarc;
+        delete p;
+        p = q;
+        G.arcnum--;
+    }
+    G.vertices[pos].firstarc = NULL;
+
+    // 2. 删除所有以该顶点为弧头的边（入边），同时减少arcnum
+    for (int i = 0; i < G.vexnum; ++i) {
+        if (i == pos) continue;
+        ArcNode *prev = NULL;
+        p = G.vertices[i].firstarc;
+        while (p) {
+            if (p->adjvex == pos) {
+                if (prev) prev->nextarc = p->nextarc;
+                else G.vertices[i].firstarc = p->nextarc;
+                ArcNode *tmp = p;
+                p = p->nextarc;
+                delete tmp;
+                G.arcnum--;
+            } else {
+                prev = p;
+                p = p->nextarc;
+            }
+        }
+    }
+
+    // 3. 顶点数组前移（删除位置pos）
+    for (int i = pos + 1; i < G.vexnum; ++i) {
+        G.vertices[i - 1] = G.vertices[i];
+    }
+    G.vexnum--;
+
+    // 4. 更新所有边结点中的adjvex值（大于pos的索引减1）
+    for (int i = 0; i < G.vexnum; ++i) {
+        p = G.vertices[i].firstarc;
+        while (p) {
+            if (p->adjvex > pos) p->adjvex--;
+            p = p->nextarc;
+        }
+    }
+    return true;
+}</code></pre>
+
+<h3 id="insert-arc">插入弧</h3>
+<pre><code class="language-cpp">bool InsertArc(ALGraph &G, VerTexType v, VerTexType w, OtherInfo info) {
+    int i = LocateVex(G, v);
+    int j = LocateVex(G, w);
+    if (i == -1 || j == -1) return false;
+
+    // 检查弧是否已存在（可选）
+    ArcNode *p = G.vertices[i].firstarc;
+    while (p) {
+        if (p->adjvex == j) return false;
+        p = p->nextarc;
+    }
+
+    // 头插法插入新边结点
+    p = new ArcNode;
+    p->adjvex = j;
+    p->info = info;
+    p->nextarc = G.vertices[i].firstarc;
+    G.vertices[i].firstarc = p;
+    G.arcnum++;
+
+    // 【无向图专用】取消注释以添加反向弧&lt;w, v&gt;
+    /*
+    ArcNode *q = new ArcNode;
+    q->adjvex = i;
+    q->info = info;
+    q->nextarc = G.vertices[j].firstarc;
+    G.vertices[j].firstarc = q;
+    G.arcnum++;
+    */
+}</code></pre>
+
+<h3 id="delete-arc">删除弧</h3>
+<pre><code class="language-cpp">bool DeleteArc(ALGraph &G, VerTexType v, VerTexType w) {
+    int i = LocateVex(G, v);
+    int j = LocateVex(G, w);
+    if (i == -1 || j == -1) return false;
+
+    ArcNode *prev = NULL;
+    ArcNode *p = G.vertices[i].firstarc;
+    while (p && p->adjvex != j) {
+        prev = p;
+        p = p->nextarc;
+    }
+    if (!p) return false;
+    if (prev) prev->nextarc = p->nextarc;
+	else G.vertices[i].firstarc = p->nextarc;
+    delete p;
+    G.arcnum--;
+
+    // 【无向图专用】取消注释以删除反向弧&lt;w, v&gt;
+    /*
+    p = G.vertices[j].firstarc;
+    prev = NULL;
+    while (p && p->adjvex != i) {
+        prev = p;
+        p = p->nextarc;
+    }
+    if (!p) return false;
+    if (prev) prev->nextarc = p->nextarc;
+	else G.vertices[j].firstarc = p->nextarc;
+    delete p;
+    G.arcnum--;
+    */
+    return true;
+}</code></pre>
+
+                <h2 id="graph-traversal">图的遍历</h2>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/DFS.svg" alt="DFS" />
+					<figcaption>深度优先遍历</figcaption>
+				</figure>
+				<p>以上是图的深度优先遍历的示意图，其遍历顺序可能为：ABCDEFGHI。</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/BFS.svg" alt="BFS" />
+					<figcaption>广度优先遍历</figcaption>
+				</figure>
+				<p>以上是图的广度优先遍历的示意图，其遍历顺序可能为：A BF CDG EHI。</p>
+				<p>图的遍历算法的一般流程为：</p>
+				<ol>
+					<li>定义点集 \(X\) 为已经处理的点，点集 \(F\) 为已发现但尚未处理的点</li>
+					<li>初始化点集 \(X\) 为空，点集 \(F\) 只包含搜索的起点</li>
+					<li>只要点集 \(F\) 不为空，循环步骤 4~6：</li>
+					<ol start="4">
+						<li>从点集 \(F\) 中取出一个点 \(v\)</li>
+						<li>处理点 \(v\)，把点 \(v\) 加入点集 \(X\)</li>
+						<li>遍历 \(v\) 的出边，对于每个 \(v\) 的邻居，若既不在点集 \(X\) 中也不在点集 \(F\) 中，则将其加入点集 \(F\)</li>
+					</ol>
+					<li value="7">搜索结束，点集 \(X\) 里的点是搜索过的点</li>
+				</ol>
+				<p>以上流程最关键的就是步骤 4，也就是取出点 \(v\) 的方式，如果点集 \(F\) 是一个栈，那整个遍历过程就是深度优先遍历。如果点集 \(F\) 是一个队列，那整个遍历过程就是广度优先遍历。</p>
                 
-                <p>以上代码覆盖了图的核心算法，可直接运行验证。通过邻接表实现，支持有向/无向、带权图，提供了完整的测试案例。</p>
-            </div>
+				<h3 id="dfs">深度优先遍历 (DFS)</h3>
+				<p>深度优先遍历除了一般流程外，还可以通过递归实现。</p>
+				<p>递归实现的流程为：</p>
+				<ol>
+					<li>定义点集 \(X\) 为已经处理的点<del>，点集 \(F\) 为已发现但尚未处理的点</del></li>
+					<li>初始化点集 \(X\) 为空<del>，点集 \(F\) 只包含搜索的起点</del></li>
+					<li><span style="color: #4898d4;">递归搜索点 \(v\) (开始时搜索起点)：</span></li>
+					<ol start="4">
+						<li><del>从点集 \(F\) 中取出一个点 \(v\)</del></li>
+						<li>处理点 \(v\)，把点 \(v\) 加入点集 \(X\)</li>
+						<li>遍历 \(v\) 的出边，对于每个 \(v\) 的邻居，若<del>既</del>不在点集 \(X\) 中<del>也不在点集 \(F\) 中</del>，则<span style="color: #4898d4;">递归处理那个点</span></li>
+					</ol>
+					<li value="7">搜索结束，点集 \(X\) 里的点是搜索过的点</li>
+				</ol>
+				<p>其中，用栈实现和用递归实现的DFS会有小的差别：</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/DFS用栈和递归实现的差别的例子.svg" alt="DFS用栈和递归实现的差别的例子" />
+					<figcaption>DFS用栈和递归实现的差别的例子</figcaption>
+				</figure>
+				<p>对于以上实例，</p>
+				<ul>
+					<li>如果用栈实现，其遍历顺序不可能是：1234。因为 3 会被 1 先发现，3 不会被 2 先发现。</li>
+					<li>如果用递归实现，其遍历顺序有可能是：1234。</li>
+				</ul>
+<pre><code class="language-cpp">// DFS 递归实现
+void DFS(ALGraph G, int v, bool discovered[]) {
+    discovered[v] = true;
+    printf("%d ", v);
+    for (ArcNode *p = G.vertices[v].firstarc; p; p = p->nextarc) {
+        int w = p->adjvex;
+        if (!discovered[w]) {
+            DFS(G, w, discovered);
+        }
+    }
+}
+
+bool DFSTraverse(ALGraph G, VerTexType start) {
+    int startIdx = LocateVex(G, start);
+    if (startIdx == -1) return false;
+    bool *discovered = new bool[G.vexnum]();
+    DFS(G, startIdx, discovered);
+    delete[] discovered;
+    return true;
+}
+
+// DFS 栈实现
+bool DFSTraverse(ALGraph G, VerTexType start) {
+    int startIdx = LocateVex(G, start);
+    if (startIdx == -1) return false;
+
+    bool *discovered = new bool[G.vexnum]();
+
+    SeqStack F;
+    InitStack(F);
+
+    Push(F, startIdx);
+    discovered[startIdx] = true;
+    while (!IsEmpty(F)) {
+        int v = Top(F);
+        Pop(F);
+        printf("%d ", v);
+        ArcNode *p = G.vertices[v].firstarc;
+        while (p) {
+            if (!discovered[p->adjvex]) {
+                Push(F, p->adjvex);
+                discovered[p->adjvex] = true;
+            }
+            p = p->nextarc;
+        }
+    }
+    delete[] discovered;
+    return true; 
+}</code></pre>
+
+<h3 id="bfs">广度优先遍历 (BFS)</h3>
+<pre><code class="language-cpp">// BFS 队列实现
+bool BFSTraverse(ALGraph G, VerTexType start) {
+    int startIdx = LocateVex(G, start);
+    if (startIdx == -1) return false;
+ 
+    bool *discovered = new bool[G.vexnum]();
+ 
+    SeqQueue F;
+    InitQueue(F);
+ 
+    Enqueue(F, startIdx);
+    discovered[startIdx] = true;
+    while (!IsEmpty(F)) {
+        int v = GetHead(F);
+        Dequeue(F);
+        printf("%d ", v);
+        ArcNode *p = G.vertices[v].firstarc;
+        while (p) {
+            if (!discovered[p->adjvex]) {
+                Enqueue(F, p->adjvex);
+                discovered[p->adjvex] = true;
+            }
+            p = p->nextarc;
+        }
+    }
+    delete[] discovered;
+    return true; 
+}</code></pre>
+
+                <h2 id="graph-applications">图的应用</h2>
+                <h3 id="minimum-spanning-tree">最小生成树</h3>
+				<p>最小生成树（Minimum Spanning Tree，MST）：给定一个无向网，在该网的所有生成树中，使得各边的权值之和最小的那棵生成树称为该网的最小生成树。</p>
+				
+				<h4 id="prim-algorithm">Prim（普里姆）算法</h4>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/Prim（普里姆）算法.svg" alt="Prim（普里姆）算法" />
+					<figcaption>Prim（普里姆）算法</figcaption>
+				</figure>
+                <p>Prim（普里姆）算法是一种加点法，适用于稠密图。</p>
+				<p>假设 \(N = (V, E)\)是一个无向网，\(U\) 是最小生成树的顶点集，\(TE\) 是最小生成树的边集，起初 \(U = \{\},TE = \{\}\)。假设 \(u_0(u_0 \in V)\) 是选中的第一个顶点。那么构建最小生成树的流程为：</p>
+				<ol>
+					<li>\(U = \{u_0\},TE = \{\}\)。</li>
+					<li>在所有 \(u \in U, v \in V - U\) 的边 \((u,v)\) 中，选择权值最小的边 \(u_0,v_0\) 加入集合 \(TE\)，同时把 \(v_0\) 加入集合 \(U\)。</li>
+					<blockquote> 
+						V-U 是剩余顶点集
+					</blockquote>
+					<li>重复步骤 2，直到 \(U = V\) 为止。</li>
+				</ol>
+				<p>此时 \(TE\) 中必有 \(n-1\) 条边，\(U = V\)，则 \(T = (U,TE)\) 就是最小生成树。</p>
+<pre><code class="language-cpp">// 辅助函数：获取 v 到 w 的权值
+OtherInfo GetWeight(ALGraph G, int v, int w) {
+    ArcNode *p = G.vertices[v].firstarc;
+    while (p) {
+        if (p->adjvex == w) return p->info;
+        p = p->nextarc;
+    }
+    return INFINITY; // 无边则返回无穷大
+}
+
+bool Prim(ALGraph G, VerTexType start_vertex) {
+    int start = LocateVex(G, start_vertex);
+    if (start == -1) return false;
+
+    // 辅助数组
+    int lowcost[MVNum];  // lowcost[j]：未选顶点j到已选集的最小权值
+    int adjvex[MVNum];   // adjvex[j]：lowcost[j]对应的已选顶点下标
+    bool selected[MVNum];// selected[j]：顶点j是否已选
+
+    // 1. 初始化辅助数组
+    for (int j = 0; j < G.vexnum; ++j) {
+        lowcost[j] = GetWeight(G, start, j); // 初始为起点到各顶点的权值
+        adjvex[j] = start;                     // 初始最小权值对应的已选顶点为起点
+        selected[j] = false;                   // 所有顶点未选
+    }
+    selected[start] = true; // 起点加入已选集
+    int total_weight = 0;   // 最小生成树总权值
+
+    // 2. 循环n-1次，选n-1条边
+    for (int i = 1; i < G.vexnum; ++i) {
+        // 步骤1：找lowcost中最小的未选顶点k
+        int min_weight = INFINITY;
+        int k = -1;
+        for (int j = 0; j < G.vexnum; ++j) {
+            if (!selected[j] && lowcost[j] < min_weight) {
+                min_weight = lowcost[j];
+                k = j;
+            }
+        }
+
+        if (k == -1) {
+            printf("图不连通，无法生成最小生成树！\n");
+            return false;
+        }
+
+        // 步骤2：将k加入已选集，输出边(adjvex[k], k)
+        selected[k] = true;
+        printf("%c --(%d)-- %c\n", 
+               G.vertices[adjvex[k]].data, 
+               min_weight, 
+               G.vertices[k].data);
+		total_weight += min_weight;
+
+        // 步骤3：更新lowcost和adjvex（因为k加入了已选集）
+        for (int j = 0; j < G.vexnum; ++j) {
+            if (!selected[j]) {
+                OtherInfo weight = GetWeight(G, k, j);
+                if (weight < lowcost[j]) {
+                    lowcost[j] = weight;  // 更新为更小的权值
+                    adjvex[j] = k;         // 更新对应的已选顶点为k
+                }
+            }
+        }
+    }
+
+    printf("最小生成树总权值：%d\n", total_weight);
+    return true;
+}</code></pre>
+
+				<h4 id="kruskal-algorithm">Kruskal（克鲁斯卡尔）算法</h4>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/Kruskal（克鲁斯卡尔）算法.svg" alt="Kruskal（克鲁斯卡尔）算法" />
+					<figcaption>Kruskal（克鲁斯卡尔）算法</figcaption>
+				</figure>
+                <p>Kruskal（克鲁斯卡尔）算法是一种加边法，适用于稀疏图。</p>
+				<p>假设连通网 \(N = (V, E)\)，则将 \(N\) 中的边按权值从小到大的顺序排列。</p>
+				<ol>
+					<li>初始状态为只有 \(n\) 个顶点而无边的非连通图 \(T = (V, {})\)，图中每个顶点自成一个连通分量。</li>
+					<li>在 \(E\) 中选择权值最小的边，若该边依附的顶点落在 \(T\) 中不同的连通分量上（即不形成回路），则将此边加入到 \(T\) 中，否则舍去此边而选择下一条权值最小的边。</li>
+					<li>重复步骤 2，直至 \(T\) 中所有顶点都在同一连通分量上为止。</li>
+				</ol>
+<pre><code class="language-cpp">// Kruskal专用：边结构体
+typedef struct {
+    int start;    // 边的起点下标
+    int end;      // 边的终点下标
+    int weight;   // 边的权值
+} Edge;
+
+// Initial 初始化并查集
+void Initial(int p[], int n) {
+    for(int i = 0; i < n; i++) {
+        p[i] = -1;
+    }
+}
+
+// Find 并查集查找操作
+int Find(int p[], int x) {
+    if(p[x] < 0)
+        return x;
+    else
+        return p[x] = Find(p, p[x]);
+}
+ 
+// Union 并查集合并操作（秩为树的高度）
+void Union(int p[], int x, int y) {
+    int rootx = Find(p, x);
+    int rooty = Find(p, y);
+    if(rootx != rooty) {
+        if(p[rootx] < p[rooty]) {
+            p[rooty] = rootx;
+        } else if(p[rootx] > p[rooty]) {
+            p[rootx] = rooty;
+        } else {
+            p[rootx] = rooty;
+            p[rooty]--;
+        }
+    }
+}
+
+// ExtractEdges 从邻接表提取边数组（避免重复）
+int ExtractEdges(ALGraph G, Edge edges[]) {
+    int edgeCount = 0;
+    for (int i = 0; i < G.vexnum; ++i) {
+        ArcNode *p = G.vertices[i].firstarc;
+        while (p) {
+            // 关键：只处理i < p->adjvex的边，避免无向图中边的重复存储
+            if (i < p->adjvex) {
+                edges[edgeCount].start = i;
+                edges[edgeCount].end = p->adjvex;
+                edges[edgeCount].weight = p->info;
+                edgeCount++;
+            }
+            p = p->nextarc;
+        }
+    }
+    return edgeCount;
+}
+
+// CompareEdges 用于 qsort 的比较函数，边数组按权值排序（升序）
+int CompareEdges(const void *a, const void *b) {
+    Edge *edgeA = (Edge *)a;
+    Edge *edgeB = (Edge *)b;
+    return edgeA->weight - edgeB->weight; // 升序：返回负数则a在前
+}
+
+// Kruskal（克鲁斯卡尔）算法
+bool Kruskal(ALGraph G) {
+    Edge edges[MVNum * MVNum]; // 边数组（最多MVNum*(MVNum-1)/2条边）
+    int edgeCount = ExtractEdges(G, edges); // 从邻接表提取所有边
+
+    // 步骤1：按权值升序排序所有边
+    qsort(edges, edgeCount, sizeof(Edge), CompareEdges);
+
+    // 步骤2：初始化并查集
+    int p[MVNum]; // 父节点数组
+    Initial(p, G.vexnum);
+
+    int selectedEdges = 0; // 已选边数（需选n-1条）
+    int totalWeight = 0;   // 最小生成树总权值
+
+    // 步骤3：遍历排序后的边，选n-1条不形成环的边
+    for (int i = 0; i < edgeCount && selectedEdges < G.vexnum - 1; ++i) {
+        int u = edges[i].start;
+        int v = edges[i].end;
+        int rootU = Find(p, u);
+        int rootV = Find(p, v);
+
+        if (rootU != rootV) { // 两个顶点不在同一集合，选这条边
+            Union(p, rootU, rootV); // 合并集合
+            // 输出边（起点和终点的顶点值）
+            printf("%c --(%d)-- %c\n", 
+                   G.vertices[u].data, 
+                   edges[i].weight, 
+                   G.vertices[v].data);
+            totalWeight += edges[i].weight;
+            selectedEdges++;
+        }
+    }
+
+    // 检查图是否连通
+    if (selectedEdges < G.vexnum - 1) {
+        printf("图不连通，无法生成最小生成树！\n");
+        return false;
+    }
+
+    printf("最小生成树总权值：%d\n", totalWeight);
+    return true;
+}</code></pre>
+
+				<h3 id="shortest-path">最短路径</h3>
+				<h4 id="dijkstra-algorithm">Dijkstra（迪杰斯特拉）算法</h4>
+				<div style="display: flex; gap: 10px; align-items: center;">
+					<figure>
+						<img src="/assets/images/posts/data-structure/graph/迪杰斯特拉算法示例图.svg" alt="迪杰斯特拉算法示例图" />
+						<figcaption>图 迪杰斯特拉算法示例图</figcaption>
+					</figure>
+					<div class="article-table-container">
+						<table class="article-table">
+							<caption class="table-caption caption-top">表 迪杰斯特拉算法示例表</caption>
+							<thead>
+								<tr>
+									<!-- 左上角空白单元格 -->
+									<th></th>
+									<th>第1次</th>
+									<th>第2次</th>
+									<th>第3次</th>
+									<th>第4次</th>
+									<th>第5次</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- 行 b -->
+								<tr>
+									<td><strong>b</strong></td>
+									<td style="background-color: #E8F5E9;">2 (a,b)</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<!-- 行 c -->
+								<tr>
+									<td><strong>c</strong></td>
+									<td>5 (a,c)</td>
+									<td style="background-color: #E8F5E9;">3 (a,b,c)</td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<!-- 行 d -->
+								<tr>
+									<td><strong>d</strong></td>
+									<td>∞</td>
+									<td>5 (a,b,d)</td>
+									<td>5 (a,b,d)</td>
+									<td style="background-color: #E8F5E9;">5 (a,b,d)</td>
+									<td></td>
+								</tr>
+								<!-- 行 e -->
+								<tr>
+									<td><strong>e</strong></td>
+									<td>∞</td>
+									<td>∞</td>
+									<td>7 (a,b,c,e)</td>
+									<td>7 (a,b,c,e)</td>
+									<td style="background-color: #E8F5E9;">6 (a,b,d,e)</td>
+								</tr>
+								<!-- 行 f -->
+								<tr>
+									<td><strong>f</strong></td>
+									<td>∞</td>
+									<td>∞</td>
+									<td style="background-color: #E8F5E9;">4 (a,b,c,f)</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<!-- 终点集行 -->
+								<tr>
+									<td><strong>终点集</strong></td>
+									<td>{a,b}</td>
+									<td>{a,b,c}</td>
+									<td>{a,b,c,f}</td>
+									<td>{a,b,c,f,d}</td>
+									<td>{a,b,c,f,d,e}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<p>Dijkstra（迪杰斯特拉）算法：是用来求图中一个点到其他所有点的最短路径的算法。</p>
+				<p>假设用带权的邻接表来表示带权有向网 \(N\)，其中顶点 \(v_i\) 的邻接表中存储所有以 \(v_i\) 为起点的弧，每个表项包含邻接顶点 \(v_j\) 和弧 \(&lt;v_i, v_j&gt;\) 上的权值。若 \(&lt;v_i, v_j&gt;\) 不存在，则顶点 \(v_i\) 的邻接表中权值为 \(\infty\)，源点为 \(v_0\)。</p>
+				<p>算法的实现要引入以下辅助的数据结构：</p>
+				<ol>
+					<li>一维数组 S[MVNum]：记录从源点 \(v_0\) 到终点 \(v_i\) 是否已被确定最短路径长度，true 表示确定，false 表示尚未确定。</li>
+					<li>一维数组 Path[MVNum]：记录从源点 \(v_0\) 到终点 \(v_i\) 的当前最短路径上 \(v_i\) 的直接前驱顶点序号。其初值为：如果从 \(v_0\) 到 \(v_i\) 有弧，则 Path[i] 为 \(v_0\)；否则为 -1。</li>
+					<li>一维数组 D[MVNum]：记录从源点 \(v_0\) 到终点 \(v_i\) 的当前最短路径长度。其初值为：如果从 \(v_0\) 到 \(v_i\) 有弧，则 D[i] 为弧上的权值；否则为 \(\infty\)。</li>
+				</ol>
+				<p>显然，长度最短的一条最短路径必为 (v_0, v_k)，满足以下条件：</p>
+				<div>
+					$$
+					D[k] = Min\{D[i] | v_i ∈ V - S\}
+					$$
+				</div>
+				<p>求得顶点 \(v_k\) 的最短路径后，将其加入到第一组顶点集 \(S\) 中。</p>
+				<p>每当加入一个新的顶点到顶点集 \(S\)，对第二组剩余的各个顶点而言，多了一个“中转”顶点，从而多了一个“中转”路径，所以要对第二组剩余的各个顶点的最短路径长度进行更新。</p>
+				<p>原来 \(v_0\) 到 \(v_i\) 的最短路径长度为 \(D[i]\)，加进 \(v_k\) 之后，需遍历 \(v_k\) 的邻接表，对每个邻接顶点 \(v_i\) 及其对应的弧权值 \(weight\)，考虑以 \(v_k\) 作为中间顶点的“中转”路径长度：\(D[k] + weight\)。若 \(D[k] + weight < D[i]\)，则用 \(D[k] + weight\) 取代 \(D[i]\)，并更新 \(Path[i]\) 为 \(v_k\)。</p>
+				<p>更新后，再选择数组 \(D\) 中值最小的顶点加入到第一组顶点集 \(S\) 中，如此进行下去，直到图中所有顶点都加入到第一组顶点集 \(S\) 中为止。</p>
+<pre><code class="language-cpp">int GetWeight(ALGraph G, int v, int w) {
+    ArcNode *p = G.vertices[v].firstarc;
+    while (p) {
+        if (p->adjvex == w)
+            return p->info;
+        p = p->nextarc;
+    }
+    return INFINITY;
+}
+
+bool Dijkstra(ALGraph G, VerTexType start) {
+    int s = LocateVex(G, start);
+    if (s == -1) return false;
+
+    int dist[MVNum];     // 源点到i的最短距离
+    int visited[MVNum];  // 是否已确定最短路径
+    int path[MVNum];     // 前驱结点，记录路径
+
+    // 初始化
+    for (int i = 0; i < G.vexnum; ++i) {
+        dist[i] = GetWeight(G, s, i);
+        visited[i] = 0;
+        path[i] = (dist[i] < INFINITY) ? s : -1;
+    }
+    visited[s] = 1;
+    dist[s] = 0;
+
+    // 循环 n-1 次
+    for (int i = 1; i < G.vexnum; ++i) {
+        // 1. 选未访问中 dist 最小的 u
+        int min = INFINITY;
+        int u = -1;
+        for (int j = 0; j < G.vexnum; ++j) {
+            if (!visited[j] && dist[j] < min) {
+                min = dist[j];
+                u = j;
+            }
+        }
+        if (u == -1) break; // 剩余点不可达
+        visited[u] = 1;
+
+        // 2. 松弛更新
+        for (int v = 0; v < G.vexnum; ++v) {
+            if (!visited[v]) {
+                int w = GetWeight(G, u, v);
+                if (dist[u] + w < dist[v]) {
+                    dist[v] = dist[u] + w;
+                    path[v] = u;
+                }
+            }
+        }
+    }
+
+    // 输出结果
+    for (int i = 0; i < G.vexnum; ++i) {
+        if (i == s) continue;
+        printf("%c -> %c  最短距离：", G.vertices[s].data, G.vertices[i].data);
+        if (dist[i] >= INFINITY)
+            printf("不可达\n");
+        else
+            printf("%d\n", dist[i]);
+    }
+    return true;
+}
+</code></pre>
+
+				<h4 id="floyd-algorithm">Floyd（弗洛伊德）算法</h4>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/弗洛伊德算法示例图.png" alt="弗洛伊德算法示例图" />
+					<figcaption>图 弗洛伊德算法示例图</figcaption>
+				</figure>
+				<div class="article-table-container" style="width: 65%; margin: 0 auto;">
+					<table class="article-table">
+						<caption class="table-caption">表 弗洛伊德算法示例表</caption>
+						<tbody>
+							<!-- ========= 阶段 k = -1 ========= -->
+							<tr>
+								<td style="padding: 16px; vertical-align: top;">
+									<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; align-items: flex-start;">
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">D<sup>(-1)</sup> 距离矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead>
+													<tr>
+														<th></th><th>0</th><th>1</th><th>2</th><th>3</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr><th>0</th><td>0</td><td>1</td><td>∞</td><td>4</td></tr>
+													<tr><th>1</th><td>∞</td><td>0</td><td>9</td><td>2</td></tr>
+													<tr><th>2</th><td>3</td><td>5</td><td>0</td><td>8</td></tr>
+													<tr><th>3</th><td>∞</td><td>∞</td><td>6</td><td>0</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">P<sup>(-1)</sup> 路径矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead>
+													<tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+												</thead>
+												<tbody>
+													<tr><th>0</th><td>-1</td><td>0</td><td>-1</td><td>0</td></tr>
+													<tr><th>1</th><td>-1</td><td>-1</td><td>1</td><td>1</td></tr>
+													<tr><th>2</th><td>2</td><td>2</td><td>-1</td><td>2</td></tr>
+													<tr><th>3</th><td>-1</td><td>-1</td><td>3</td><td>-1</td></tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</td>
+							</tr>
+
+							<!-- ========= 阶段 k = 0 ========= -->
+							<tr>
+								<td style="padding: 16px; vertical-align: top;">
+									<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; align-items: flex-start;">
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">D<sup>(0)</sup> 距离矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+												<tbody>
+													<tr><th>0</th><td>0</td><td>1</td><td>∞</td><td>4</td></tr>
+													<tr><th>1</th><td>∞</td><td>0</td><td>9</td><td>2</td></tr>
+													<tr><th>2</th><td>3</td><td>4</td><td>0</td><td>7</td></tr>
+													<tr><th>3</th><td>∞</td><td>∞</td><td>6</td><td>0</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">P<sup>(0)</sup> 路径矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+												<tbody>
+													<tr><th>0</th><td>-1</td><td>0</td><td>-1</td><td>0</td></tr>
+													<tr><th>1</th><td>-1</td><td>-1</td><td>1</td><td>1</td></tr>
+													<tr><th>2</th><td>2</td><td>0</td><td>-1</td><td>2</td></tr>
+													<tr><th>3</th><td>-1</td><td>-1</td><td>3</td><td>-1</td></tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</td>
+							</tr>
+
+							<!-- ========= 阶段 k = 1 ========= -->
+							<tr>
+								<td style="padding: 16px; vertical-align: top;">
+									<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; align-items: flex-start;">
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">D<sup>(1)</sup> 距离矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+												<tbody>
+													<tr><th>0</th><td>0</td><td>1</td><td>10</td><td>3</td></tr>
+													<tr><th>1</th><td>∞</td><td>0</td><td>9</td><td>2</td></tr>
+													<tr><th>2</th><td>3</td><td>4</td><td>0</td><td>6</td></tr>
+													<tr><th>3</th><td>∞</td><td>6</td><td>15</td><td>0</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">P<sup>(1)</sup> 路径矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+												<tbody>
+													<tr><th>0</th><td>-1</td><td>0</td><td>1</td><td>1</td></tr>
+													<tr><th>1</th><td>-1</td><td>-1</td><td>1</td><td>1</td></tr>
+													<tr><th>2</th><td>2</td><td>0</td><td>-1</td><td>1</td></tr>
+													<tr><th>3</th><td>-1</td><td>3</td><td>3</td><td>-1</td></tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</td>
+							</tr>
+
+							<!-- ========= 阶段 k = 2 ========= -->
+							<tr>
+								<td style="padding: 16px; vertical-align: top;">
+									<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; align-items: flex-start;">
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">D<sup>(2)</sup> 距离矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+												<tbody>
+													<tr><th>0</th><td>0</td><td>1</td><td>10</td><td>3</td></tr>
+													<tr><th>1</th><td>12</td><td>0</td><td>9</td><td>2</td></tr>
+													<tr><th>2</th><td>3</td><td>4</td><td>0</td><td>6</td></tr>
+													<tr><th>3</th><td>10</td><td>6</td><td>15</td><td>0</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">P<sup>(2)</sup> 路径矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+												<tbody>
+													<tr><th>0</th><td>-1</td><td>0</td><td>1</td><td>1</td></tr>
+													<tr><th>1</th><td>2</td><td>-1</td><td>1</td><td>1</td></tr>
+													<tr><th>2</th><td>2</td><td>0</td><td>-1</td><td>1</td></tr>
+													<tr><th>3</th><td>2</td><td>3</td><td>3</td><td>-1</td></tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</td>
+							</tr>
+
+							<!-- ========= 阶段 k = 3 (最终) ========= -->
+							<tr>
+								<td style="padding: 16px; vertical-align: top;">
+									<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; align-items: flex-start;">
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">D<sup>(3)</sup> 最终距离矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+												<tbody>
+													<tr><th>0</th><td>0</td><td>1</td><td>10</td><td>3</td></tr>
+													<tr><th>1</th><td>12</td><td>0</td><td>9</td><td>2</td></tr>
+													<tr><th>2</th><td>3</td><td>4</td><td>0</td><td>6</td></tr>
+													<tr><th>3</th><td>10</td><td>6</td><td>15</td><td>0</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div style="display: inline-block; text-align: center;">
+											<div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">P<sup>(3)</sup> 最终路径矩阵</div>
+											<table border="1" style="border-collapse: collapse; margin: 0 auto;">
+												<thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+												<tbody>
+													<tr><th>0</th><td>-1</td><td>0</td><td>1</td><td>1</td></tr>
+													<tr><th>1</th><td>2</td><td>-1</td><td>1</td><td>1</td></tr>
+													<tr><th>2</th><td>2</td><td>0</td><td>-1</td><td>1</td></tr>
+													<tr><th>3</th><td>2</td><td>3</td><td>3</td><td>-1</td></tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>Floyd（弗洛伊德）算法：是用来求图中任意两个顶点对之间的最短路径的算法。</p>
+				<p>假设使用带权的邻接矩阵 \(arcs\) 来表示有向网 \(N\)，求从顶点 \(v_i\) 到 \(v_j\) 的最短路径。</p>
+                <p>算法的实现要引入以下辅助的数据结构：</p>
+				<ol>
+					<li>二维数组 \(Path[i][j]\)：最短路径上顶点 \(v_j\) 的前一顶点的序号。</li>
+					<li>二维数组 \(D[i][j]\)：记录顶点 \(v_i\) 和 \(v_j\) 之间的最短路径长度。</li>
+				</ol>
+				<p>将 \(v_i\) 到 \(v_j\) 的最短路径长度初始化，即 \(D[i][j] = G.arcs[i][j]\)，然后进行 \(n\) 次比较和更新。</p>
+				<ol>
+					<li>在 \(v_i\) 和 \(v_j\) 间加入顶点 \(v_0\)，比较 \((v_i, v_j) 和 (v_i, v_0, v_j)\) 的路径长度，取其中较短者作为 \(v_i\) 到 \(v_j\) 的中间顶点序号不大于 0 的最短路径。</li>
+					<li>在 \(v_i\) 和 \(v_j\) 间加入顶点 \(v_1\)，得到 \((v_i, …, v_1) 和 (v_1, …, v_j)\)，其中 \((v_i, …, v_1)\) 是 \(v_i\) 到 \(v_1\) 的且中间顶点的序号不大于 0 的最短路径，\((v_1, …, v_j)\) 是 \(v_1\) 到 \(v_j\) 的且中间顶点的序号不大于 0 的最短路径，这两条路径已在上一步中求出。比较 \((v_i, …, v_1, …, v_j)\) 与上一步求出的 \(v_i\) 到 \(v_j\) 的中间顶点序号不大于 0 的最短路径，取其中较短者作为 \(v_i\) 到 \(v_j\) 的中间顶点序号不大于 1 的最短路径。</li>
+					<li>依次类推，在 \(v_i\) 和 \(v_j\) 间加入顶点 \(v_k\)，若 \((v_i, …, v_k)\) 和 \((v_k, …, v_j)\) 分别是从 \(v_i\) 到 \(v_k\) 和从 \(v_k\) 到 \(v_j\) 的中间顶点的序号不大于 \(k-1\) 的最短路径，则将 \((v_i, …, v_k, …, v_j)\) 和已经得到的从 \(v_i\) 到 \(v_j\) 且中间顶点序号不大于 \(k-1\) 的最短路径相比较，其长度较短者便是从 \(v_i\) 到 \(v_j\) 的中间顶点的序号不大于 \(k\) 的最短路径。这样，经过 \(n\) 次比较后，最后求得的必是从 \(v_i\) 到 \(v_j\) 的最短路径。按此方法，可以同时求得各对顶点间的最短路径。</li>
+				</ol>
+				<p>根据上述求解过程，图中的所有顶点对 \(v_i\) 和 \(v_j\) 间的最短路径长度对应一个 \(n\) 阶方阵 \(D\)。在上述 \(n+1\) 步中，\(D\) 的值不断变化，对应一个 \(n\) 阶方阵序列。</p>
+				<p>\(n\) 阶方阵序列可定义为：</p>
+				<div>
+					$$
+					D^{(-1)}, D^{(0)}, D^{(1)}, …, D^{(k)}, …, D^{(n-1)}
+					$$
+				</div>
+				<p>其中，</p>
+				<div>
+					$$
+					D^{(-1)}[i][j] = G.arcs[i][j]
+					D^{(k)}[i][j] = Min{D^{(k-1)}[i][j], D^{(k-1)}[i][k] + D^{(k-1)}[k][j]}, 0 ≤ k ≤ n-1
+					$$
+				</div>
+				<p>显然，\(D^{(1)}[i][j]\) 是从 \(v_i\) 到 \(v_j\) 的中间顶点的序号不大于 1 的最短路径的长度；\(D^{(k)}[i][j]\) 是从 \(v_i\) 到 \(v_j\) 的中间顶点的序号不大于 \(k\) 的最短路径的长度；\(D^{(n-1)}[i][j]\) 就是从 \(v_i\) 到 \(v_j\) 的最短路径的长度。</p>
+<pre><code class="language-cpp">// PrintPath 辅助函数，递归回溯打印路径：从顶点i到顶点j
+void PrintPath(MGraph G, int path[MVNum][MVNum], int i, int j) {
+    if (i == j) {
+        printf("%c", G.vexs[i]);
+        return;
+    }
+    if (path[i][j] == -1) {
+        printf("无路径");
+        return;
+    }
+    PrintPath(G, path, i, path[i][j]);
+    printf(" -> %c", G.vexs[j]);
+}
+
+// Floyd（弗洛伊德）算法（邻接矩阵实现）
+bool Floyd(MGraph G) {
+    int dist[MVNum][MVNum];  // dist[i][j]：顶点i到j的最短距离
+    int path[MVNum][MVNum];  // path[i][j]：i到j最短路径上j的前驱顶点
+
+    // 1. 初始化距离矩阵和路径矩阵
+    for (int i = 0; i < G.vexnum; ++i) {
+        for (int j = 0; j < G.vexnum; ++j) {
+            dist[i][j] = G.arcs[i][j];  // 直接复制邻接矩阵
+            if (i != j && dist[i][j] < INFINITY)
+                path[i][j] = i;  // 有直接边时，j的前驱是i
+            else
+                path[i][j] = -1; // 无直接边时，前驱为-1
+        }
+    }
+
+    // 2. 核心三重循环：k为中间顶点
+    // ⚠️ 注意：循环顺序必须是 k -> i -> j，k必须在最外层
+    for (int k = 0; k < G.vexnum; ++k) {
+        for (int i = 0; i < G.vexnum; ++i) {
+            for (int j = 0; j < G.vexnum; ++j) {
+                // 如果经过k的路径比当前路径更短，则更新
+                if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                    path[i][j] = path[k][j];  // 更新j的前驱为k到j的前驱
+                }
+            }
+        }
+    }
+
+    // 3. 输出所有顶点对的最短路径
+    for (int i = 0; i < G.vexnum; ++i) {
+        for (int j = 0; j < G.vexnum; ++j) {
+            if (i == j) continue;  // 跳过自身到自身的路径
+            printf("%c -> %c  最短距离：", G.vexs[i], G.vexs[j]);
+            
+            if (dist[i][j] >= INFINITY) {
+                printf("不可达\n");
+            } else {
+                printf("%d  路径：", dist[i][j]);
+                PrintPath(G, path, i, j);
+                printf("\n");
+            }
+        }
+        printf("\n");  // 每个起点的结果空一行分隔
+    }
+
+    return true;
+}
+</code></pre>
+
+				<h3 id="topological-sort">拓扑排序</h3>
+				<p>有向无环图：一个无环的有向图称作有向无环图（Directed AcyclineGraph），简称DAG图。</p>
+                <p>AOV-网：用顶点表示活动，用弧表示活动间的优先关系的有向图称为顶点表示活动的网（Activity On Vertex - Network），简称AOV-网。</p>
+				<p>拓扑排序：就是将图中所有点按照先后顺序排成序列。拓扑排序的充分必要条件是给定的有向图必须是一个有向无环图（DAG）。</p>
+				<p>拓扑排序的常用算法有Kahn算法（基于入度）和DFS算法（基于后序遍历）。</p>
+				<p>Kahn算法：每次选入度为 0 的点，然后删除这个点和它的出边。</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/Kahn算法.svg" alt="Kahn算法" />
+					<figcaption>图 Kahn算法</figcaption>
+				</figure>
+<pre><code class="language-cpp">bool TopologicalSort(ALGraph G) {
+    int inDegree[MVNum] = {0}; // 入度数组，初始化为0
+    int stack[MVNum];           // 用数组模拟栈（也可用队列，结果顺序不同但都合法）
+    int top = -1;               // 栈顶指针，-1表示空栈
+
+    // 1. 计算所有顶点的入度
+    for (int i = 0; i < G.vexnum; ++i) {
+        ArcNode *p = G.vertices[i].firstarc;
+        while (p) {
+            inDegree[p->adjvex]++;
+            p = p->nextarc;
+        }
+    }
+
+    // 2. 将所有初始入度为0的顶点入栈
+    for (int i = 0; i < G.vexnum; ++i) {
+        if (inDegree[i] == 0) {
+            stack[++top] = i;
+        }
+    }
+
+    // 3. 拓扑排序核心过程
+    int count = 0; // 记录已输出的顶点数
+    while (top != -1) {
+        int v = stack[top--]; // 出栈
+        printf("%c ", G.vertices[v].data);
+        count++;
+
+        // 遍历v的所有邻接点，入度减1
+        ArcNode *p = G.vertices[v].firstarc;
+        while (p) {
+            int w = p->adjvex;
+            inDegree[w]--;
+            if (inDegree[w] == 0) {
+                stack[++top] = w;
+            }
+            p = p->nextarc;
+        }
+    }
+    printf("\n");
+
+    // 4. 检查图是否有环（虽然题目说是DAG，但保留健壮性检查）
+    if (count < G.vexnum) {
+        printf("图中存在环，不是有向无环图（DAG）！\n");
+        return false;
+    }
+
+    return true;
+}</code></pre>
+
+				<h3 id="aoe-critical">AOE-网和关键路径</h3>
+                <p>AOE-网：用弧表示活动，用顶点表示事件（中间状态）有向图称为弧表示活动的网（Activity On Edge - Network），简称AOE-网。AOE-网也必须是有向无环图（DAG）。</p>
+                <figure>
+					<img src="/assets/images/posts/data-structure/graph/AOE-网.svg" alt="AOE-网" />
+					<figcaption>图 AOE-网</figcaption>
+				</figure>
+				<p>AOE网通常用来表示工程活动的计划，每个弧表示一个活动，每个顶点表示一个事件（中间状态），弧的权重表示活动的持续时间等。例如，上图可以表示一个工程活动的计划，其中 A 是开始事件，F 是结束事件。</p>
+				<ul>
+					<li>关键路径：完成整个工程至少需要花费的时间取决于哪条路径最耗时，最耗时的这条路径就是关键路径。</li>
+					<li>关键活动：关键路径上的活动就是关键活动。关键活动是不能拖延的活动，否则会导致整个工程的拖延。关键活动的最早开始时间 = 最晚开始时间。而其他活动是可以等的。</li>
+				</ul>
+				<p>为了确定关键路径，首先定义 4 个描述量。</p>
+				<ol>
+					<li>ve：事件的最早开始时间。</li>
+					<li>vl：事件的最晚开始时间。</li>
+					<li>e：活动的最早开始时间。</li>
+					<li>l：活动的最晚开始时间。</li>
+				</ol>
+                <p>求关键路径的思路是：先通过拓扑排序求顶点的最早开始时间 ve ，再通过逆拓扑排序求顶点的最晚开始时间 vl，根据顶点的 ve 和 vl 求活动的最早开始时间 e 和最晚开始时间 l。最后，e = l 的活动就是关键活动，所有关键活动的路径就是关键路径。</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/拓扑排序求ve的过程.svg" alt="拓扑排序求ve的过程" />
+					<figcaption>图 拓扑排序求 ve 的过程</figcaption>
+				</figure>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/逆拓扑排序求vl的过程.svg" alt="逆拓扑排序求vl的过程" />
+					<figcaption>图 逆拓扑排序求 vl 的过程</figcaption>
+				</figure>
+				<p>由上述过程最终求得的顶点的 ve 与 vl 如下，</p>
+				<div class="article-table-container" style="width: 30%; margin: 0 auto;">
+					<table class="article-table">
+						<caption class="table-caption caption-top">表 顶点的 ve 与 vl</caption>
+						<thead>
+							<tr>
+								<th></th>
+								<th>ve</th>
+								<th>vl</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>v₁</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td><strong>v₂</strong></td>
+								<td>2</td>
+								<td>4</td>
+							</tr>
+							<tr>
+								<td><strong>v₃</strong></td>
+								<td>5</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td><strong>v₄</strong></td>
+								<td>8</td>
+								<td>8</td>
+							</tr>
+							<tr>
+								<td><strong>v₅</strong></td>
+								<td>9</td>
+								<td>11</td>
+							</tr>
+							<tr>
+								<td><strong>v₆</strong></td>
+								<td>12</td>
+								<td>12</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>由ve 与 vl 求 e 与 l的方法是：</p>
+				<ul>
+					<li>该边是哪个顶点的出边，该边的 e = 该顶点的 ve。</li>
+					<li>该边是哪个顶点的入边，该边的 l = 该顶点的 vl - 该边的权重。</li>
+				</ul>
+				<p>因此，上述过程最终求得的边的 e 与 l 如下，</p>
+				<div class="article-table-container" style="width: 30%; margin: 0 auto;">
+					<table class="article-table">
+						<caption class="table-caption caption-top">表 边的 e 与 l</caption>
+						<thead>
+							<tr>
+								<th></th>
+								<th>ve</th>
+								<th>vl</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>a</strong></td>
+								<td>0</td>
+								<td>2</td>
+							</tr>
+							<tr style="background-color: #E8F5E9;">
+								<td><strong>b</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td><strong>c</strong></td>
+								<td>2</td>
+								<td>4</td>
+							</tr>
+							<tr>
+								<td><strong>d</strong></td>
+								<td>2</td>
+								<td>5</td>
+							</tr>
+							<tr style="background-color: #E8F5E9;">
+								<td><strong>e</strong></td>
+								<td>5</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td><strong>f</strong></td>
+								<td>5</td>
+								<td>7</td>
+							</tr>
+							<tr>
+								<td><strong>g</strong></td>
+								<td>5</td>
+								<td>11</td>
+							</tr>
+							<tr>
+								<td><strong>h</strong></td>
+								<td>8</td>
+								<td>10</td>
+							</tr>
+							<tr style="background-color: #E8F5E9;">
+								<td><strong>i</strong></td>
+								<td>8</td>
+								<td>8</td>
+							</tr>
+							<tr>
+								<td><strong>j</strong></td>
+								<td>9</td>
+								<td>11</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>根据上表，可以知道 b、e、i 的 e = l，因此是关键活动。由边 b、e、i 组成的路径 b → e → i 就是关键路径：</p>
+				<figure>
+					<img src="/assets/images/posts/data-structure/graph/关键路径.svg" alt="关键路径" />
+					<figcaption>图 关键路径</figcaption>
+				</figure>
+<pre><code class="language-cpp">// TopologicalSort 拓扑排序（同时计算ve并保存拓扑序列）
+bool TopologicalSort(ALGraph G, int topoOrder[], int ve[]) {
+    int inDegree[MVNum] = {0};
+    int stack[MVNum];
+    int top = -1;
+    int count = 0;
+
+    // 初始化ve为0
+    for (int i = 0; i < G.vexnum; ++i) {
+        ve[i] = 0;
+    }
+
+    // 计算入度
+    for (int i = 0; i < G.vexnum; ++i) {
+        ArcNode *p = G.vertices[i].firstarc;
+        while (p) {
+            inDegree[p->adjvex]++;
+            p = p->nextarc;
+        }
+    }
+
+    // 入度为0入栈
+    for (int i = 0; i < G.vexnum; ++i) {
+        if (inDegree[i] == 0) {
+            stack[++top] = i;
+        }
+    }
+
+    // 拓扑排序核心
+    while (top != -1) {
+        int v = stack[top--];
+        topoOrder[count++] = v; // 保存拓扑序列
+
+        ArcNode *p = G.vertices[v].firstarc;
+        while (p) {
+            int w = p->adjvex;
+            inDegree[w]--;
+            // 计算ve：取最大值
+            if (ve[v] + p->info > ve[w]) {
+                ve[w] = ve[v] + p->info;
+            }
+            if (inDegree[w] == 0) {
+                stack[++top] = w;
+            }
+            p = p->nextarc;
+        }
+    }
+
+    if (count < G.vexnum) {
+        printf("图中存在环，不是有向无环图（DAG）！\n");
+        return false;
+    }
+    return true;
+}
+
+// ReverseTopologicalSort 逆拓扑排序（计算vl）
+void ReverseTopologicalSort(ALGraph G, int topoOrder[], int ve[], int vl[]) {
+    // 初始化vl为汇点的ve值
+    int sink = topoOrder[G.vexnum - 1];
+    for (int i = 0; i < G.vexnum; ++i) {
+        vl[i] = ve[sink];
+    }
+
+    // 按拓扑序列的逆序计算vl
+    for (int i = G.vexnum - 2; i >= 0; --i) {
+        int v = topoOrder[i];
+        ArcNode *p = G.vertices[v].firstarc;
+        while (p) {
+            int w = p->adjvex;
+            // 计算vl：取最小值
+            if (vl[w] - p->info < vl[v]) {
+                vl[v] = vl[w] - p->info;
+            }
+            p = p->nextarc;
+        }
+    }
+}
+
+// CriticalPath 关键路径求解
+bool CriticalPath(ALGraph G) {
+    int ve[MVNum];       // 顶点最早发生时间
+    int vl[MVNum];       // 顶点最迟发生时间
+    int topoOrder[MVNum]; // 拓扑序列
+
+    // 步骤1：拓扑排序求ve
+    if (!TopologicalSort(G, topoOrder, ve)) {
+        return false;
+    }
+
+    // 步骤2：逆拓扑排序求vl
+    ReverseTopologicalSort(G, topoOrder, ve, vl);
+
+    // 步骤3：遍历所有边，判定关键活动
+    int totalDuration = ve[topoOrder[G.vexnum - 1]];
+    for (int v = 0; v < G.vexnum; ++v) {
+        ArcNode *p = G.vertices[v].firstarc;
+        while (p) {
+            int w = p->adjvex;
+            int e = ve[v];       // 活动最早开始时间
+            int l = vl[w] - p->info; // 活动最迟开始时间
+            if (e == l) {
+                printf("%c -> %c  %d\n", G.vertices[v].data, G.vertices[w].data, p->info);
+            }
+            p = p->nextarc;
+        }
+    }
+    printf("工程最短完成时间：%d\n", totalDuration);
+    return true;
+}</code></pre>
+			</div>
         </div>
         
         <!-- 右侧目录（自动包含代码块相关标题） -->
