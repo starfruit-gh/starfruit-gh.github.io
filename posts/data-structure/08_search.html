@@ -86,696 +86,1669 @@
         <!-- 中间正文（整合markdown内容） -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1 id="search-tree-hash">查找、树结构及哈希表</h1>
+                <h1 id="search-tree-hash">（七）查找</h1>
                 
-                <!-- 顺序查找 -->
-                <h2 id="sequential-search">顺序查找</h2>
-                <pre><code class="language-go">// SequentialSearch 顺序查找，返回目标索引，未找到返回-1
-func SequentialSearch(arr []int, target int) int {
-    for i, v := range arr {
-        if v == target {
-            return i
-        }
-    }
-    return -1
+                <h2 id="search-concept">查找的基本概念</h2>
+                <ul>
+                    <li>查找表：是由同一类型的数据元素构成的集合。</li>
+                    <li>关键字：是数据元素中某个数据项的值，用它可以标识一个数据元素。</li>
+                    <li>平均查找长度（Average Search Length, ASL） ：是指在查找表中进行一次查找操作，所需比较关键字的平均次数。</li>
+                </ul>
+                <p>对于含有 n 个数据元素的查找表，查找成功时的平均查找长度为：</p>
+                <div>
+                    $$ASL = \sum_{i=1}^{n} P_i \cdot C_i$$
+                </div>
+                <p>如果每个数据元素的查找概率相等（\(P_i = \frac{1}{n}\)）：</p>
+                <div>
+                    $$ASL = \frac{1}{n} \sum_{i=1}^{n} C_i$$
+                </div>
+                <p>其中，</p>
+                <ul>
+                    <li>\(n\)：查找表中元素的总个数</li>
+                    <li>\(P_i\)：查找第 \(i\) 个元素的概率，且 \(\sum\limits_{i=1}^{n} P_i = 1\)</li>
+                    <li>\(C_i\)：找到第 \(i\) 个元素所需的关键字比较次数</li>
+                </ul>
+                <p>数据元素类型定义如下：</p>
+<pre><code class="language-cpp">// 关键字
+typedef struct {
+    KeyType key;  //关键字域
+    ...           //其他域
+} ElemType;
+
+// 查找表
+typedef struct {
+    ElemType *elem;  //表基址
+    int length;   //表长
+} SSTable;        //Sequential Search Table</code></pre>
+
+                <h2 id="linear-list-search">线性表的查找</h2>
+<h3 id="sequential-search">顺序查找</h3>
+<pre><code class="language-cpp">// SeqSearch 顺序查找，返回目标索引，未找到返回-1
+int SeqSearch(SSTable ST, KeyType key) {
+    for (int i = ST.length; i >= 1; --i)
+        if (ST.elem[i].key == key) return i;
+    return -1;
+}
+
+// SeqSearch 顺序查找优化（带哨兵）
+int SeqSearch(SSTable ST, KeyType key) {
+    ST.elem[0].key = key;
+    for (int i = ST.length; ST.elem[i].key != key; --i);
+    return i;
 }</code></pre>
-                
-                <!-- 二分查找 -->
-                <h2 id="binary-search">二分查找</h2>
-                <pre><code class="language-go">// BinarySearchIterative 非递归二分查找，返回目标索引，未找到返回-1
-func BinarySearchIterative(arr []int, target int) int {
-    left, right := 0, len(arr)-1
-    for left &lt;= right {
-        mid := left + (right-left)/2 // 避免溢出
-        switch {
-        case arr[mid] == target:
-            return mid
-        case arr[mid] &lt; target:
-            left = mid + 1
-        default:
-            right = mid - 1
-        }
+                <ul>
+                    <li>时间复杂度：\(O(n)\)</li>
+                    <li>空间复杂度：\(O(1)\)</li>
+                    <li>平均查找长度：\(ASL_s(n)=(1+2+...+n)/n=(n+1)/2\)</li>
+                </ul>
+
+<h3 id="binary-search">折半查找</h3>
+<pre><code class="language-cpp">// BinarySearch 折半查找（非递归实现）
+int BinarySearch(SSTable ST, KeyType key) {
+    int low = 1;
+    int high = ST.length;
+    int mid;
+    while (low <= high) {
+        mid = low + (high - low) / 2;
+        if (ST.elem[mid].key == key)
+            return mid;
+        else if (key < ST.elem[mid].key)
+            high = mid - 1;
+        else
+            low = mid + 1;
     }
-    return -1
+    return -1;
 }
 
-// BinarySearchRecursive 递归二分查找
-func BinarySearchRecursive(arr []int, target, left, right int) int {
-    if left &gt; right {
-        return -1
-    }
-    mid := left + (right-left)/2
-    switch {
-    case arr[mid] == target:
-        return mid
-    case arr[mid] &lt; target:
-        return BinarySearchRecursive(arr, target, mid+1, right)
-    default:
-        return BinarySearchRecursive(arr, target, left, mid-1)
-    }
+// BinarySearch 折半查找（递归实现）
+int BinarySearch(SSTable ST, KeyType key, int low, int high) {
+    if (low > high)
+        return -1;
+    int mid = low + (high - low) / 2;
+    if (key == ST.elem[mid].key)
+        return mid;
+    else if (key < ST.elem[mid].key)
+        return BinarySearch(ST, key, low, mid - 1);
+    else
+        return BinarySearch(ST, key, mid + 1, high);
 }</code></pre>
+                <ul>
+                    <li>时间复杂度：\(O(log_2 n)\)</li>
+                    <li>空间复杂度：</li>
+                    <ul>
+                        <li>非递归实现：\(O(1)\)</li>
+                        <li>递归实现：\(O(log_2 n)\)</li>
+                    </ul>
+                </ul>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/判定树.svg" alt="判定树" />
+                    <figcaption>图 判定树</figcaption>
+                </figure>
+                <p>假设查找表的表长为：\(n = 2^h - 1\)，则 \(h = log_2(n + 1)\)，此时，判定树为深度 = h 的满二叉树。且表中每个记录的查找概率相等：\(P_i = \frac{1}{n}\)。则：</p>
+                <div>
+                    $$
+                    \begin{align*}
+                    ASL_{bs} &= \sum_{i=1}^{n} p_i c_i = \frac{1}{n} \sum_{i=1}^{n} c_i = \frac{1}{n} \sum_{j=1}^{h} j \cdot 2^{j-1} \\
+                    &= \frac{n+1}{n} \log_2(n+1) - 1 \\
+                    &\approx \log_2(n+1) - 1 \quad (n > 50)
+                    \end{align*}
+                    $$
+                </div>
+                <p>其中，</p>
+                <ul>
+                    <li>\(j\)：第 \(j\) 层的每个结点需要比较的次数</li>
+                    <li>\(2^{j-1}\)：第 \(j\) 层的结点总数</li>
+                    <li>\(j \cdot 2^{j-1}\)：第 \(j\) 层所有结点需要比较的总次数</li>
+                    <li>\(h\)：折半查找判定树的高度</li>
+                </ul>
+
+                <h2 id="tree-search">树的查找</h2>
+                <h3 id="binary-search-tree">二叉搜索树</h3>
+                <p>二叉搜索树或是空树，或是满足如下性质的二叉树：</p>
+                <ol>
+                    <li>若其左子树非空，则左子树上所有结点的值均小于根结点的值；</li>
+                    <li>若其右子树非空，则右子树上所有结点的值均大于等于根结点的值；</li>
+                    <li>其左右子树本身又各是一棵二叉排序树</li>
+                </ol>
                 
-                <!-- 二叉搜索树 -->
-                <h2 id="binary-search-tree">二叉搜索树</h2>
-                <pre><code class="language-go">// TreeNode BST节点
-type TreeNode struct {
-    Val   int
-    Left  *TreeNode
-    Right *TreeNode
+                <p>中序遍历非空的二叉搜索树所得到的数据元素序列是一个按关键字排列的递增有序序列。</p>
+
+<pre><code class="language-cpp">typedef struct {
+    KeyType key;        //关键字项
+    InfoType otherinfo; //其他数据域
+} ElemType;
+
+typedef struct BSTNode {
+    ElemType data;              //数据域
+    struct BSTNode *lchild, *rchild; //左右孩子指针
+} BSTNode, *BSTree;
+
+BSTree BSTSearch(BSTree T, KeyType key) {
+    if ((!T) || key == T->data.key) return T;
+    else if (key < T->data.key)
+        return BSTSearch(T->lchild, key); //在左子树中继续查找
+    else return BSTSearch(T->rchild, key); //在右子树中继续查找
 }
 
-// BSTInsert 插入节点
-func BSTInsert(root *TreeNode, val int) *TreeNode {
-    if root == nil {
-        return &amp;TreeNode{Val: val}
+void InsertBST(BSTree &T, ElemType e) { //当二叉排序树T中不存在关键字等于e.key的数据元素时，则插入该元素
+    if (!T) {
+        // 找到插入位置，递归结束
+        S = new BSTNode;              // 生成新结点*S
+        S->data = e;                  // 新结点*S的数据域置为e
+        S->lchild = S->rchild = NULL; // 新结点*S作为叶子结点
+        T = S;                        // 把新结点*S链接到已找到的插入位置
     }
-    if val &lt; root.Val {
-        root.Left = BSTInsert(root.Left, val)
-    } else if val &gt; root.Val {
-        root.Right = BSTInsert(root.Right, val)
-    }
-    return root
+    else if (e.key < T->data.key)
+        InsertBST(T->lchild, e);     // 将*S插入左子树
+    else if (e.key > T->data.key)
+        InsertBST(T->rchild, e);     // 将*S插入右子树
 }
 
-// BSTSearch 查找节点
-func BSTSearch(root *TreeNode, val int) *TreeNode {
-    if root == nil || root.Val == val {
-        return root
+void CreatBST(BSTree &T) { // 依次读入一个关键字为key的结点，将此结点插入二叉排序树T中
+    T = NULL;                        // 将二叉排序树T初始化为空树
+    cin >> e;
+    while (e.key != ENDFLAG) {       // ENDFLAG为自定义常量，作为输入结束标志
+        InsertBST(T, e);             // 将此结点插入二叉排序树T中
+        cin >> e;
     }
-    if val &lt; root.Val {
-        return BSTSearch(root.Left, val)
-    }
-    return BSTSearch(root.Right, val)
 }
 
-// BSTDelete 删除节点
-func BSTDelete(root *TreeNode, val int) *TreeNode {
-    if root == nil {
-        return nil
+void DeleteBST(BSTree &T, KeyType key) { // 从二叉排序树T中删除关键字等于key的结点
+    p = T; f = NULL;                                      //初始化
+    // 从根开始查找关键字等于key的结点*p
+    while (p) {
+        if (p->data.key == key) break;                    // 找到关键字等于key的结点*p，结束循环
+        f = p;                                            // *f为*p的双亲结点
+        if (p->data.key > key) p = p->lchild;             // 在*p的左子树中继续查找
+        else p = p->rchild;                               // 在*p的右子树中继续查找
     }
-    // 1. 查找要删除的节点
-    if val &lt; root.Val {
-        root.Left = BSTDelete(root.Left, val)
-    } else if val &gt; root.Val {
-        root.Right = BSTDelete(root.Right, val)
-    } else {
-        // 2. 情况1：叶子节点或只有一个子节点
-        if root.Left == nil {
-            return root.Right
-        } else if root.Right == nil {
-            return root.Left
+    if (!p) return;                                       // 找不到被删结点则返回
+    // 考虑3种情况实现p所指子树内部的处理: *p左右子树均不空、无右子树、无左子树
+    if ((p->lchild) && (p->rchild)) {                     // 被删结点*p左右子树均不空
+        q = p; s = p->lchild;
+        while (s->rchild) {                               // 在*p的左子树中继续查找其前驱结点，即最右下结点
+            q = s; s = s->rchild;                         // 向右到尽头
         }
-        // 3. 情况2：有两个子节点，找右子树最小节点（后继）
-        minNode := root.Right
-        for minNode.Left != nil {
-            minNode = minNode.Left
-        }
-        root.Val = minNode.Val
-        root.Right = BSTDelete(root.Right, minNode.Val)
+        p->data = s->data;                                // s指向被删结点的"前驱"
+        if (q != p) q->rchild = s->lchild;                // 重接*q的右子树
+        else q->lchild = s->lchild;                       // 重接*q的左子树
+        delete s;
+        return;
+    }                                                     
+    else if (!p->rchild) {                                // 被删结点*p无右子树，只需重接其左子树
+        q = p; p = p->lchild;
     }
-    return root
-}</code></pre>
-                
-                <!-- 平衡二叉树 AVL -->
-                <h2 id="avl-tree">平衡二叉树 (AVL)</h2>
-                <pre><code class="language-go">// AVLTreeNode AVL节点
-type AVLTreeNode struct {
-    Val    int
-    Left   *AVLTreeNode
-    Right  *AVLTreeNode
-    Height int // 节点高度
+    else if (!p->lchild) {                                // 被删结点*p无左子树，只需重接其右子树
+        q = p; p = p->rchild;
+    }
+    // 将p所指的子树挂接到其双亲结点*f相应的位置
+    if (!f) T = p;                                        // 被删结点为根结点
+    else if (q == f->lchild) f->lchild = p;               // 挂接到*f的左子树位置
+    else f->rchild = p;                                   // 挂接到*f的右子树位置
+    delete q;
+}
+</code></pre>
+                <ul>
+                    <li>最好情况：\(ASL = \log_2(n+1) - 1\) （形态比较均衡）</li>
+                    <li>最坏情况：\(ASL = \frac{n+1}{2}\) （单支树的形态）</li>
+                </ul>
+
+                <h3 id="balanced-tree">平衡二叉树</h3>
+                <h4 id="avl-tree">AVL树</h4>
+                <p>二叉搜索树会退化为单支树，从而导致查找效率退化为 \(O(n)\)，可以使用平衡二叉树（AVL树）来避免这种情况。</p>
+                <p>平衡二叉树或者是空树，或者是具有下列性质的二叉排序树：</p>
+                <ol>
+                    <li>左子树与右子树的高度之差的绝对值小于等于1。</li>
+                    <li>左子树和右子树也是平衡二叉排序树。</li>
+                </ol>
+                <div style="display: flex; gap: 10px; align-items: flex-center;">
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/平衡的二叉搜索树.svg" alt="平衡的二叉搜索树">
+                        <figcaption>图 平衡的二叉搜索树</figcaption>
+				    </figure>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/失衡的二叉搜索树.svg" alt="失衡的二叉搜索树">
+                        <figcaption>图 失衡的二叉搜索树</figcaption>
+				    </figure>
+                </div>
+                <p>平衡二叉树中所有结点的 左子树高度 - 右子树高度 的绝对值 \(\leqslant 1\)。</p>
+                <p>其中，左子树高度 - 右子树高度 称为平衡因子。平衡因子的所有取值为：(-1、0、1)。</p>
+                <p>保持平衡的方式：</p>
+                <ul>
+                    <div style="display: flex; gap: 10px; align-items: flex-center;">
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/左旋.svg" alt="左旋">
+                            <figcaption>图 左旋</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/左旋(1).svg" alt="左旋">
+                            <figcaption>图 左旋</figcaption>
+                        </figure>
+                    </div>
+                    <li>左旋：向左旋转，冲突的左孩变右孩。</li>
+                     <div style="display: flex; gap: 10px; align-items: flex-center;">
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/右旋.svg" alt="右旋">
+                            <figcaption>图 右旋</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/右旋(1).svg" alt="右旋">
+                            <figcaption>图 右旋</figcaption>
+                        </figure>
+                    </div>
+                    <li>右旋：向右旋转，冲突的右孩变左孩。</li>
+                </ul>
+                <p>平衡二叉树的四种失衡情况：</p>
+                <ul>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/LL型.svg" alt="LL型">
+                        <figcaption>图 LL型</figcaption>
+                    </figure>
+                    <li>LL型：失衡结点的平衡因子 = 2，失衡结点左孩子的平衡因子 = 1。</li>
+                    <ul>
+                        <li>调整方式：右旋。</li>
+                    </ul>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/RR型.svg" alt="RR型">
+                        <figcaption>图 RR型</figcaption>
+                    </figure>
+                    <li>RR型：失衡结点的平衡因子 = -2，失衡结点右孩子的平衡因子 = -1。</li>
+                    <ul>
+                        <li>调整方式：左旋。</li>
+                    </ul>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/LR型.svg" alt="LR型">
+                        <figcaption>图 LR型</figcaption>
+                    </figure>
+                    <li>LR型：失衡结点的平衡因子 = 2，失衡结点左孩子的平衡因子 = -1。</li>
+                    <ul>
+                        <li>调整方式：先左旋左孩子，然后右旋。</li>
+                    </ul>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/RL型.svg" alt="RL型">
+                        <figcaption>图 RL型</figcaption>
+                    </figure>
+                    <li>RL型：失衡结点的平衡因子 = -2，失衡结点右孩子的平衡因子 = 1。</li>
+                    <ul>
+                        <li>调整方式：先右旋右孩子，然后左旋。</li>
+                    </ul>
+                </ul>
+                <p>平衡二叉树插入结点的操作：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/平衡二叉树插入结点的操作.svg" alt="平衡二叉树插入结点的操作">
+                    <figcaption>图 平衡二叉树插入结点的操作</figcaption>
+                </figure>
+                <p>插入结点后如果导致多个祖先结点失衡，只需调整距离插入结点最近的失衡结点，其他失衡结点会自然平衡。</p>
+                <p>平衡二叉树的构建：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/平衡二叉树的构建.svg" alt="平衡二叉树的构建">
+                    <figcaption>图 平衡二叉树的构建</figcaption>
+                </figure>
+                <p>平衡二叉树删除结点的操作：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/平衡二叉树删除结点的操作.svg" alt="平衡二叉树删除结点的操作">
+                    <figcaption>图 平衡二叉树删除结点的操作</figcaption>
+                </figure>
+                <p>删除结点后，需要依次对每个祖先检查并调整，保持平衡。</p>
+                <pre><code class="language-cpp">typedef struct {
+    KeyType key;              // 关键字项
+    InfoType otherinfo;       // 其他数据域
+} ElemType;
+
+// AVL 树节点结构（增加了高度字段）
+typedef struct AVLNode {
+    ElemType data;                    // 数据域
+    struct AVLNode *lchild, *rchild;  // 左右孩子指针
+    int height;                       // 当前节点的高度（叶子高度为1，空树高度为0）
+} AVLNode, *AVLTree;
+
+// 辅助函数：返回节点高度（空树高度为0）
+int GetHeight(AVLTree T) {
+    return T ? T->height : 0;
 }
 
-// getHeight 获取节点高度（空节点高度为-1）
-func getHeight(node *AVLTreeNode) int {
-    if node == nil {
-        return -1
+// 更新节点的高度（根据左右子树高度计算）
+void UpdateHeight(AVLTree T) {
+    if (T) {
+        T->height = max(GetHeight(T->lchild), GetHeight(T->rchild)) + 1;
     }
-    return node.Height
 }
 
-// max 辅助函数
-func max(a, b int) int {
-    if a &gt; b {
-        return a
-    }
-    return b
+// 计算节点的平衡因子（左高 - 右高）
+int BalanceFactor(AVLTree T) {
+    return GetHeight(T->lchild) - GetHeight(T->rchild);
 }
 
-// rightRotate 右旋
-func rightRotate(y *AVLTreeNode) *AVLTreeNode {
-    x := y.Left
-    T2 := x.Right
-
-    // 旋转
-    x.Right = y
-    y.Left = T2
-
+// 左旋（以 T 为根，右孩子上升）
+AVLTree LL_Rotate(AVLTree T) {   // 通常称为左旋转，但这里按“向左旋转”命名
+    AVLTree R = T->rchild;
+    T->rchild = R->lchild;
+    R->lchild = T;
     // 更新高度
-    y.Height = max(getHeight(y.Left), getHeight(y.Right)) + 1
-    x.Height = max(getHeight(x.Left), getHeight(x.Right)) + 1
-
-    return x
+    UpdateHeight(T);
+    UpdateHeight(R);
+    return R;                    // 返回新的根节点
 }
 
-// leftRotate 左旋
-func leftRotate(x *AVLTreeNode) *AVLTreeNode {
-    y := x.Right
-    T2 := y.Left
-
-    // 旋转
-    y.Left = x
-    x.Right = T2
-
-    // 更新高度
-    x.Height = max(getHeight(x.Left), getHeight(x.Right)) + 1
-    y.Height = max(getHeight(y.Left), getHeight(y.Right)) + 1
-
-    return y
+// 右旋（以 T 为根，左孩子上升）
+AVLTree RR_Rotate(AVLTree T) {   // 通常称为右旋转
+    AVLTree L = T->lchild;
+    T->lchild = L->rchild;
+    L->rchild = T;
+    UpdateHeight(T);
+    UpdateHeight(L);
+    return L;
 }
 
-// getBalanceFactor 获取平衡因子
-func getBalanceFactor(node *AVLTreeNode) int {
-    if node == nil {
-        return 0
+// 先左旋后右旋（LR型）
+AVLTree LR_Rotate(AVLTree T) {
+    T->lchild = LL_Rotate(T->lchild);   // 先对左子树左旋
+    return RR_Rotate(T);                 // 再对根右旋
+}
+
+// 先右旋后左旋（RL型）
+AVLTree RL_Rotate(AVLTree T) {
+    T->rchild = RR_Rotate(T->rchild);   // 先对右子树右旋
+    return LL_Rotate(T);                 // 再对根左旋
+}
+
+// 平衡调整：根据平衡因子决定旋转类型，返回调整后的新根
+AVLTree Balance(AVLTree T) {
+    if (!T) return T;
+    int bf = BalanceFactor(T);
+    // 左子树过重
+    if (bf > 1) {
+        if (BalanceFactor(T->lchild) >= 0)   // LL型
+            return RR_Rotate(T);
+        else                                 // LR型
+            return LR_Rotate(T);
     }
-    return getHeight(node.Left) - getHeight(node.Right)
+    // 右子树过重
+    if (bf < -1) {
+        if (BalanceFactor(T->rchild) <= 0)   // RR型
+            return LL_Rotate(T);
+        else                                 // RL型
+            return RL_Rotate(T);
+    }
+    return T;          // 已经平衡，无需旋转
 }
 
-// AVLInsert 插入节点并平衡
-func AVLInsert(node *AVLTreeNode, val int) *AVLTreeNode {
-    // 1. 标准BST插入
-    if node == nil {
-        return &amp;AVLTreeNode{Val: val, Height: 0}
+// 插入结点（递归），返回新树的根结点
+AVLTree InsertAVL(AVLTree T, ElemType e) {
+    if (!T) {
+        // 创建新结点
+        AVLTree newNode = new AVLNode;
+        newNode->data = e;
+        newNode->lchild = newNode->rchild = NULL;
+        newNode->height = 1;      // 叶子高度为1
+        return newNode;
     }
-    if val &lt; node.Val {
-        node.Left = AVLInsert(node.Left, val)
-    } else if val &gt; node.Val {
-        node.Right = AVLInsert(node.Right, val)
+    if (e.key < T->data.key) {
+        T->lchild = InsertAVL(T->lchild, e);
+    } else if (e.key > T->data.key) {
+        T->rchild = InsertAVL(T->rchild, e);
     } else {
-        return node // 不允许重复值
+        // 关键字已存在，不插入（根据需求可修改）
+        return T;
     }
+    // 更新当前结点高度
+    UpdateHeight(T);
+    // 平衡调整
+    return Balance(T);
+}
 
-    // 2. 更新当前节点高度
-    node.Height = 1 + max(getHeight(node.Left), getHeight(node.Right))
+// 创建 AVL 树（依次读入结点并插入）
+void CreatAVL(AVLTree &T) {
+    T = NULL;
+    ElemType e;
+    cin >> e.key >> e.otherinfo;   // 假设输入方式：key otherinfo
+    while (e.key != ENDFLAG) {
+        T = InsertAVL(T, e);
+        cin >> e.key >> e.otherinfo;
+    }
+}
 
-    // 3. 获取平衡因子，检查是否失衡
-    balance := getBalanceFactor(node)
+// 查找结点（与 BST 完全相同）
+AVLTree AVLSearch(AVLTree T, KeyType key) {
+    if ((!T) || key == T->data.key) return T;
+    else if (key < T->data.key)
+        return AVLSearch(T->lchild, key);
+    else
+        return AVLSearch(T->rchild, key);
+}
 
-    // 4. 四种失衡情况处理
-    // LL
-    if balance &gt; 1 &amp;&amp; val &lt; node.Left.Val {
-        return rightRotate(node)
-    }
-    // RR
-    if balance &lt; -1 &amp;&amp; val &gt; node.Right.Val {
-        return leftRotate(node)
-    }
-    // LR
-    if balance &gt; 1 &amp;&amp; val &gt; node.Left.Val {
-        node.Left = leftRotate(node.Left)
-        return rightRotate(node)
-    }
-    // RL
-    if balance &lt; -1 &amp;&amp; val &lt; node.Right.Val {
-        node.Right = rightRotate(node.Right)
-        return leftRotate(node)
-    }
+// 查找以 T 为根的树中的最小结点（用于删除）
+AVLTree FindMin(AVLTree T) {
+    if (!T) return NULL;
+    while (T->lchild) T = T->lchild;
+    return T;
+}
 
-    return node
+// 删除结点（递归），返回新树的根结点
+AVLTree DeleteAVL(AVLTree T, KeyType key) {
+    if (!T) return NULL;   // 未找到，返回空
+    if (key < T->data.key) {
+        T->lchild = DeleteAVL(T->lchild, key);
+    } else if (key > T->data.key) {
+        T->rchild = DeleteAVL(T->rchild, key);
+    } else {
+        // 找到要删除的结点
+        if (!T->lchild || !T->rchild) {
+            // 至少有一个子树为空
+            AVLTree temp = T->lchild ? T->lchild : T->rchild;
+            delete T;
+            return temp;
+        } else {
+            // 左右子树均非空：用前驱（左子树中最大结点）替换
+            AVLTree pre = FindMin(T->rchild);   // 也可用前驱，这里用后继（右子树最小）
+            T->data = pre->data;                // 复制数据
+            // 在右子树中删除前驱结点
+            T->rchild = DeleteAVL(T->rchild, pre->data.key);
+        }
+    }
+    // 更新高度并平衡
+    UpdateHeight(T);
+    return Balance(T);
 }</code></pre>
-                
-                <!-- 红黑树 -->
-                <h2 id="red-black-tree">红黑树</h2>
-                <pre><code class="language-go">const (
-    RED   = true
-    BLACK = false
-)
+                <ul>
+                    <li>对于一棵有 \(n\) 个结点的 \(\text{AVL}\) 树，其高度保持在 \(O(\log_2 n)\) 数量级，\(\text{ASL}\) 也保持在 \(O(\log_2 n)\) 数量级</li>
+                </ul>
 
-// RBTreeNode 红黑树节点
-type RBTreeNode struct {
-    Val    int
-    Left   *RBTreeNode
-    Right  *RBTreeNode
-    Parent *RBTreeNode
-    Color  bool
+                <h4 id="red-black-tree">红黑树</h4>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/红黑树.svg" alt="红黑树" />
+                    <figcaption>图 红黑树</figcaption>
+                </figure>
+                <p>红黑树也是一种平衡二叉树，其结点有两种颜色：红色和黑色。</p>
+                <p>红黑树或者是空树，或者是具有下列性质的二叉排序树：</p>
+                <ol>
+                    <li>左根右：满足二叉搜索树 (BST)，即：左 < 根 ≤ 右</li>
+                    <li>根叶黑：根节点和叶子结点 (null) 都是黑色的</li>
+                    <li>不红红：从上到下不存在两个连续的红色结点</li>
+                    <li>黑路同：每个结点到任意叶结点的所有路径上的黑色结点数量都是相同的</li>
+                </ol>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/红黑树最短路径和最长路径.svg" alt="红黑树最短路径和最长路径" />
+                    <figcaption>图 红黑树最短路径和最长路径</figcaption>
+                </figure>
+                <p>红黑树最长路径不超过最短路径的两倍。也就是：任一结点左右子树的高度相差不超过两倍。</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/AVL树和红黑树的对比.svg" alt="AVL树和红黑树的对比" />
+                    <figcaption>图 AVL树和红黑树的对比</figcaption>
+                </figure>
+                <p>而 AVL 树是：任一结点左右子树的高度相差绝对值不超过 1。因此，AVL 树对于平衡的要求会更加严格，所以，AVL 树的树高比 红黑树 控制的更加平衡。</p>
+                <p>这就导致，红黑树的查询效率略逊于AVL树，但都是 \(O(\log_2 n)\) 数量级，差距不会太大。还有，因为 AVL 树得更加严格的控制树的平衡，插入删除之后需要进行的旋转调整操作会比红黑树更加频繁。</p>
+                <p>因此，</p>
+                <ul>
+                    <li>AVL树查询更高效</li>
+                    <li>红树插入和删除更高效</li>
+                </ul>
+                <p>对比 BST、AVL树、红黑树：</p>
+                <ul>
+                    <li>BST 维护的是「左 < 根 ≤ 右」的性质</li>
+                    <li>AVL树 是在 BST 的基础上，维护「左右子树的高度差不大于1」的性质</li>
+                    <li>红黑树 则是在 BST 的基础上，维护「根叶黑，不红红，黑路同」的性质</li>
+                </ul>
+                <p>红黑树插入结点的操作：</p>
+                <p>红黑树默认插入的是红色结点。这是因为，如果插入的结点是黑色的，那么插入后，必然会违反黑路同的性质，必然需要进行调整操作。而如果插入的结点是红色的，那么插入后，有可能不会违反任何性质，也就是不需要调整操作。就算是违反了红黑树的性质，也只可能违反根叶黑或者不红红。相比于插入黑色结点，会没那么麻烦。</p>
+                <p>插入结点后，如果红黑树性质被破坏，分三种情况调整：</p>
+                <ol>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/插入结点是根结点.svg" alt="插入结点是根结点" />
+                        <figcaption>图 插入结点是根结点</figcaption>
+                    </figure>
+                    <li>插入结点是根结点 → 直接变黑</li>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/插入结点的叔叔是红色.svg" alt="插入结点的叔叔是红色" />
+                        <figcaption>图 插入结点的叔叔是红色</figcaption>
+                    </figure>
+                    <li>插入结点的叔叔是红色 → 叔父爷变色，爷爷变插入结点</li>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/红黑树LL型失衡.svg" alt="红黑树LL型失衡" />
+                        <figcaption>图 红黑树LL型失衡</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/红黑树RR型失衡.svg" alt="红黑树RR型失衡" />
+                        <figcaption>图 红黑树RR型失衡</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/红黑树LR型失衡.svg" alt="红黑树LR型失衡" />
+                        <figcaption>图 红黑树LR型失衡</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/红黑树RL型失衡.svg" alt="红黑树RL型失衡" />
+                        <figcaption>图 红黑树RL型失衡</figcaption>
+                    </figure>
+                    <li>插入结点的叔叔是黑色 → (LL,RR,LR,RL)旋转，然后变色</li>
+                </ol>
+                <p>红黑树的构建：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/红黑树的构建.svg" alt="红黑树的构建" />
+                    <figcaption>图 红黑树的构建</figcaption>
+                </figure>
+                <p>红黑树的删除操作：</p>
+                <p>红黑树的删除和二叉搜索树的删除操作基本相同，只是在删除后，如果破坏了红黑树的性质，那么需要进行调整来保持红黑树的性质。具体为：</p>
+                <ol>
+                    <li>删除的结点是叶子结点</li>
+                    <ul>
+                        <li>删除方式：直接删除</li>
+                    </ul>
+                    <li>删除的结点只有左子树或只有右子树</li>
+                    <ul>
+                        <li>删除方式：删除结点，然后让其子树代替它</li>
+                    </ul>
+                    <li>删除的结点既有左子树又有右子子树</li>
+                    <ul>
+                        <li>删除方式：让其前驱或后继代替它，然后删除前驱或后继（转换成前两种情况）</li>
+                    </ul>
+                </ol>
+                <p>先看情况 2 在红黑树中的处理：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/红黑树的结点只有左子树或右子树时的两种情况.svg" alt="红黑树的结点只有左子树或右子树时的两种情况" />
+                    <figcaption>图 红黑树的结点只有左子树或右子树时的两种情况</figcaption>
+                </figure>
+                <p>对于红黑树来说，如果删除的结点只有左子树或只有右子树。那么父亲结点只能是黑色，孩子结点只能是红色。也就是只会有两种情况。因为：</p>
+                <ul>
+                    <li>如果父亲结点是红色：孩子如果是红色，那就违反了不红红的性质；孩子如果是黑色，那就违反了黑路同的性质。</li>
+                    <li>如果父亲结点是黑色：孩子如果是黑色，那就违反了黑路同的性质。</li>
+                </ul>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/删除的结点只有左子树或只有右子树.svg" alt="删除的结点只有左子树或只有右子树" />
+                    <figcaption>图 删除的结点只有左子树或只有右子树</figcaption>
+                </figure>
+                <p>对于这种情况，删除结点，然后让其子树代替它，并且代替后直接变黑就可以了。</p>
+                <p>再来看情况 1 在红黑树中的处理：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/删除的结点是红色叶子结点.svg" alt="删除的结点是红色叶子结点" />
+                    <figcaption>图 删除的结点是红色叶子结点</figcaption>
+                </figure>
+                <p>对于红黑树来说，如果删除的结点是叶子结点，而该叶子结点是红色的，那么直接删除就可以了，不需要任何调整。</p>
+                <p>如果该叶子结点是黑色的，那么一定会违反黑路同的性质。为此，引入两个概念：双黑结点和单黑结点。结点删除后变为双黑结点。</p>
+                <ul>
+                    <li>单黑结点：单黑结点就是普通黑结点。</li>
+                    <li>双黑结点：是指这里缺一个黑色结点。目标就是把双黑变成单黑。</li>
+                </ul>
+                <p>然后还要看兄弟结点的颜色。</p>
+                <ul>
+                    <li>如果兄弟结点是黑色：</li>
+                    <ul>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，LL型）.svg" alt="删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，LL型）" />
+                            <figcaption>图 删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，LL型）</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，RR型）.svg" alt="删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，RR型）" />
+                            <figcaption>图 删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，RR型）</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，LR型）.svg" alt="删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，LR型）" />
+                            <figcaption>图 删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，LR型）</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，RL型）.svg" alt="删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，RL型）" />
+                            <figcaption>图 删除的结点是黑色叶子结点（兄弟是黑色，有一个红色孩子，RL型）</figcaption>
+                        </figure>
+                        <li>兄弟至少有一个红孩子：(LL,RR,LR,RL)变色+旋转（规定：删除结点是 d，其兄弟结点是 s，其双亲结点是 p，s 结点的孩子是 r）</li>
+                        <ul>
+                            <li>LL型和RR型的变色：r 变 s，s 变 p，p 变 黑</li>
+                            <li>LR型和RL型的变色：r 变 p，p 变 黑</li>
+                        </ul>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇黑）.svg" alt="删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇黑）" />
+                            <figcaption>图 删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇黑）</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇红）.svg" alt="删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇红）" />
+                            <figcaption>图 删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇红）</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇根）.svg" alt="删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇根）" />
+                            <figcaption>图 删除的结点是黑色叶子结点（兄弟是黑色，有两个黑色孩子，上移遇根）</figcaption>
+                        </figure>
+                        <li>兄弟的孩子都是黑色：兄弟变红，双黑上移</li>
+                        <ul>
+                            <li>双黑上移，如果遇见普通黑色结点继续调整双黑结点</li>
+                            <li>如果遇见红色结点，红色结点直接变成单黑结点</li>
+                            <li>如果遇见根结点，根结点直接变成单黑结点</li>
+                        </ul>
+                    </ul>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/删除的结点是黑色叶子结点（兄弟是红色）.svg" alt="删除的结点是黑色叶子结点（兄弟是红色）" />
+                        <figcaption>图 删除的结点是黑色叶子结点（兄弟是红色）</figcaption>
+                    </figure>
+                    <li>如果兄弟结点是红色：兄父变色，朝双黑旋转（保持双黑，继续调整）</li>
+                </ul>
+                <p>举个例子：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/红黑树的删除.svg" alt="红黑树的删除" />
+                    <figcaption>图 红黑树的删除</pfigcaption>
+                </figure>
+<pre><code class="language-cpp">// 颜色枚举
+#define RED 0
+#define BLACK 1
+typedef int Color;
+
+// 红黑树结点类型定义
+typedef struct RBTNode {
+    KeyType key;              // 关键字项
+    Color color;              // 结点颜色：RED 或 BLACK
+    struct RBTNode *lchild;   // 左孩子指针
+    struct RBTNode *rchild;   // 右孩子指针
+    struct RBTNode *parent;   // 父结点指针
+} RBTNode, *RBTree;
+
+// 全局哨兵结点
+RBTree nil;
+
+// InitNil 初始化哨兵
+void InitNil() {
+    nil = new RBTNode;
+    nil->color = BLACK;
+    nil->lchild = nil->rchild = nil->parent = nil;
 }
 
-// RBTree 红黑树
-type RBTree struct {
-    Root *RBTreeNode
-    Nil  *RBTreeNode // 哨兵节点
+// InitRBTree 初始化红黑树
+void InitRBTree(RBTree &T) {
+    InitNil();
+    T = nil;
 }
 
-// NewRBTree 初始化红黑树
-func NewRBTree() *RBTree {
-    nilNode := &amp;RBTreeNode{Color: BLACK}
-    return &amp;RBTree{
-        Root: nilNode,
-        Nil:  nilNode,
-    }
+// LeftRotate 左旋
+void LeftRotate(RBTree &T, RBTNode *x) {
+    RBTNode *y = x->rchild;
+    x->rchild = y->lchild;
+    if (y->lchild != nil)
+        y->lchild->parent = x;
+    y->parent = x->parent;
+    if (x->parent == nil)
+        T = y;
+    else if (x == x->parent->lchild)
+        x->parent->lchild = y;
+    else
+        x->parent->rchild = y;
+    y->lchild = x;
+    x->parent = y;
 }
 
-// leftRotate 左旋
-func (t *RBTree) leftRotate(x *RBTreeNode) {
-    y := x.Right
-    x.Right = y.Left
-    if y.Left != t.Nil {
-        y.Left.Parent = x
-    }
-    y.Parent = x.Parent
-    if x.Parent == t.Nil {
-        t.Root = y
-    } else if x == x.Parent.Left {
-        x.Parent.Left = y
-    } else {
-        x.Parent.Right = y
-    }
-    y.Left = x
-    x.Parent = y
+// RightRotate 右旋
+void RightRotate(RBTree &T, RBTNode *x) {
+    RBTNode *y = x->lchild;
+    x->lchild = y->rchild;
+    if (y->rchild != nil)
+        y->rchild->parent = x;
+    y->parent = x->parent;
+    if (x->parent == nil)
+        T = y;
+    else if (x == x->parent->rchild)
+        x->parent->rchild = y;
+    else
+        x->parent->lchild = y;
+    y->rchild = x;
+    x->parent = y;
 }
 
-// rightRotate 右旋
-func (t *RBTree) rightRotate(y *RBTreeNode) {
-    x := y.Left
-    y.Left = x.Right
-    if x.Right != t.Nil {
-        x.Right.Parent = y
-    }
-    x.Parent = y.Parent
-    if y.Parent == t.Nil {
-        t.Root = x
-    } else if y == y.Parent.Right {
-        y.Parent.Right = x
-    } else {
-        y.Parent.Left = x
-    }
-    x.Right = y
-    y.Parent = x
+// RBSearch 红黑树查找
+RBTree RBSearch(RBTree T, KeyType key) {
+    if (T == nil || key == T->key)
+        return T;
+    else if (key < T->key)
+        return RBSearch(T->lchild, key);
+    else
+        return RBSearch(T->rchild, key);
 }
 
-// insertFixup 插入后修复红黑树性质
-func (t *RBTree) insertFixup(z *RBTreeNode) {
-    for z.Parent.Color == RED {
-        if z.Parent == z.Parent.Parent.Left {
-            y := z.Parent.Parent.Right // 叔叔节点
-            if y.Color == RED {
-                // 情况1：叔叔红，变色
-                z.Parent.Color = BLACK
-                y.Color = BLACK
-                z.Parent.Parent.Color = RED
-                z = z.Parent.Parent
+// RBInsertFixup 插入后调整
+void RBInsertFixup(RBTree &T, RBTNode *z) {
+    RBTNode *y;
+    while (z->parent->color == RED) {
+        if (z->parent == z->parent->parent->lchild) {
+            y = z->parent->parent->rchild;
+            if (y->color == RED) {
+                z->parent->color = BLACK;
+                y->color = BLACK;
+                z->parent->parent->color = RED;
+                z = z->parent->parent;
             } else {
-                // 情况2：叔叔黑，z是右孩子，左旋
-                if z == z.Parent.Right {
-                    z = z.Parent
-                    t.leftRotate(z)
+                if (z == z->parent->rchild) {
+                    z = z->parent;
+                    LeftRotate(T, z);
                 }
-                // 情况3：叔叔黑，z是左孩子，右旋+变色
-                z.Parent.Color = BLACK
-                z.Parent.Parent.Color = RED
-                t.rightRotate(z.Parent.Parent)
+                z->parent->color = BLACK;
+                z->parent->parent->color = RED;
+                RightRotate(T, z->parent->parent);
             }
         } else {
-            // 对称情况
-            y := z.Parent.Parent.Left
-            if y.Color == RED {
-                z.Parent.Color = BLACK
-                y.Color = BLACK
-                z.Parent.Parent.Color = RED
-                z = z.Parent.Parent
+            y = z->parent->parent->lchild;
+            if (y->color == RED) {
+                z->parent->color = BLACK;
+                y->color = BLACK;
+                z->parent->parent->color = RED;
+                z = z->parent->parent;
             } else {
-                if z == z.Parent.Left {
-                    z = z.Parent
-                    t.rightRotate(z)
+                if (z == z->parent->lchild) {
+                    z = z->parent;
+                    RightRotate(T, z);
                 }
-                z.Parent.Color = BLACK
-                z.Parent.Parent.Color = RED
-                t.leftRotate(z.Parent.Parent)
+                z->parent->color = BLACK;
+                z->parent->parent->color = RED;
+                LeftRotate(T, z->parent->parent);
             }
         }
     }
-    t.Root.Color = BLACK // 根节点始终黑
+    T->color = BLACK;
 }
 
-// Insert 插入节点
-func (t *RBTree) Insert(val int) {
-    // 1. 初始化新节点
-    z := &amp;RBTreeNode{
-        Val:    val,
-        Left:   t.Nil,
-        Right:  t.Nil,
-        Color:  RED,
-        Parent: t.Nil,
+// RBInsert 红黑树插入
+void RBInsert(RBTree &T, KeyType key) {
+    RBTNode *y = nil;
+    RBTNode *x = T;
+    while (x != nil) {
+        y = x;
+        if (key < x->key)
+            x = x->lchild;
+        else if (key > x->key)
+            x = x->rchild;
+        else
+            return;
     }
-
-    // 2. 标准BST插入
-    y := t.Nil
-    x := t.Root
-    for x != t.Nil {
-        y = x
-        if z.Val &lt; x.Val {
-            x = x.Left
-        } else {
-            x = x.Right
-        }
-    }
-    z.Parent = y
-    if y == t.Nil {
-        t.Root = z
-    } else if z.Val &lt; y.Val {
-        y.Left = z
-    } else {
-        y.Right = z
-    }
-
-    // 3. 修复红黑树性质
-    if z.Parent == nil {
-        z.Color = BLACK
-        return
-    }
-    if z.Parent.Parent == nil {
-        return
-    }
-    t.insertFixup(z)
-}</code></pre>
-                
-                <!-- B树 -->
-                <h2 id="b-tree">B树</h2>
-                <pre><code class="language-go">const M = 3 // B树阶数（最大子节点数）
-
-// BTreeNode B树节点
-type BTreeNode struct {
-    Keys     []int
-    Children []*BTreeNode
-    IsLeaf   bool
+    RBTNode *z = new RBTNode;
+    z->key = key;
+    z->color = RED;
+    z->lchild = z->rchild = nil;
+    z->parent = y;
+    if (y == nil)
+        T = z;
+    else if (key < y->key)
+        y->lchild = z;
+    else
+        y->rchild = z;
+    RBInsertFixup(T, z);
 }
 
-// NewBTreeNode 创建新节点
-func NewBTreeNode(isLeaf bool) *BTreeNode {
-    return &amp;BTreeNode{
-        Keys:     make([]int, 0, M-1),
-        Children: make([]*BTreeNode, 0, M),
-        IsLeaf:   isLeaf,
+// CreatRBTree 红黑树构建
+void CreatRBTree(RBTree &T) {
+    T = nil;
+    KeyType key;
+    cin >> key;
+    while (key != ENDFLAG) {
+        RBInsert(T, key);
+        cin >> key;
     }
 }
 
-// BTree B树
-type BTree struct {
-    Root *BTreeNode
+// RBMinimum 查找最小值（辅助删除）
+RBTNode* RBMinimum(RBTNode x) {
+    while (x->lchild != nil)
+        x = x->lchild;
+    return x;
 }
 
-// searchHelper 辅助查找
-func (n *BTreeNode) searchHelper(key int) *BTreeNode {
-    i := 0
-    for i &lt; len(n.Keys) &amp;&amp; key &gt; n.Keys[i] {
-        i++
-    }
-    if i &lt; len(n.Keys) &amp;&amp; key == n.Keys[i] {
-        return n
-    }
-    if n.IsLeaf {
-        return nil
-    }
-    return n.Children[i].searchHelper(key)
+// RBTransplant 移植辅助函数（用 v 替换 u 的位置）
+void RBTransplant(RBTree &T, RBTNode *u, RBTNode *v) {
+    if (u->parent == nil)
+        T = v;
+    else if (u == u->parent->lchild)
+        u->parent->lchild = v;
+    else
+        u->parent->rchild = v;
+    v->parent = u->parent;
 }
 
-// Search 查找键
-func (t *BTree) Search(key int) bool {
-    if t.Root == nil {
-        return false
-    }
-    return t.Root.searchHelper(key) != nil
-}
-
-// splitChild 分裂子节点
-func (n *BTreeNode) splitChild(i int, y *BTreeNode) {
-    z := NewBTreeNode(y.IsLeaf)
-    mid := (M - 1) / 2 // 中间键索引
-
-    // 复制y的后半部分键到z
-    z.Keys = append(z.Keys, y.Keys[mid+1:]...)
-    y.Keys = y.Keys[:mid]
-
-    // 如果不是叶子，复制子节点
-    if !y.IsLeaf {
-        z.Children = append(z.Children, y.Children[mid+1:]...)
-        y.Children = y.Children[:mid+1]
-    }
-
-    // 将z插入n的子节点
-    n.Children = append(n.Children[:i+1], append([]*BTreeNode{z}, n.Children[i+1:]...)...)
-    // 将中间键插入n
-    n.Keys = append(n.Keys[:i], append([]int{y.Keys[mid]}, n.Keys[i:]...)...)
-}
-
-// insertNonFull 向非满节点插入键
-func (n *BTreeNode) insertNonFull(key int) {
-    i := len(n.Keys) - 1
-    if n.IsLeaf {
-        // 叶子节点，直接插入
-        for i &gt;= 0 &amp;&amp; key &lt; n.Keys[i] {
-            i--
-        }
-        n.Keys = append(n.Keys[:i+1], append([]int{key}, n.Keys[i+1:]...)...)
-    } else {
-        // 非叶子节点，找到子节点
-        for i &gt;= 0 &amp;&amp; key &lt; n.Keys[i] {
-            i--
-        }
-        i++
-        // 如果子节点满了，先分裂
-        if len(n.Children[i].Keys) == M-1 {
-            n.splitChild(i, n.Children[i])
-            if key &gt; n.Keys[i] {
-                i++
+// RBDeleteFixup 删除后调整（处理双黑问题）
+void RBDeleteFixup(RBTree &T, RBTNode *x) {
+    RBTNode *w; // w 指向 x 的兄弟结点
+    while (x != T && x->color == BLACK) {
+        if (x == x->parent->lchild) {
+            // 情况 1：x 是左孩子
+            w = x->parent->rchild;
+            if (w->color == RED) {
+                // 情况 1.1：兄弟是红色，变色后左旋转
+                w->color = BLACK;
+                x->parent->color = RED;
+                LeftRotate(T, x->parent);
+                w = x->parent->rchild;
             }
-        }
-        n.Children[i].insertNonFull(key)
-    }
-}
-
-// Insert 插入键
-func (t *BTree) Insert(key int) {
-    if t.Root == nil {
-        t.Root = NewBTreeNode(true)
-        t.Root.Keys = append(t.Root.Keys, key)
-        return
-    }
-    // 如果根节点满了，先分裂
-    if len(t.Root.Keys) == M-1 {
-        newRoot := NewBTreeNode(false)
-        newRoot.Children = append(newRoot.Children, t.Root)
-        newRoot.splitChild(0, t.Root)
-        t.Root = newRoot
-    }
-    t.Root.insertNonFull(key)
-}</code></pre>
-                
-                <!-- B+树 -->
-                <h2 id="b-plus-tree">B+树</h2>
-                <pre><code class="language-go">const BPlusM = 3 // B+树阶数
-
-// BPlusTreeNode B+树节点
-type BPlusTreeNode struct {
-    Keys     []int
-    Children []*BPlusTreeNode
-    Next     *BPlusTreeNode // 叶子节点链表指针
-    IsLeaf   bool
-}
-
-// NewBPlusTreeNode 创建新节点
-func NewBPlusTreeNode(isLeaf bool) *BPlusTreeNode {
-    return &amp;BPlusTreeNode{
-        Keys:     make([]int, 0, BPlusM-1),
-        Children: make([]*BPlusTreeNode, 0, BPlusM),
-        IsLeaf:   isLeaf,
-    }
-}
-
-// BPlusTree B+树
-type BPlusTree struct {
-    Root *BPlusTreeNode
-    Head *BPlusTreeNode // 叶子节点链表头
-}
-
-// Search 查找键（仅在叶子节点）
-func (t *BPlusTree) Search(key int) bool {
-    if t.Root == nil {
-        return false
-    }
-    node := t.Root
-    // 找到叶子节点
-    for !node.IsLeaf {
-        i := 0
-        for i &lt; len(node.Keys) &amp;&amp; key &gt;= node.Keys[i] {
-            i++
-        }
-        node = node.Children[i]
-    }
-    // 在叶子节点链表中查找
-    for _, k := range node.Keys {
-        if k == key {
-            return true
-        }
-    }
-    return false
-}
-
-// splitChild 分裂子节点
-func (n *BPlusTreeNode) splitChild(i int, y *BPlusTreeNode) {
-    z := NewBPlusTreeNode(y.IsLeaf)
-    mid := (BPlusM - 1) / 2
-
-    // 复制键和子节点
-    if y.IsLeaf {
-        // 叶子节点：复制后半部分键，维护链表
-        z.Keys = append(z.Keys, y.Keys[mid:]...)
-        y.Keys = y.Keys[:mid]
-        z.Next = y.Next
-        y.Next = z
-    } else {
-        // 非叶子节点：复制后半部分键和子节点
-        z.Keys = append(z.Keys, y.Keys[mid+1:]...)
-        y.Keys = y.Keys[:mid]
-        z.Children = append(z.Children, y.Children[mid+1:]...)
-        y.Children = y.Children[:mid+1]
-    }
-
-    // 插入z到n的子节点
-    n.Children = append(n.Children[:i+1], append([]*BPlusTreeNode{z}, n.Children[i+1:]...)...)
-    // 插入中间键到n（非叶子节点取y.Keys[mid]，叶子节点取z.Keys[0]）
-    var insertKey int
-    if y.IsLeaf {
-        insertKey = z.Keys[0]
-    } else {
-        insertKey = y.Keys[mid]
-    }
-    n.Keys = append(n.Keys[:i], append([]int{insertKey}, n.Keys[i:]...)...)
-}
-
-// insertNonFull 向非满节点插入
-func (n *BPlusTreeNode) insertNonFull(key int, isLeaf bool) {
-    i := len(n.Keys) - 1
-    if n.IsLeaf {
-        // 叶子节点插入
-        for i &gt;= 0 &amp;&amp; key &lt; n.Keys[i] {
-            i--
-        }
-        n.Keys = append(n.Keys[:i+1], append([]int{key}, n.Keys[i+1:]...)...)
-    } else {
-        // 非叶子节点找到子节点
-        for i &gt;= 0 &amp;&amp; key &lt; n.Keys[i] {
-            i--
-        }
-        i++
-        if len(n.Children[i].Keys) == BPlusM-1 {
-            n.splitChild(i, n.Children[i])
-            if key &gt;= n.Keys[i] {
-                i++
-            }
-        }
-        n.Children[i].insertNonFull(key, isLeaf)
-    }
-}
-
-// Insert 插入键
-func (t *BPlusTree) Insert(key int) {
-    if t.Root == nil {
-        t.Root = NewBPlusTreeNode(true)
-        t.Root.Keys = append(t.Root.Keys, key)
-        t.Head = t.Root
-        return
-    }
-    // 根节点满了分裂
-    if len(t.Root.Keys) == BPlusM-1 {
-        newRoot := NewBPlusTreeNode(false)
-        newRoot.Children = append(newRoot.Children, t.Root)
-        newRoot.splitChild(0, t.Root)
-        t.Root = newRoot
-    }
-    t.Root.insertNonFull(key, true)
-}</code></pre>
-                
-                <!-- 哈希表 -->
-                <h2 id="hash-table">哈希表</h2>
-                <pre><code class="language-go">// ListNode 链表节点
-type ListNode struct {
-    Key  int
-    Val  int
-    Next *ListNode
-}
-
-// HashTable 哈希表
-type HashTable struct {
-    Buckets  []*ListNode
-    Size     int
-    Capacity int
-}
-
-// NewHashTable 初始化哈希表
-func NewHashTable(capacity int) *HashTable {
-    return &amp;HashTable{
-        Buckets:  make([]*ListNode, capacity),
-        Capacity: capacity,
-    }
-}
-
-// hashFunc 哈希函数（取模）
-func (ht *HashTable) hashFunc(key int) int {
-    return key % ht.Capacity
-}
-
-// Put 插入键值对
-func (ht *HashTable) Put(key, val int) {
-    index := ht.hashFunc(key)
-    // 检查是否已存在，存在则更新
-    current := ht.Buckets[index]
-    for current != nil {
-        if current.Key == key {
-            current.Val = val
-            return
-        }
-        current = current.Next
-    }
-    // 不存在则头插
-    newNode := &amp;ListNode{Key: key, Val: val, Next: ht.Buckets[index]}
-    ht.Buckets[index] = newNode
-    ht.Size++
-}
-
-// Get 查找键对应的值
-func (ht *HashTable) Get(key int) (int, bool) {
-    index := ht.hashFunc(key)
-    current := ht.Buckets[index]
-    for current != nil {
-        if current.Key == key {
-            return current.Val, true
-        }
-        current = current.Next
-    }
-    return 0, false
-}
-
-// Remove 删除键
-func (ht *HashTable) Remove(key int) {
-    index := ht.hashFunc(key)
-    current := ht.Buckets[index]
-    var prev *ListNode
-    for current != nil {
-        if current.Key == key {
-            if prev == nil {
-                ht.Buckets[index] = current.Next
+            if (w->lchild->color == BLACK && w->rchild->color == BLACK) {
+                // 情况 1.2：兄弟的两个孩子都是黑色，将兄弟染红，x 上移
+                w->color = RED;
+                x = x->parent;
             } else {
-                prev.Next = current.Next
+                if (w->rchild->color == BLACK) {
+                    // 情况 1.3：兄弟左红右黑，变色后右旋转
+                    w->lchild->color = BLACK;
+                    w->color = RED;
+                    RightRotate(T, w);
+                    w = x->parent->rchild;
+                }
+                // 情况 1.4：兄弟右红，变色后左旋转，结束调整
+                w->color = x->parent->color;
+                x->parent->color = BLACK;
+                w->rchild->color = BLACK;
+                LeftRotate(T, x->parent);
+                x = T; // 退出循环
             }
-            ht.Size--
-            return
+        } else {
+            // 情况 2：x 是右孩子（与情况 1 对称）
+            w = x->parent->lchild;
+            if (w->color == RED) {
+                w->color = BLACK;
+                x->parent->color = RED;
+                RightRotate(T, x->parent);
+                w = x->parent->lchild;
+            }
+            if (w->rchild->color == BLACK && w->lchild->color == BLACK) {
+                w->color = RED;
+                x = x->parent;
+            } else {
+                if (w->lchild->color == BLACK) {
+                    w->rchild->color = BLACK;
+                    w->color = RED;
+                    LeftRotate(T, w);
+                    w = x->parent->lchild;
+                }
+                w->color = x->parent->color;
+                x->parent->color = BLACK;
+                w->lchild->color = BLACK;
+                RightRotate(T, x->parent);
+                x = T;
+            }
         }
-        prev = current
-        current = current.Next
+    }
+    x->color = BLACK; // 最后将 x 染黑，消除双黑
+}
+
+// RBDelete 红黑树删除
+void RBDelete(RBTree &T, KeyType key) {
+    // 1. 查找待删除结点 z
+    RBTNode *z = T;
+    while (z != nil) {
+        if (key == z->key) break;
+        else if (key < z->key) z = z->lchild;
+        else z = z->rchild;
+    }
+    if (z == nil) return; // 未找到，不删除
+
+    // 2. y 记录实际被删除/移动的结点，x 记录 y 的孩子
+    RBTNode *y = z;
+    RBTNode *x;
+    Color y_original_color = y->color; // 记录 y 的原始颜色
+
+    if (z->lchild == nil) {
+        // 情况 1：z 只有右孩子
+        x = z->rchild;
+        RBTransplant(T, z, z->rchild);
+    } else if (z->rchild == nil) {
+        // 情况 2：z 只有左孩子
+        x = z->lchild;
+        RBTransplant(T, z, z->lchild);
+    } else {
+        // 情况 3：z 有两个孩子，用后继 y 替代 z
+        y = RBMinimum(z->rchild);
+        y_original_color = y->color;
+        x = y->rchild;
+        if (y->parent == z) {
+            x->parent = y; // 确保 x 的父指针正确（若 x 是 nil）
+        } else {
+            RBTransplant(T, y, y->rchild);
+            y->rchild = z->rchild;
+            y->rchild->parent = y;
+        }
+        RBTransplant(T, z, y);
+        y->lchild = z->lchild;
+        y->lchild->parent = y;
+        y->color = z->color; // y 继承 z 的颜色
+    }
+    delete z;
+
+    // 3. 如果删除的是黑色结点，需要调整红黑性质
+    if (y_original_color == BLACK)
+        RBDeleteFixup(T, x);
+}
+
+// InOrder 辅助：中序遍历（验证有序性）
+void InOrder(RBTree T) {
+    if (T != nil) {
+        InOrder(T->lchild);
+        cout << T->key << "(" << (T->color == RED ? "红" : "黑") << ") ";
+        InOrder(T->rchild);
     }
 }</code></pre>
+
+                <h3 id="multi-tree">多路搜索树</h3>
+                <h4 id="b-tree">B树</h4>
+                <p>二叉搜索树、AVL树、红黑树，使得查找，插入，删除数据的效率均降到了 O(logn) 级别。但是这些树通常都是先把数据全部加载到内存里面，数据量通常不会很大。如果要处理的数据规模非常大，大到内存根本存不下了的时候，就只能先把数据存到硬盘中。因为没办法把大规模的数据全部读到内存中，所以只能分批次的把需要处理的数据从硬盘调到内存里进行进一步处理，也就是进行硬盘 IO 操作。由于访问硬盘的速度远高于访问内存的速度，因此要使访问硬盘的操作尽可能的少，此时这些树就不太合适了，因为硬盘的访问次数和树的高度是正相关的，也就是树越高，硬盘的访问次数可能就越多。而 B树 正是适合解决这类问题的数据结构。B树就是一种多叉平衡搜索树，这就使得树的每个结点可以保存更多的数据了，那么树的高度就会被压缩，硬盘的访问次数也就会跟着减少了。并且硬盘读取物理地址连续的多个字节和读取单个字节耗时几乎没有区别。因此，B树可以很好地解决这个问题。</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/B树.svg" alt="B树" />
+                    <figcaption>图 B树</figcaption>
+                </figure>
+                <p>一棵 \( m \) 阶的 B树，或为空树，或为满足下列特性的 \( m \) 叉树：</p>
+                <ol>
+                    <li>树中每个结点至多有 \(m\) 棵子树；</li>
+                    <li>若根结点不是叶子结点，则至少有两棵子树；</li>
+                    <li>除根之外的所有非终端结点至少有\(\lceil \frac{m}{2} \rceil\)棵子树；</li>
+                    <li>所有的叶子结点都出现在同一层次上，并且不带信息，通常称为失败结点（失败结点并不存在，指向这些结点的指针为空。引入失败结点是为了便于分析 B树 的查找性能）；</li>
+                    <li>所有的非终端结点最多有 \(m-1\) 个关键字。</li>
+                </ol>
+                <p>B树 的特点：</p>
+                <ul>
+                    <li>平衡：所有的叶子结点都在同一层</li>
+                    <li>有序：任一元素的左子树都小于它，右子树都大于它</li>
+                    <li>多路：对于 \(m\) 阶的 B树 的结点：</li>
+                    <ul>
+                        <li>最多：\(m\) 个分支，\(m-1\) 个关键字</li>
+                        <li>最少：</li>
+                        <ul>
+                            <li>根结点：2 个分支，1 个关键字</li>
+                            <li>非根结点：\(\lceil \frac{m}{2} \rceil\) 个分支，\(\lceil \frac{m}{2} \rceil -1\) 个关键字</li>
+                        </ul>
+                    </ul>
+                </ul>
+                <p>B树 插入结点的操作（以三阶 B树 为例）：</p>
+                <ul>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/B树的插入（无上溢）.svg" alt="B树的插入（无上溢）" />
+                        <figcaption>图 B树的插入（无上溢）</figcaption>
+                    </figure>
+                    <li>如果没有上溢出，无需调整</li>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/B树的插入（有上溢）.svg" alt="B树的插入（有上溢）" />
+                        <figcaption>图 B树的插入（有上溢）</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/B树的插入（连续上溢）.svg" alt="B树的插入（连续上溢）" />
+                        <figcaption>图 B树的插入（连续上溢）</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/posts/data-structure/search/B树的插入（连续上溢到根）.svg" alt="B树的插入（连续上溢到根）" />
+                        <figcaption>图 B树的插入（连续上溢到根）</figcaption>
+                    </figure>
+                    <li>如果有上溢出，中间元素 \((\lceil \frac{m}{2} \rceil)\) 上移，两边分裂（直到没有上溢出）</li>
+                </ul>
+                <p>B树 的构建（以四阶 B树 为例）：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/B树的构建.svg" alt="B树的构建" />
+                    <figcaption>图 B树的构建</figcaption>
+                </figure>
+                <p>B树 删除结点的操作（以五阶 B树 为例）：</p>
+                <ul>
+                    <li>如果删除的结点不是非终端结点的最后一层，需要先找到该结点的前驱或后继，不管是前驱还是后继，都会落在非终端结点的最后一层，将该结点替换为前驱或后继，然后删除前驱或后继。也就是删除不是非终端结点的最后一层的结点，最终会转化为删除非终端结点的最后一层。</li>
+                    <li>如果删除的结点是非终端结点的最后一层，删除该结点，然后判断是否发生了下溢。</li>
+                    <ul>
+                        <figure>
+                            <img src="/assets/images/posts/data-structure/search/B树的删除（没有下溢）.svg" alt="B树的删除（没有下溢）" />
+                            <figcaption>图 B树的删除（没有下溢）</figcaption>
+                        </figure>
+                        <li>如果没有下溢，直接删除即可。</li>
+                        <li>如果有下溢，需要从兄弟结点借关键字。</li>
+                        <ul>
+                            <figure>
+                                <img src="/assets/images/posts/data-structure/search/B树的删除（下溢出，兄弟够借）.svg" alt="B树的删除（下溢出，兄弟够借）" />
+                                <figcaption>图 B树的删除（下溢出，兄弟够借）</figcaption>
+                            </figure>
+                            <li>如果兄弟结点够借，就借：父下来，兄上去。</li>
+                            <figure>
+                                <img src="/assets/images/posts/data-structure/search/B树的删除（下溢出，兄弟不够借，父够借）.svg" alt="B树的删除（下溢出，兄弟不够借，父够借）" />
+                                <figcaption>图 B树的删除（下溢出，兄弟不够借，父够借）</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="/assets/images/posts/data-structure/search/B树的删除（下溢出，兄弟不够借，父不够借，父兄弟够借）.svg" alt="B树的删除（下溢出，兄弟不够借，父不够借，父兄弟够借）" />
+                                <figcaption>图 B树的删除（下溢出，兄弟不够借，父不够借，父兄弟够借）</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="/assets/images/posts/data-structure/search/B树的删除（下溢出，兄弟不够借，父不够借，父兄弟不够借）.svg" alt="B树的删除（下溢出，兄弟不够借，父不够借，父兄弟不够借）" />
+                                <figcaption>图 B树的删除（下溢出，兄弟不够借，父不够借，父兄弟不够借）</figcaption>
+                            </figure>
+                            <li>如果兄弟结点不够借，就合并：父下移到左，然后右并过来。并检查父是否下溢。</li>
+                        </ul>
+                    </ul>
+                </ul>
+<pre><code class="language-cpp">#define MAXM 100    // B 树的最大阶数
+// B 树结点结构
+typedef int KeyType;
+
+// m 阶 B 树结点
+typedef struct BTNode {
+    int keynum;                     // 结点中关键字个数
+    KeyType key[MAXM + 1];           // 关键字数组 key[1..keynum]
+    struct BTNode *parent;          // 双亲结点
+    struct BTNode *ptr[MAXM + 1];    // 孩子指针 ptr[0..keynum]
+} BTNode, *BTree;
+
+// InitBTree 初始化 B 树
+void InitBTree(BTree &T) {
+    T = new BTNode;
+    T->keynum = 0;
+    T->parent = NULL;
+    // 所有指针初始化为空
+    for (int i = 0; i <= MAXM; i++) {
+        T->ptr[i] = NULL;
+    }
+}
+
+// SearchBTree B树查找，在 T 中查找 key，返回结点 p 与位置 i
+bool SearchBTree(BTree T, KeyType key, BTree &p, int &i) {
+    p = T;
+    i = 0;
+    while (p) {
+        // 在结点内顺序查找
+        for (i = 1; i <= p->keynum && key > p->key[i]; i++);
+        if (i <= p->keynum && key == p->key[i]) {
+            return true; // 找到
+        }
+        // 去子树查找
+        p = p->ptr[i - 1];
+    }
+    return false; // 未找到
+}
+
+// InsertKey 结点内插入关键字
+void InsertKey(BTree &p, KeyType key, BTree q, int pos) {
+    // 关键字后移
+    for (int i = p->keynum; i >= pos; i--) {
+        p->key[i + 1] = p->key[i];
+        p->ptr[i + 1] = p->ptr[i];
+    }
+    p->key[pos] = key;
+    p->ptr[pos] = q;
+    if (q) q->parent = p;
+    p->keynum++;
+}
+
+// SplitNode 分裂结点
+void SplitNode(BTree &p, int mid, BTree &q) {
+    int m = p->keynum + 1; // 当前阶数
+    q = new BTNode;
+    q->parent = p->parent;
+    q->keynum = 0;
+
+    // 后半部分复制到 q
+    for (int i = mid + 1; i <= p->keynum; i++) {
+        q->key[i - mid] = p->key[i];
+        q->ptr[i - mid] = p->ptr[i];
+        if (q->ptr[i - mid]) {
+            q->ptr[i - mid]->parent = q;
+        }
+    }
+    q->keynum = p->keynum - mid;
+    p->keynum = mid - 1;
+}
+
+// InsertBTree 插入关键字（核心）
+bool InsertBTree(BTree &T, KeyType key, int m) {
+    BTree p = NULL, q = NULL;
+    int i = 0;
+
+    // 已存在则不插入
+    if (SearchBTree(T, key, p, i)) return false;
+
+    // 空树
+    if (!p) {
+        T = new BTNode;
+        T->keynum = 1;
+        T->key[1] = key;
+        T->parent = NULL;
+        for (int j = 0; j <= m; j++) T->ptr[j] = NULL;
+        return true;
+    }
+
+    // 叶子结点插入
+    InsertKey(p, key, q, i);
+
+    // 上溢：分裂
+    while (p->keynum == m) {
+        int mid = (m + 1) / 2;
+        SplitNode(p, mid, q);
+        KeyType upkey = p->key[mid];
+
+        if (!p->parent) {
+            // 根结点分裂
+            BTree newroot = new BTNode;
+            newroot->keynum = 1;
+            newroot->key[1] = upkey;
+            newroot->ptr[0] = p;
+            newroot->ptr[1] = q;
+            p->parent = newroot;
+            q->parent = newroot;
+            T = newroot;
+            break;
+        } else {
+            p = p->parent;
+            InsertKey(p, upkey, q, 1);
+        }
+    }
+    return true;
+}
+
+// CreatBTree 构建 B 树
+void CreatBTree(BTree &T, int m) {
+    InitBTree(T);
+    KeyType key;
+    cout << "输入关键字（-1结束）：";
+    cin >> key;
+    while (key != -1) {
+        InsertBTree(T, key, m);
+        cin >> key;
+    }
+}
+
+// TraverseBTree 遍历 B 树（层次）
+void TraverseBTree(BTree T) {
+    if (!T) return;
+    for (int i = 1; i <= T->keynum; i++) {
+        cout << T->key[i] << " ";
+    }
+    for (int i = 0; i <= T->keynum; i++) {
+        TraverseBTree(T->ptr[i]);
+    }
+}
+
+// GetPre 找前驱（删除用）
+BTree GetPre(BTree p, int i) {
+    p = p->ptr[i - 1];
+    while (p->ptr[p->keynum]) p = p->ptr[p->keynum];
+    return p;
+}
+
+// GetNext 找后继（删除用）
+BTree GetNext(BTree p, int i) {
+    p = p->ptr[i];
+    while (p->ptr[0]) p = p->ptr[0];
+    return p;
+}
+
+// DeleteBTree 删除关键字（核心）
+bool DeleteBTree(BTree &T, KeyType key, int m) {
+    BTree p;
+    int i;
+    if (!SearchBTree(T, key, p, i)) return false;
+
+    // 非叶子 → 替换为前驱
+    if (p->ptr[0]) {
+        BTree pre = GetPre(p, i);
+        p->key[i] = pre->key[pre->keynum];
+        p = pre;
+        i = pre->keynum;
+    }
+
+    // 直接删除
+    for (int j = i; j < p->keynum; j++) {
+        p->key[j] = p->key[j + 1];
+        p->ptr[j] = p->ptr[j + 1];
+    }
+    p->keynum--;
+
+    // 下溢处理
+    int minkey = (m + 1) / 2 - 1;
+    while (p && p->keynum < minkey && p->parent) {
+        BTree parent = p->parent;
+        int pos = 0;
+        for (; pos <= parent->keynum; pos++) {
+            if (parent->ptr[pos] == p) break;
+        }
+
+        // 右兄弟借
+        if (pos < parent->keynum && parent->ptr[pos + 1]->keynum > minkey) {
+            BTree rbro = parent->ptr[pos + 1];
+            p->key[++p->keynum] = parent->key[pos + 1];
+            parent->key[pos + 1] = rbro->key[1];
+            rbro->key[1] = rbro->key[2];
+            rbro->ptr[0] = rbro->ptr[1];
+            rbro->keynum--;
+            break;
+        }
+        // 左兄弟借
+        else if (pos > 0 && parent->ptr[pos - 1]->keynum > minkey) {
+            BTree lbro = parent->ptr[pos - 1];
+            for (int j = ++p->keynum; j > 1; j--) {
+                p->key[j] = p->key[j - 1];
+            }
+            p->key[1] = parent->key[pos];
+            parent->key[pos] = lbro->key[lbro->keynum--];
+            break;
+        }
+        // 合并
+        else {
+            BTree bro;
+            int upidx;
+            if (pos > 0) {
+                bro = parent->ptr[pos - 1];
+                upidx = pos;
+            } else {
+                bro = parent->ptr[pos + 1];
+                upidx = pos + 1;
+            }
+            // 合并关键字
+            bro->key[++bro->keynum] = parent->key[upidx];
+            for (int j = 1; j <= p->keynum; j++) {
+                bro->key[++bro->keynum] = p->key[j];
+            }
+            parent->keynum--;
+            // 父结点下移
+            for (int j = upidx; j <= parent->keynum; j++) {
+                parent->key[j] = parent->key[j + 1];
+                parent->ptr[j] = parent->ptr[j + 1];
+            }
+            p = parent;
+        }
+    }
+
+    // 根结点空
+    if (T->keynum == 0 && T->ptr[0]) {
+        BTree old = T;
+        T = T->ptr[0];
+        T->parent = NULL;
+        delete old;
+    }
+    return true;
+}</code></pre>
+                
+                <h4 id="b-plus-tree">B+树</h4>
+                <p>在 B树 中，如果想要顺序遍历所有元素，就需要按照中序遍历的方式，在各结点之间依次穿梭访问，这会涉及到频繁的 硬盘IO 操作，因此效率较低。来看 B+树 如何解决这个问题。</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/B+树.svg" alt="B+树" />
+                    <figcaption>图 B+树</figcaption>
+                </figure>
+                <p>一棵 \(m\) 阶的 B+树 和 \(m\) 阶的 B树 的差异在于：</p>
+                <ol>
+                    <li>有 \(m\) 棵子树的结点中含有 \(m\) 个关键字；</li>
+                    <li>所有的叶子结点中包含了全部关键字的信息，以及指向含这些关键字记录的指针，且叶子结点本身依关键字的大小自小而大顺序链接；</li>
+                    <li>所有的非终端结点可以看成是索引部分（每一层都是下一层的索引，也就是多级索引结构），结点中仅含有其子树（根结点）中的最大（或最小）关键字。</li>
+                </ol>
+                <p>B+树 的查找操作：B+ 树 既支持随机查找，也支持顺序查找，还可以结合随机查找和顺序查找进行范围查找。</p>
+                <p>B+树 的插入操作：插入：仅在叶子结点上进行插入，当结点中的关键字个数大于\( m \)时要分裂成两个结点，它们所含关键字的个数分别为\( \left\lfloor \frac{m+1}{2} \right\rfloor \)和\( \left\lceil \frac{m+1}{2} \right\rceil \)；并且，它们的双亲结点中应同时包含这两个结点中的最大关键字。</p>
+                <p>B+树 的删除操作：B+树的删除也仅在叶子结点进行，当叶子结点中最大关键字被删除时，其在非终端结点中的值可以作为一个“分界关键字”存在。若因删除而使结点中关键字的个数少于\( \left\lceil m/2 \right\rceil \)时，其和兄弟结点的合并过程亦和B-树类似。</p>
+<pre><code class="language-cpp">#define MAXM 100    // B+ 树最大阶数
+typedef int KeyType;
+
+// B+ 树结点结构
+typedef struct BPlusNode {
+    int keynum;                     // 结点中关键字个数
+    KeyType key[MAXM + 1];           // 关键字数组 key[1..keynum]
+    struct BPlusNode *parent;        // 双亲结点指针
+    struct BPlusNode *ptr[MAXM + 1]; // 子树指针（内部结点用）
+    struct BPlusNode *next;          // 叶子结点链表指针（仅叶子结点用）
+    bool is_leaf;                    // 是否为叶子结点标志
+} BPlusNode, *BPlusTree;
+
+// InitBPlusTree 初始化 B+ 树
+void InitBPlusTree(BPlusTree &T) {
+    T = new BPlusNode;
+    T->keynum = 0;
+    T->parent = NULL;
+    T->next = NULL;
+    T->is_leaf = true; // 初始根结点为叶子结点
+    for (int i = 0; i <= MAXM; i++) {
+        T->ptr[i] = NULL;
+    }
+}
+
+// SearchBPlusTree 查找关键字 key，返回所在叶子结点 p 和位置 i（1<=i<=p->keynum）
+bool SearchBPlusTree(BPlusTree T, KeyType key, BPlusTree &p, int &i) {
+    p = T;
+    while (!p->is_leaf) { // 非叶子结点仅做索引，向下查找
+        for (i = 1; i <= p->keynum && key > p->key[i]; i++);
+        p = p->ptr[i - 1];
+    }
+    // 叶子结点内精确查找
+    for (i = 1; i <= p->keynum && key > p->key[i]; i++);
+    if (i <= p->keynum && key == p->key[i]) {
+        return true;
+    }
+    return false;
+}
+
+// InsertKey 结点内插入关键字
+void InsertKey(BPlusTree &p, KeyType key, BPlusTree child, int pos) {
+    // 关键字和指针后移
+    for (int i = p->keynum; i >= pos; i--) {
+        p->key[i + 1] = p->key[i];
+        p->ptr[i + 1] = p->ptr[i];
+    }
+    p->key[pos] = key;
+    p->ptr[pos] = child;
+    if (child) child->parent = p;
+    p->keynum++;
+}
+
+// UpdateParentIndex 更新父结点的索引关键字
+void UpdateParentIndex(BPlusTree p) {
+    if (!p->parent) return;
+    BPlusTree parent = p->parent;
+    int pos = 0;
+    // 找到 p 在父结点中的位置
+    for (; pos <= parent->keynum; pos++) {
+        if (parent->ptr[pos] == p) break;
+    }
+    if (pos > 0) { // 父结点的 key[pos] 是 p 的最大值
+        parent->key[pos] = p->key[p->keynum];
+        UpdateParentIndex(parent);
+    }
+}
+
+// SplitNode 分裂结点
+void SplitNode(BPlusTree &p, BPlusTree &q, int m) {
+    q = new BPlusNode;
+    q->parent = p->parent;
+    q->is_leaf = p->is_leaf;
+    q->keynum = 0;
+    q->next = NULL;
+
+    int mid = (m + 1) / 2; // 分裂点
+    // 复制后半部分关键字和指针到新结点 q
+    for (int i = mid + 1; i <= p->keynum; i++) {
+        q->key[++q->keynum] = p->key[i];
+        q->ptr[q->keynum] = p->ptr[i];
+        if (q->ptr[q->keynum]) {
+            q->ptr[q->keynum]->parent = q;
+        }
+    }
+    q->ptr[0] = p->ptr[mid];
+    if (q->ptr[0]) q->ptr[0]->parent = q;
+
+    // 叶子结点特殊处理：维护链表，且原结点保留 mid 关键字
+    if (p->is_leaf) {
+        q->next = p->next;
+        p->next = q;
+        p->keynum = mid;
+    } else {
+        // 内部结点：原结点不保留 mid 关键字
+        p->keynum = mid - 1;
+    }
+}
+
+// InsertBPlusTree B+ 树插入关键字（核心）
+bool InsertBPlusTree(BPlusTree &T, KeyType key, int m) {
+    BPlusTree p = NULL, q = NULL;
+    int i = 0;
+
+    // 关键字已存在则不插入
+    if (SearchBPlusTree(T, key, p, i)) return false;
+
+    // 空树特殊处理
+    if (T->keynum == 0 && T->is_leaf) {
+        T->key[1] = key;
+        T->keynum = 1;
+        return true;
+    }
+
+    // 在叶子结点插入关键字
+    InsertKey(p, key, NULL, i);
+
+    // 如果插入的是叶子结点的最大值，向上更新父结点索引
+    if (i == p->keynum) {
+        UpdateParentIndex(p);
+    }
+
+    // 上溢处理：分裂结点并向上传递
+    KeyType upkey;
+    while (p->keynum == m) {
+        SplitNode(p, q, m);
+        // 提取要提升到父结点的关键字
+        upkey = p->is_leaf ? q->key[1] : p->key[(m + 1) / 2];
+
+        if (!p->parent) {
+            // 根结点分裂，创建新根
+            BPlusTree newroot = new BPlusNode;
+            newroot->keynum = 1;
+            newroot->key[1] = upkey;
+            newroot->ptr[0] = p;
+            newroot->ptr[1] = q;
+            newroot->is_leaf = false;
+            newroot->parent = NULL;
+            p->parent = newroot;
+            q->parent = newroot;
+            T = newroot;
+            break;
+        } else {
+            // 找到父结点中插入位置
+            p = p->parent;
+            for (i = 1; i <= p->keynum && upkey > p->key[i]; i++);
+            InsertKey(p, upkey, q, i);
+        }
+    }
+    return true;
+}
+
+// CreatBPlusTree 构建 B+ 树
+void CreatBPlusTree(BPlusTree &T, int m) {
+    InitBPlusTree(T);
+    KeyType key;
+    printf("输入关键字（-1 结束）：");
+    scanf("%d", &key);
+    while (key != -1) {
+        InsertBPlusTree(T, key, m);
+        scanf("%d", &key);
+    }
+}
+
+// BorrowFromBrother 从兄弟结点借关键字
+bool BorrowFromBrother(BPlusTree &p, int pos, int minkey) {
+    BPlusTree parent = p->parent;
+    // 尝试向右兄弟借
+    if (pos < parent->keynum && parent->ptr[pos + 1]->keynum > minkey) {
+        BPlusTree rbro = parent->ptr[pos + 1];
+        // 借第一个关键字
+        p->key[++p->keynum] = rbro->key[1];
+        p->ptr[p->keynum] = rbro->ptr[1];
+        if (p->ptr[p->keynum]) p->ptr[p->keynum]->parent = p;
+        // 右兄弟删除第一个关键字
+        for (int j = 1; j < rbro->keynum; j++) {
+            rbro->key[j] = rbro->key[j + 1];
+            rbro->ptr[j] = rbro->ptr[j + 1];
+        }
+        rbro->keynum--;
+        // 更新父结点索引
+        parent->key[pos + 1] = rbro->key[1];
+        return true;
+    }
+    // 尝试向左兄弟借
+    else if (pos > 0 && parent->ptr[pos - 1]->keynum > minkey) {
+        BPlusTree lbro = parent->ptr[pos - 1];
+        // 借最后一个关键字
+        for (int j = ++p->keynum; j > 1; j--) {
+            p->key[j] = p->key[j - 1];
+            p->ptr[j] = p->ptr[j - 1];
+        }
+        p->key[1] = lbro->key[lbro->keynum];
+        p->ptr[0] = lbro->ptr[lbro->keynum];
+        if (p->ptr[0]) p->ptr[0]->parent = p;
+        // 左兄弟删除最后一个关键字
+        lbro->keynum--;
+        // 更新父结点索引
+        parent->key[pos] = p->key[p->keynum];
+        return true;
+    }
+    return false;
+}
+
+// MergeWithBrother 与兄弟结点合并
+void MergeWithBrother(BPlusTree &p, int pos) {
+    BPlusTree parent = p->parent;
+    BPlusTree bro;
+    int bro_pos;
+
+    // 优先和左兄弟合并
+    if (pos > 0) {
+        bro = parent->ptr[pos - 1];
+        bro_pos = pos - 1;
+    } else {
+        bro = parent->ptr[pos + 1];
+        bro_pos = pos + 1;
+    }
+
+    // 叶子结点合并：直接追加关键字
+    if (p->is_leaf) {
+        for (int i = 1; i <= p->keynum; i++) {
+            bro->key[++bro->keynum] = p->key[i];
+        }
+        bro->next = p->next;
+    } else {
+        // 内部结点合并：先加入父结点的索引关键字
+        bro->key[++bro->keynum] = parent->key[bro_pos + 1];
+        for (int i = 1; i <= p->keynum; i++) {
+            bro->key[++bro->keynum] = p->key[i];
+            bro->ptr[bro->keynum] = p->ptr[i];
+            if (bro->ptr[bro->keynum]) bro->ptr[bro->keynum]->parent = bro;
+        }
+        bro->ptr[bro->keynum] = p->ptr[0];
+        if (bro->ptr[bro->keynum]) bro->ptr[bro->keynum]->parent = bro;
+    }
+
+    // 父结点删除对应的索引关键字
+    for (int j = bro_pos + 1; j < parent->keynum; j++) {
+        parent->key[j] = parent->key[j + 1];
+        parent->ptr[j] = parent->ptr[j + 1];
+    }
+    parent->keynum--;
+    delete p;
+    p = parent; // 向上处理父结点的下溢
+}
+
+// DeleteBPlusTree B+ 树删除关键字（核心）
+bool DeleteBPlusTree(BPlusTree &T, KeyType key, int m) {
+    BPlusTree p;
+    int i;
+    int minkey = (m + 1) / 2; // 结点最少关键字个数
+
+    // 未找到关键字则返回
+    if (!SearchBPlusTree(T, key, p, i)) return false;
+
+    // 从叶子结点删除关键字
+    for (int j = i; j < p->keynum; j++) {
+        p->key[j] = p->key[j + 1];
+        p->ptr[j] = p->ptr[j + 1];
+    }
+    p->keynum--;
+
+    // 如果删除的是叶子结点的最大值，向上更新父结点索引
+    if (i > p->keynum && p->parent) {
+        UpdateParentIndex(p);
+    }
+
+    // 下溢处理
+    while (p != T && p->keynum < minkey) {
+        BPlusTree parent = p->parent;
+        int pos = 0;
+        // 找到 p 在父结点中的位置
+        for (; pos <= parent->keynum; pos++) {
+            if (parent->ptr[pos] == p) break;
+        }
+
+        // 先尝试向兄弟结点借
+        if (BorrowFromBrother(p, pos, minkey) == true) {
+            break;
+        }
+        // 借不到则合并
+        else {
+            MergeWithBrother(p, pos);
+        }
+    }
+
+    // 根结点下溢处理
+    if (T->keynum == 0 && !T->is_leaf) {
+        BPlusTree old_root = T;
+        T = T->ptr[0];
+        T->parent = NULL;
+        delete old_root;
+    }
+
+    return true;
+}
+
+// LevelTraverse 层次遍历（打印树结构）
+void LevelTraverse(BPlusTree T, int level = 0) {
+    if (!T) return;
+    // 打印缩进
+    for (int i = 0; i < level * 4; i++) {
+        printf(" ");
+    }
+    // 打印结点类型
+    printf("%s", T->is_leaf ? "[叶子] " : "[内部] ");
+    // 打印关键字
+    for (int i = 1; i <= T->keynum; i++) {
+        printf("%d ", T->key[i]);
+    }
+    printf("\n");
+    // 递归遍历子树
+    if (!T->is_leaf) {
+        for (int i = 0; i <= T->keynum; i++) {
+            LevelTraverse(T->ptr[i], level + 1);
+        }
+    }
+}
+
+// SeqTraverse 顺序遍历（通过叶子链表）
+void SeqTraverse(BPlusTree T) {
+    // 找到最左叶子结点
+    BPlusTree p = T;
+    while (!p->is_leaf) {
+        p = p->ptr[0];
+    }
+    // 遍历叶子链表
+    printf("顺序遍历：");
+    while (p) {
+        for (int i = 1; i <= p->keynum; i++) {
+            printf("%d ", p->key[i]);
+        }
+        p = p->next;
+    }
+    printf("\n");
+}</code></pre>
+                
+                <h2 id="hash-table-search">哈希表的查找</h2>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/哈希查找例子.svg" alt="哈希查找例子" />
+                    <figcaption>图 哈希查找例子</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/关键字与存储位置之间没有关系.svg" alt="关键字与存储位置之间没有关系" />
+                    <figcaption>图 关键字与存储位置之间没有关系</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/关键字与存储位置之间有关系（等值映射）.svg" alt="关键字与存储位置之间有关系（等值映射）" />
+                    <figcaption>图 关键字与存储位置之间有关系（等值映射）</figcaption>
+                </figure>
+                <p>基于线性表、树结构的查找都是以关键字的比较为基础的。也就是查找时需要逐个比较关键字，目标元素的存储位置和其关键字无直接关系，其查找时间与表的长度有关，如果表的长度很长，查找时要大量地与无效结点的关键字进行比较，致使查找速度很慢。</p>
+                <p>可以在元素的存储位置和其关键字之间建立某种映射关系，那么在进行查找时，就无需做比较或做很少次的比较，按照这种映射关系直接由关键字找到相应的记录。这就是哈希查找法（Hash Search）的思想。它通过对元素的关键字值进行某种运算，直接求出元素的地址，即使用关键字到地址的直接转换方法，而不需要反复比较。</p>
+                <ul>
+                    <li>哈希函数和哈希地址：在记录的存储位置\( p \)和其关键字\( key \)之间建立一个确定的对应关系\( H \)，使\( p=H(key) \)，称这个对应关系\( H \)为哈希函数，\( p \)为哈希地址。</li>
+                    <li>哈希表：一个有限连续的地址空间，用以存储按哈希函数计算得到相应哈希地址的数据记录。通常哈希表的存储空间是一个一维数组，哈希地址是数组的下标。</li>
+                    <li>冲突和同义词：对不同的关键字可能得到同一哈希地址，即\( key_1 \neq key_2 \)，而\( H(key_1)=H(key_2) \)，这种现象称为冲突。具有相同函数值的关键字对该哈希函数来说称作同义词，\( key_1 \)与\( key_2 \)互称为同义词。</li>
+                </ul>
+                <p><strong>哈希函数</strong></p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/恒等关系.svg" alt="恒等关系" />
+                    <figcaption>图 恒等关系</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/恒等关系映射的弊端.svg" alt="恒等关系映射的弊端" />
+                    <figcaption>图 恒等关系映射的弊端</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/线性关系.svg" alt="线性关系" />
+                    <figcaption>图 线性关系</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/直接定址法的弊端.svg" alt="直接定址法的弊端" />
+                    <figcaption>图 直接定址法的弊端</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/除留余数法.svg" alt="除留余数法" />
+                    <figcaption>图 除留余数法</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/线性探测.svg" alt="线性探测" />
+                    <figcaption>图 线性探测</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/平方探测.svg" alt="平方探测" />
+                    <figcaption>图 平方探测</figcaption>
+                </figure>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/search/链地址法.svg" alt="链地址法" />
+                    <figcaption>图 链地址法</figcaption>
+                </figure>
+                
             </div>
         </div>
         
