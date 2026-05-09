@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 使用 MathJax 渲染 LaTeX 数学公式 -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+	<!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 引语 -->
+                <div class="author-quote">
+                    Have a good day!
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+					<li class="related-article-item">
+                        <a href="/posts/data-structure/01_overview.html" class="related-article-link">（一）概述</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/02_linear-list.html" class="related-article-link">（二）线性表</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/03_stack-and-queue.html" class="related-article-link">（三）栈和队列</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/04_string-array-and-glist.html" class="related-article-link">（四）串、数组和广义表</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/05_tree.html" class="related-article-link">（五）树和二叉树</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/06_graph.html" class="related-article-link">（六）图</a>
+                    </li>
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/07_search.html" class="related-article-link">（七）查找</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文（整合markdown内容） -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+				<h1>（八）排序</h1>
+
+				<h2>排序的基本概念</h2>
+				<ul>
+					<li>排序：是按关键字的非递减或非递增顺序对一组记录重新进行排列的操作。</li>
+					<li>排序的稳定性：相等的记录在排序前后的相对位置保持不变就是稳定的，否则就是不稳定的。</li>
+					<li>内部排序：指的是待排序记录全部存放在计算机内存中进行排序的过程。</li>
+					<li>外部排序：指的是待排序记录的数量很大，以致内存一次不能容纳全部记录，在排序过程中尚需对外存进行访问的排序过程。</li>
+				</ul>
+
+                <h2 id="internal-sort">内部排序</h2>
+				<h3 id="comparison-sorting">比较类排序</h3>
+				<h4 id="insertion-sort">插入排序</h4>
+<h5 id="straight-insertion-sort">直接插入排序</h5>
+<pre><code class="language-go">func StraightInsertionSort(arr []int) {
+    n := len(arr)
+    if n <= 1 {
+        return
+    }
+    for i := 1; i < n; i++ {
+        insertVal := arr[i]
+        insertIndex := i - 1
+        for insertIndex >= 0 && insertVal < arr[insertIndex] {
+            arr[insertIndex+1] = arr[insertIndex]
+            insertIndex--
+        }
+        arr[insertIndex+1] = insertVal
+    }
+}</code></pre>
+
+<h5 id="binary-insertion-sort">折半插入排序</h5>
+<pre><code class="language-go">func BinaryInsertionSort(arr []int) {
+    n := len(arr)
+    if n <= 1 {
+        return
+    }
+    for i := 1; i < n; i++ {
+        insertVal := arr[i]
+        low, high := 0, i-1
+        for low <= high {
+            mid := low + (high-low)/2
+            if insertVal < arr[mid] {
+                high = mid - 1
+            } else {
+                low = mid + 1
+            }
+        }
+        for j := i - 1; j >= low; j-- {
+            arr[j+1] = arr[j]
+        }
+        arr[low] = insertVal
+    }
+}</code></pre>
+
+<h5 id="shell-sort">希尔排序</h5>
+<pre><code class="language-go">func ShellSort(arr []int) {
+    n := len(arr)
+    if n <= 1 {
+        return
+    }
+    for gap := n / 2; gap > 0; gap /= 2 {
+        for i := gap; i < n; i++ {
+            insertVal := arr[i]
+            insertIndex := i
+            for insertIndex >= gap && insertVal < arr[insertIndex-gap] {
+                arr[insertIndex] = arr[insertIndex-gap]
+                insertIndex -= gap
+            }
+            arr[insertIndex] = insertVal
+        }
+    }
+}</code></pre>
+
+				<h4 id="exchange-sorting">交换排序</h4>
+<h5 id="bubble-sort">冒泡排序</h5>
+<pre><code class="language-go">func BubbleSort(arr []int) {
+    n := len(arr)
+    if n <= 1 {
+        return
+    }
+    for i := 0; i < n-1; i++ {
+        swapped := false
+        for j := 0; j < n-1-i; j++ {
+            if arr[j] > arr[j+1] {
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+                swapped = true
+            }
+        }
+        if !swapped {
+            break
+        }
+    }
+}</code></pre>
+
+<h5 id="quick-sort">快速排序</h5>
+<pre><code class="language-go">func QuickSort(arr []int) {
+    if len(arr) <= 1 {
+        return
+    }
+    quickSort(arr, 0, len(arr)-1)
+}
+
+func quickSort(arr []int, low, high int) {
+    if low < high {
+        pivotIndex := partition(arr, low, high)
+        quickSort(arr, low, pivotIndex)
+        quickSort(arr, pivotIndex+1, high)
+    }
+}
+
+func partition(arr []int, low, high int) int {
+    pivot := arr[low+(high-low)/2]
+    for {
+        for arr[low] < pivot {
+            low++
+        }
+        for arr[high] > pivot {
+            high--
+        }
+        if low >= high {
+            return high
+        }
+        arr[low], arr[high] = arr[high], arr[low]
+        low++
+        high--
+    }
+}</code></pre>
+
+				<h4 id="selection-sorting">选择排序</h4>
+<h5 id="simple-selection-sort">简单选择排序</h5>
+<pre><code class="language-go">func SelectionSort(arr []int) {
+    n := len(arr)
+    if n <= 1 {
+        return
+    }
+    for i := 0; i < n-1; i++ {
+        minIndex := i
+        for j := i + 1; j < n; j++ {
+            if arr[j] < arr[minIndex] {
+                minIndex = j
+            }
+        }
+        arr[i], arr[minIndex] = arr[minIndex], arr[i]
+    }
+}</code></pre>
+
+<h5 id="heap-sort">堆排序</h5>
+<pre><code class="language-go">func HeapSort(arr []int) {
+    n := len(arr)
+    if n <= 1 {
+        return
+    }
+
+    buildMaxHeap(arr)
+
+    for i := n - 1; i > 0; i-- {
+        arr[0], arr[i] = arr[i], arr[0]
+        heapify(arr, i, 0)
+    }
+}
+
+func buildMaxHeap(arr []int) {
+    n := len(arr)
+    for i := n/2 - 1; i >= 0; i-- {
+        heapify(arr, n, i)
+    }
+}
+
+func heapify(arr []int, heapSize, root int) {
+    largest := root
+    left := 2*root + 1
+    right := 2*root + 2
+
+    if left < heapSize && arr[left] > arr[largest] {
+        largest = left
+    }
+    if right < heapSize && arr[right] > arr[largest] {
+        largest = right
+    }
+
+    if largest != root {
+        arr[root], arr[largest] = arr[largest], arr[root]
+        heapify(arr, heapSize, largest)
+    }
+}</code></pre>
+
+				<h4 id="merge-sort">归并排序</h4>
+<h5 id="two-way-merge-sort">二路归并排序</h5>
+<pre><code class="language-go">func MergeSort(arr []int) {
+    if len(arr) <= 1 {
+        return
+    }
+    mid := len(arr) / 2
+    left := arr[:mid]
+    right := arr[mid:]
+    MergeSort(left)
+    MergeSort(right)
+    merge(arr, left, right)
+}
+
+func merge(arr, left, right []int) {
+    i, j, k := 0, 0, 0
+    temp := make([]int, len(left)+len(right))
+    for i < len(left) && j < len(right) {
+        if left[i] <= right[j] {
+            temp[k] = left[i]
+            i++
+        } else {
+            temp[k] = right[j]
+            j++
+        }
+        k++
+    }
+    for i < len(left) {
+        temp[k] = left[i]
+        i++
+        k++
+    }
+    for j < len(right) {
+        temp[k] = right[j]
+        j++
+        k++
+    }
+    copy(arr, temp)
+}</code></pre>
+
+				<h3 id="non-comparison-sorting">非比较类排序</h3>
+<h4 id="bucket-sort">桶排序</h4>
+<pre><code class="language-go">func BucketSort(arr []int) {
+    if len(arr) <= 1 {
+        return
+    }
+
+    minVal, maxVal := arr[0], arr[0]
+    for _, v := range arr {
+        if v < minVal {
+            minVal = v
+        }
+        if v > maxVal {
+            maxVal = v
+        }
+    }
+
+    bucketSize := 10
+    bucketCount := (maxVal-minVal)/bucketSize + 1
+    buckets := make([][]int, bucketCount)
+
+    for _, v := range arr {
+        index := (v - minVal) / bucketSize
+        buckets[index] = append(buckets[index], v)
+    }
+
+    index := 0
+    for _, bucket := range buckets {
+        // 使用任何内部排序算法来实现桶内排序
+        StraightInsertionSort(bucket)
+        
+        for _, v := range bucket {
+            arr[index] = v
+            index++
+        }
+    }
+}</code></pre>
+
+<h4 id="count-sort">计数排序</h4>
+<p>支持负数：</p>
+<ul>
+    <li>分组法</li>
+    <li>偏移量法</li>
+</ul>
+<pre><code class="language-go">// 原生计数排序（仅支持非负整数）
+func CountingSortNonNegative(arr []int) {
+    if len(arr) <= 1 {
+        return
+    }
+
+    maxVal := arr[0]
+    for _, v := range arr {
+        if v > maxVal {
+            maxVal = v
+        }
+    }
+
+    count := make([]int, maxVal+1)
+    for _, v := range arr {
+        count[v]++
+    }
+
+    index := 0
+    for i, cnt := range count {
+        for ; cnt > 0; cnt-- {
+            arr[index] = i
+            index++
+        }
+    }
+}
+
+// 支持负数的计数排序
+func CountingSort(arr []int) {
+    if len(arr) <= 1 {
+        return
+    }
+
+    minVal, maxVal := arr[0], arr[0]
+    for _, v := range arr {
+        if v < minVal {
+            minVal = v
+        }
+        if v > maxVal {
+            maxVal = v
+        }
+    }
+
+    offset := -minVal
+    temp := make([]int, len(arr))
+    for i, v := range arr {
+        temp[i] = v + offset
+    }
+
+    CountingSortNonNegative(temp)
+
+    for i, v := range temp {
+        arr[i] = v - offset
+    }
+}</code></pre>
+
+<h4 id="radix-sort">基数排序</h4>
+<p>支持负数：</p>
+<ul>
+    <li>分组法</li>
+    <li>偏移量法</li>
+</ul>
+<p>支持浮点数：</p>
+<ul>
+    <li>缩放法</li>
+</ul>
+<pre><code class="language-go">type Node struct {
+    Val  int64
+    Next *Node
+}
+
+type Queue struct {
+    Head *Node
+    Tail *Node
+}
+
+func (q *Queue) Enqueue(val int64) {
+    newNode := &Node{Val: val}
+    if q.Tail == nil {
+        q.Head = newNode
+        q.Tail = newNode
+    } else {
+        q.Tail.Next = newNode
+        q.Tail = newNode
+    }
+}
+
+func (q *Queue) Dequeue() (int64, bool) {
+    if q.Head == nil {
+        return 0, false
+    }
+    val := q.Head.Val
+    q.Head = q.Head.Next
+    if q.Head == nil {
+        q.Tail = nil
+    }
+    return val, true
+}
+
+func (q *Queue) IsEmpty() bool {
+    return q.Head == nil
+}
+
+// 原生基数排序（仅支持非负整数）
+func RadixSortNonNegative(arr []int64) {
+    if len(arr) <= 1 {
+        return
+    }
+    maxVal := arr[0]
+    for _, v := range arr {
+        if v > maxVal {
+            maxVal = v
+        }
+    }
+    for exp := int64(1); maxVal/exp > 0; exp *= 10 {
+        queues := make([]*Queue, 10)
+        for i := range queues {
+            queues[i] = &Queue{}
+        }
+        for _, v := range arr {
+            digit := (v / exp) % 10
+            queues[digit].Enqueue(v)
+        }
+        idx := 0
+        for _, t := range queues {
+            for !t.IsEmpty() {
+                val, _ := t.Dequeue()
+                arr[idx] = val
+                idx++
+            }
+        }
+    }
+}
+
+// 支持负数的整数基数排序
+func RadixSortInt(arr []int64) {
+    if len(arr) <= 1 {
+        return
+    }
+    var neg, nonNeg []int64
+    for _, v := range arr {
+        if v < 0 {
+            neg = append(neg, -v)
+        } else {
+            nonNeg = append(nonNeg, v)
+        }
+    }
+    RadixSortNonNegative(neg)
+    RadixSortNonNegative(nonNeg)
+    for i, j := 0, len(neg)-1; i < j; i, j = i+1, j-1 {
+        neg[i], neg[j] = neg[j], neg[i]
+    }
+    idx := 0
+    for _, v := range neg {
+        arr[idx] = -v
+        idx++
+    }
+    for _, v := range nonNeg {
+        arr[idx] = v
+        idx++
+    }
+}
+
+// 辅助函数：获取浮点数小数位数
+func getDecimals(x float64) int {
+    s := strconv.FormatFloat(x, 'f', 6, 64)
+    pos := strings.Index(s, ".")
+    if pos == -1 {
+        return 0
+    }
+    return len(strings.TrimRight(s[pos+1:], "0"))
+}
+
+// 支持正负 + 小数的浮点数基数排序
+func RadixSortFloat(arr []float64) {
+    if len(arr) <= 1 {
+        return
+    }
+    minVal := arr[0]
+    for _, v := range arr {
+        if v < minVal {
+            minVal = v
+        }
+    }
+    offset := 0.0
+    if minVal < 0 {
+        offset = -minVal
+    }
+    maxd := 0
+    for _, v := range arr {
+        if d := getDecimals(v); d > maxd {
+            maxd = d
+        }
+    }
+    scale := math.Pow(10, float64(maxd))
+    temp := make([]int64, len(arr))
+    for i, v := range arr {
+        temp[i] = int64(math.Round((v + offset) * scale))
+    }
+    RadixSortNonNegative(temp)
+    for i, v := range temp {
+        arr[i] = float64(v)/scale - offset
+    }
+}</code></pre>
+				<h2 id="external-sort">外部排序</h2>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/外部排序示意图.svg" alt="外部排序示意图">
+                    <figcaption>图 外部排序示意图</figcaption>
+                </figure>
+                <p>将外存上含 n 个记录的文件分成若干长度为 l 的子文件或段（segment），依次读入内存并利用有效的内部排序方法对它们进行排序，并将排序后得到的有序子文件重新写入外存，通常称这些有序子文件为归并段。</p>
+                <p>假设内存中只有两个输入缓冲区、一个输出缓冲区，如何将外存中磁盘块0-7进行排序？</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/生成归并段示意图.svg" alt="生成归并段示意图">
+                    <figcaption>图 生成归并段示意图</figcaption>
+                </figure>
+                <p>首先，通过内部排序将磁盘块0、1，2、3，4、5，6、7通过内部排序，生成4个归并段。</p>
+                <p>然后，利用归并排序的方法将4个归并段进行合并，最终得到一个有序文件。</p>
+                <p>举个例子：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/外部排序归并过程.svg" alt="外部排序归并过程">
+                    <figcaption>图 外部排序归并过程</figcaption>
+                </figure>
+
+                <h3 id="merge-tree">归并树</h3>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/归并树.svg" alt="归并树">
+                    <figcaption>图 归并树</figcaption>
+                </figure>
+                <p>外部排序的总时间=内部排序的时间+外存信息读/写的时间+内部归并的时间。</p>
+                <p>其中，影响最大的部分就是：外存信息读/写的时间（硬盘I/O）。</p>
+                <p>对于上述归并树：总I/O次数为：8*4+16*2+32+8*4=128。</p>
+
+                <h3 id="multi-way-merge">多路归并</h3>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/四路归并树.svg" alt="四路归并树">
+                    <figcaption>图 四路归并树</figcaption>
+                </figure>
+                <p>一般地，对r个初始归并段，做k路归并排序，设归并趟数为s，则\(k^s≥r\)。可见，当k增大时，s即可减少，进而减少IO次数，从而减少外排时间。</p>
+
+                <h3 id="loser-tree">败者树</h3>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/四路归并比较.svg" alt="四路归并比较">
+                    <figcaption>图 四路归并比较</figcaption>
+                </figure>
+                <p>由于使用多路排序会导致比较次数增加，因此引入败者树来优化比较过程。</p>
+                <p>算法步骤如下：</p>
+                <ol>
+                    <li>初始化：将所有叶子节点初始化为各个输入序列的第一个元素，其他节点初始化为无穷大。</li>
+                    <li>比较：从叶子节点开始，每次比较一对兄弟节点，并将较大的元素所在段号保存在父节点中。同时，将较小的元素（即“胜者”）向上传递，与其他胜者比较，不断重复步骤2，直至到达根节点。</li>
+                    <li>输出：根节点中的元素就是当前最小的元素，将其输出。</li>
+                    <li>更新：将刚刚输出的元素替换为其所在序列的下一个元素。如果该序列已经没有元素了，就将其替换为无穷大。</li>
+                    <li>重构败者树：从刚刚更新的叶子节点开始，重新执行步骤2和步骤3，直到所有元素都被输出。</li>
+                </ol>
+                <p>倘若有四个归并段，我们采用败者树进行归并。</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/败者树.svg" alt="败者树">
+                    <figcaption>图 败者树</figcaption>
+                </figure>
+
+                <h3 id="replacement-selection-sort">置换选择排序</h3>
+                <p>减少初始归并段的个数也可以减少归并所需要的趟数，可以通过增长初始归并段的长度来减少初始归并段的个数。</p>
+                <p>假设初始待排序文件为FI，初始归并段文件为输出文件FO，内存工作区为WA(work area)，FO与WA的初始状态为空，并假设内存工作区WA的容量可容纳w个记录，以下是置换选择排序的算法步骤：</p>
+                <ol>
+                    <li>从FI输入w个记录到工作区 WA，</li>
+                    <li>从 WA 中选出其中关键字最小的记录，记为 MINIMAX</li>
+                    <li>将MINIMAX输出到FO中去。</li>
+                    <li>若FI不为空，则从FI输入下一个记录到WA中</li>
+                    <li>从 WA 中选出关键字比 MINIMAX的关键字大的最小记录作为新的 MINIMAX。</li>
+                    <li>重复步骤 3 ~ 5，直至 WA中选不出新的 MINIMAX为止，由此得到一个初始归并段，输出个归并段的结束标记到 FO。</li>
+                    <li>重复步骤 2 ~ 6，直至 WA 为空。由此得到全部归并段。</li>
+                </ol>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/置换选择排序.svg" alt="置换选择排序">
+                    <figcaption>图 置换选择排序</figcaption>
+                </figure>
+
+                <h3 id="best-merge-tree">最佳归并树</h3>
+                <p>置换选择排序会生成长度不一样的初始归并段，每个归并段所占的磁盘块数可能不同，归并过程也可能不同。</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/普通归并树.svg" alt="普通归并树">
+                    <figcaption>图 普通归并树</figcaption>
+                </figure>
+                <p>这棵归并树的带权路径长度 WPL =  2*1 + (5+1+6+2) * 3 = 44 = 读磁盘的次数 = 写磁盘的次数。</p>
+                <p>可以使用哈夫曼树的思想来进行优化。</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/最佳归并树.svg" alt="最佳归并树">
+                    <figcaption>图 最佳归并树</figcaption>
+                </figure>
+                <p>最佳归并树 \(WPL_{min} = (1+2)*4 + 2*3 +5*2 + 6*1 = 34\)</p>
+                <p>读磁盘次数 = 写磁盘次数 = 34 次；总的磁盘 I/O 次数 = 68</p>
+                <p>对于多路归并，同样可以使用哈夫曼树的思想来构建最佳归并树。</p>
+                <p>但是，注意：对于k叉归并，若初始归并段的数量无法构成严格的Κ叉归并树，则需要补充几个长度为0的“虚段”，再进行k叉哈夫曼树的构造。</p>
+                <p>例如：</p>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/sort/多路归并最佳归并树.svg" alt="多路归并最佳归并树">
+                    <figcaption>图 多路归并最佳归并树</figcaption>
+                </figure>
+                <p>k叉的最佳归并树一定是一棵严格的k叉树，即树中只包含度为k、度为0的结点。</p>
+                <p>设度为k的结点有 \(n_k\) 个，度为0的结点有 \(n_0\) 个，归并树总结点数=\(n\) 则：</p>
+                <p>初始归并段数量+虚段数量=\(n_0\)</p>
+                <div>
+                    $$
+                    \begin{array}{c}
+                    n = n_0 + n_k \\
+                    k n_k = n - 1
+                    \end{array}
+                    \rightarrow
+                    n_0 = (k-1)n_k + 1 \;\rightarrow\; n_k = \frac{n_0 - 1}{k - 1}
+                    $$
+                </div>
+                <ol>
+                    <li>若 \((\text{初始归并段数量} - 1) \% (k-1) = 0\)，说明刚好可以构成严格k叉树，此时不需要添加虚段</li>
+                    <li>若 \((\text{初始归并段数量} - 1) \% (k-1) = u \neq 0\)，则需要补充 \((k-1) - u\) 个虚段</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
