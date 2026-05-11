@@ -168,7 +168,168 @@ typedef struct {
     int length;
 } String;
 </code></pre>
-                
+
+                <h2 id="string-pattern-matching">串的模式匹配</h2>
+                <h3 id="bf-algorithm">BF算法</h3>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/string-array-and-glist/BF算法.svg" alt="BF算法">
+                    <figcaption>图 BF算法</figcaption>
+                </figure>
+                <p>BF（Brute Force）：暴力破解。</p>
+<pre><code class="language-cpp">int BF(SString S, SString T) {
+    int i = 1;  // 主串指针
+    int j = 1;  // 子串指针
+
+    while (i <= S.length && j <= T.length) {
+        if (S.ch[i] == T.ch[j]) {
+            // 字符匹配，指针同时后移
+            i++;
+            j++;
+        } else {
+            // 字符不匹配，指针回退
+            i = i - j + 2;  // 主串回退到上一次起始位置的下一个
+            j = 1;          // 子串回到开头
+        }
+    }
+
+    if (j > T.length) {
+        return i - T.length;  // 匹配成功，返回起始位置
+    } else {
+        return -1;            // 匹配失败
+    }
+}</code></pre>
+
+                <h3 id="kmp-algorithm">KMP算法</h3>
+                <figure>
+                    <img src="/assets/images/posts/data-structure/string-array-and-glist/KMP算法.svg" alt="KMP算法">
+                    <figcaption>图 KMP算法</figcaption>
+                </figure>
+                <p>KMP（Knuth、Morris & Pratt）：改进算法。</p>
+                <p>前缀：对于一个字符串 T，它的前缀是指不包含最后一个字符的子串。</p>
+                <p>例如：T = "ababc"，其前缀包括："a", "ab", "aba", "abab"</p>
+                <p>后缀：对于一个字符串 T，它的后缀是指不包含第一个字符的子串。</p>
+                <p>例如：T = "ababc"，其后缀包括："c", "bc", "abc", "babc"</p>
+                <p>最长公共前后缀：对于一个字符串 T，它的最长公共前后缀是指既是 T 的前缀又是 T 的后缀的最长子串。</p>
+                <p>例如：T = "a"，其没有最长公共前后缀，长度为0。</p>
+                <p>例如：T = "ab"，其没有最长公共前后缀，长度为0。</p>
+                <p>例如：T = "aba"，其最长公共前后缀是 "a"，长度为1。</p>
+                <p>例如：T = "abab"，其最长公共前后缀是 "ab"，长度为2。</p>
+                <p>例如：T = "ababc"，其没有最长公共前后缀，长度为0。</p>
+                <p>前缀表：对于一个字符串 T，它的前缀表是一个数组，其中每个元素表示对应位置的最长公共前后缀的长度。</p>
+                <p>例如：T = "ababc"，其前缀表为 [0, 0, 1, 2, 0]。</p>
+                <p>next数组：对于一个字符串 T，它的next数组是前缀表的改进版本，用于优化模式匹配过程。</p>
+                <p>next 数组是前缀表的变形，没有统一的标准定义，最常见的有三种：</p>
+                <ol>
+                    <li>标准 next 数组：与前缀表完全相同</li>
+                    <li>严蔚敏版 next 数组：前缀表整体右移一位，第一个元素设为-1</li>
+                    <li>优化版 nextval 数组：在严蔚敏版基础上解决了连续相同字符的冗余比较问题</li>
+                </ol>
+<pre><code class="language-cpp">// 计算标准版next数组（=前缀表）
+// next[i] = 子串 T[0..i] 的最长相等前后缀的长度
+void GetNext(SString T, int next[]) {
+    next[0] = 0;  // 单个字符没有前后缀，最长相等长度为0
+    int j = 0;    // j表示当前最长相等前后缀的长度
+
+    // i从1开始，因为i=0已经初始化
+    for (int i = 1; i < T.length; ++i) {
+        // 不匹配时，j回退到上一个可能的最长前后缀位置
+        while (j > 0 && T.ch[i] != T.ch[j]) {
+            j = next[j - 1];  // 关键：回退到j-1位置的前缀表值
+        }
+
+        // 匹配成功，最长前后缀长度+1
+        if (T.ch[i] == T.ch[j]) {
+            j++;
+        }
+
+        next[i] = j;  // 记录当前位置的最长相等前后缀长度
+    }
+}
+
+// 标准版KMP匹配算法
+// 返回：匹配成功返回起始位置（1开始，与之前BF/KMP保持一致），失败返回-1
+int KMP(SString S, SString T, int next[]) {
+    // 边界条件：模式串为空直接返回1
+    if (T.length == 0) return 1;
+    // 模式串比主串长直接返回-1
+    if (T.length > S.length) return -1;
+
+    int j = 0;  // 模式串指针
+    for (int i = 0; i < S.length; ++i) {
+        // 不匹配时，模式串回退
+        while (j > 0 && S.ch[i] != T.ch[j]) {
+            j = next[j - 1];  // 关键：回退到j-1位置的前缀表值
+        }
+
+        // 匹配成功，两个指针同时后移
+        if (S.ch[i] == T.ch[j]) {
+            j++;
+        }
+
+        // 模式串遍历完成，匹配成功
+        if (j == T.length) {
+            return i - T.length + 1;  // 转换为1开始的位置
+        }
+    }
+
+    return -1;  // 匹配失败
+}
+
+// 计算标准next数组（严蔚敏版）
+void GetNext(SString T, int next[]) {
+    int i = 1, j = 0;
+    next[1] = 0;  // 严蔚敏教材1开始计数，next[1]=0
+    while (i < T.length) {
+        if (j == 0 || T.ch[i] == T.ch[j]) {
+            i++;
+            j++;
+            next[i] = j;
+        } else {
+            j = next[j];  // 回退到上一个可能的位置
+        }
+    }
+}
+
+// 计算优化版nextval数组
+void GetNextval(SString T, int nextval[]) {
+    int i = 1, j = 0;
+    nextval[1] = 0;
+    while (i < T.length) {
+        if (j == 0 || T.ch[i] == T.ch[j]) {
+            i++;
+            j++;
+            // 优化：如果当前字符与回退后的字符相同，则继续回退
+            if (T.ch[i] != T.ch[j]) {
+                nextval[i] = j;
+            } else {
+                nextval[i] = nextval[j];
+            }
+        } else {
+            j = nextval[j];
+        }
+    }
+}
+
+// KMP匹配算法（严蔚敏版）
+// 输入：主串S，模式串T，next数组
+// 返回：匹配成功返回起始位置（1开始），失败返回-1
+int KMP(SString S, SString T, int next[]) {
+    int i = 1, j = 1;
+    while (i <= S.length && j <= T.length) {
+        if (j == 0 || S.ch[i] == T.ch[j]) {
+            i++;
+            j++;
+        } else {
+            j = next[j];  // 模式串回退，主串i不回退！这是KMP的核心优势
+        }
+    }
+    if (j > T.length) {
+        return i - T.length;  // 匹配成功，返回起始位置
+    } else {
+        return -1;            // 匹配失败
+    }
+}</code></pre>
+
                 <h2 id="array-definition">数组的定义</h2>
                 <div style="text-align: center; margin-bottom: 10px;">
                     arr1 = [1,2,3,4,5]
