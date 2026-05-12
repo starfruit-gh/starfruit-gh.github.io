@@ -80,10 +80,10 @@
             </div>
         </div>
         
-        <!-- 中间正文（整合markdown内容） -->
+        <!-- 中间正文 -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1 id="main-title">（一）概述</h1>
+                <h1 id="overview">（一）概述</h1>
                 
                 <h2 id="basic-concepts">数据结构的基本概念与术语</h2>
                 <h3 id="data-terms">数据、数据元素、数据项和数据对象</h3>
@@ -97,6 +97,7 @@
                 <h3 id="data-structure-def">数据结构</h3>
                 <h4 id="ds-definition">定义</h4>
                 <p>数据结构（Data Structure）：是相互之间存在一种或多种特定关系的数据元素的集合。DS={“数据元素”+“结构(关系)”}。</p>
+
                 <h4 id="ds-three-elements">三要素</h4>
                 <h5 id="logical-structure">逻辑结构</h5>
                 <ul>
@@ -174,7 +175,7 @@
                 <p>此时，看一个算法的执行时间就只看算法所有语句的频度之和即可。</p>
                 <p>假设问题规模为n，算法所有语句的频度之和用f(n)表示，算法的执行时间用T(n)表示。则有T(n)=f(n)。</p>
                 <p>举个例子：</p>
-                <pre><code class="language-go">// 计算两个n×n矩阵的乘积
+<pre><code class="language-go">// 计算两个n×n矩阵的乘积
 func matrixMultiply(a, b [][]int, n int) [][]int {
     result := make([][]int, n)     // 语句1：执行1次
     for i := 0; i &lt; n; i++ {       // 语句2：执行n+1次
@@ -198,71 +199,71 @@ func matrixMultiply(a, b [][]int, n int) [][]int {
                 
                 <h4 id="asymptotic-growth">函数的渐近增长</h4>
                 <p>对比几个不同算法执行时间随问题规模n的变化的例子：</p>
-                <div class="table-container">
-                    <div class="table-caption">表1 算法时间复杂度对比</div>
-                    <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+                <div class="article-table-container">
+                    <table class="article-table">
+                        <caption class="table-caption caption-top">表 算法时间复杂度对比</caption>
                         <thead>
-                            <tr style="background-color: #f5f5f5;">
-                                <th style="border:1px solid #eee; padding:8px; text-align:left;">问题规模n</th>
-                                <th style="border:1px solid #eee; padding:8px; text-align:left;">算法A: 3n+1</th>
-                                <th style="border:1px solid #eee; padding:8px; text-align:left;">算法B: 2n²+3n+1</th>
-                                <th style="border:1px solid #eee; padding:8px; text-align:left;">算法C: 3n³+4n²+7n+6</th>
+                            <tr>
+                                <th>问题规模n</th>
+                                <th>算法A: 3n+1</th>
+                                <th>算法B: 2n²+3n+1</th>
+                                <th>算法C: 3n³+4n²+7n+6</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=1</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">4</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">6</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">20</td>
+                                <td>n=1</td>
+                                <td>4</td>
+                                <td>6</td>
+                                <td>20</td>
                             </tr>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=2</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">7</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">15</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">68</td>
+                                <td>n=2</td>
+                                <td>7</td>
+                                <td>15</td>
+                                <td>68</td>
                             </tr>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=5</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">16</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">66</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">526</td>
+                                <td>n=5</td>
+                                <td>16</td>
+                                <td>66</td>
+                                <td>526</td>
                             </tr>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=10</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">31</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">231</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,476</td>
+                                <td>n=10</td>
+                                <td>31</td>
+                                <td>231</td>
+                                <td>3,476</td>
                             </tr>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=100</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">301</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">20,301</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,040,706</td>
+                                <td>n=100</td>
+                                <td>301</td>
+                                <td>20,301</td>
+                                <td>3,040,706</td>
                             </tr>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=1000</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,001</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">2,003,001</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,004,007,006</td>
+                                <td>n=1000</td>
+                                <td>3,001</td>
+                                <td>2,003,001</td>
+                                <td>3,004,007,006</td>
                             </tr>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=10000</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">30,001</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">200,030,001</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,000,400,070,006</td>
+                                <td>n=10000</td>
+                                <td>30,001</td>
+                                <td>200,030,001</td>
+                                <td>3,000,400,070,006</td>
                             </tr>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=100000</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">300,001</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">20,000,300,001</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,000,040,000,700,006</td>
+                                <td>n=100000</td>
+                                <td>300,001</td>
+                                <td>20,000,300,001</td>
+                                <td>3,000,040,000,700,006</td>
                             </tr>
                             <tr>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">n=1000000</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,000,001</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">2,000,003,000,001</td>
-                                <td style="border:1px solid #eee; padding:8px; text-align:left;">3,000,004,000,007,000,006</td>
+                                <td>n=1000000</td>
+                                <td>3,000,001</td>
+                                <td>2,000,003,000,001</td>
+                                <td>3,000,004,000,007,000,006</td>
                             </tr>
                         </tbody>
                     </table>

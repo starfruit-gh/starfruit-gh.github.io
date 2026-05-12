@@ -144,20 +144,6 @@ body {
     font-style: italic;              /* 斜体 */
 }
 
-/* 表格容器样式 */
-.article-content .table-container {
-    margin: 20px 0;                  /* 表格与正文间距20px */
-}
-
-/* 表格序号样式 */
-.article-content .table-caption {
-    font-size: 14px;                 /* 字体大小14px */
-    color: #999;                     /* 灰色字体 */
-    text-align: center;              /* 居中对齐 */
-    margin-bottom: 8px;              /* 底部外边距8px */
-    font-style: italic;              /* 斜体 */
-}
-
 /* 统一黑色系文本样式 */
 .article-content p,
 .article-content li {
@@ -310,12 +296,10 @@ body {
 }
 
 /* =========================================== */
-/* 9. 专属文章表格样式（.article-table）       */
+/* 9. 专属文章表格样式                           */
 /* =========================================== */
-/* 用途：用于文章内容中的数据表格，与代码块表格（如 highlight.js 行号表格）完全隔离 */
-/* 特点：半透明白色背景、柔和边框、悬停反馈、响应式滚动 */
 
-/* 表格容器（提供圆角与水平滚动） */
+/* 表格容器 */
 .article-table-container {
     margin: 1.5em 0;                /* 上下外边距，与段落间距协调 */
     border-radius: 12px;            /* 圆角，与卡片风格一致 */
@@ -345,7 +329,7 @@ body {
     vertical-align: top;
 }
 
-/* 表头样式（浅蓝灰底色，与侧边栏标题呼应） */
+/* 表头样式 */
 .article-table th {
     background-color: rgba(240, 248, 255, 0.85);
     font-weight: 600;
@@ -354,12 +338,12 @@ body {
     font-size: 14px;
 }
 
-/* 行悬停效果（浅色高亮，提升可读性） */
+/* 行悬停效果 */
 .article-table tbody tr:hover {
     background-color: rgba(240, 248, 255, 0.5);
 }
 
-/* 极淡斑马纹，辅助视线（可选） */
+/* 极淡斑马纹，辅助视线 */
 .article-table tbody tr:nth-child(even) {
     background-color: rgba(0, 0, 0, 0.01);
 }
@@ -375,7 +359,7 @@ body {
     text-decoration: underline;
 }
 
-/* 表格内的行内代码（适配现有 .code-inline 风格） */
+/* 表格内的行内代码 */
 .article-table .code-inline,
 .article-table code:not(.hljs) {
     font-size: 0.85em;
@@ -386,7 +370,7 @@ body {
     white-space: nowrap;
 }
 
-/* 表格标题（caption）——与图片 figcaption 风格一致 */
+/* 表格标题 */
 .article-table caption {
     font-size: 14px;
     color: #999;
