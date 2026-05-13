@@ -83,9 +83,9 @@
         <!-- 中间正文 -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1 id="stack-and-queue">（三）栈和队列</h1>
+                <h1>（三）栈和队列</h1>
                 
-                <h2 id="stack-definition">栈的定义</h2>
+                <h2>栈的定义</h2>
                 <figure>
                     <img src="/assets/images/posts/data-structure/stack-and-queue/入栈和出栈.svg" alt="栈">
                     <figcaption>图 栈</figcaption>
@@ -98,7 +98,7 @@
                     <li>从栈顶删除元素的操作，称为出栈（Pop）。</li>
                 </ul>
                 
-                <h2 id="stack-features">栈的特点</h2>
+                <h2>栈的特点</h2>
                 <p>后进先出（LIFO）</p>
                 <p>举一个栈的例子：</p>
                 <p>假设有 3 个整型数字元素 1、2、3 依次进栈，会有哪些出栈次序呢?</p>
@@ -112,7 +112,7 @@
                 <p>有没有可能是 312 这样的次序出栈呢？</p>
                 <p>答案是肯定不会。因为 3 先出栈，就意味着 3 曾经进栈，既然 3 都进栈了，那也就意味着 1 和 2 已经进栈了，此时，2 一定是在 1 的上面，就是更接近栈顶，那么出栈只可能是 321，不然不满足 1、2、3 依次进栈的要求，所以此时不会发生 1 比 2 先出栈的情况。</p>
                 
-<h2 id="stack-adt">栈的抽象数据类型</h2>
+<h2>栈的抽象数据类型</h2>
 <pre><code class="language-cpp">ADT Stack {
     数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
     数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
@@ -137,8 +137,8 @@
         StackTraverse(S)
 } ADT Stack</code></pre>
                 
-                <h2 id="stack-sequential-storage">栈的顺序存储结构</h2>
-                <h3 id="stack-sequential-storage-definition">顺序栈的定义</h3>
+                <h2>栈的顺序存储结构</h2>
+                <h3>顺序栈的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/stack-and-queue/顺序栈.svg" alt="顺序栈">
                     <figcaption>图 顺序栈</figcaption>
@@ -149,8 +149,8 @@
                     <li>另设 base 指针，指示栈底元素在顺序栈中的位置。</li>
                     <li>并用一个整型变量 stacksize 表示顺序栈的最大容量。</li>
                 </ul>
-                <h3 id="stack-sequential-storage-code">顺序栈的代码实现</h3>
-<h4 id="seq-stack-definition">定义</h4>
+                <h3>顺序栈的代码实现</h3>
+<h4>定义</h4>
 <pre><code class="language-cpp">typedef struct {
     // 1. 栈底指针，指向动态分配的数组首地址
     ElemType *base;
@@ -160,7 +160,7 @@
     int stacksize;
 } SeqStack;</code></pre>
                 
-<h4 id="seq-stack-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">// InitStack 初始化顺序栈
 bool InitStack(SeqStack &amp;S) {
     // 1. 新建一个 ElemType 类型的一维数组，并为该数组申请一块指定大小的内存空间，让栈底指针 base 指向该数组
@@ -172,7 +172,7 @@ bool InitStack(SeqStack &amp;S) {
     return true;
 }</code></pre>
                 
-<h4 id="seq-stack-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">// DestroyStack 销毁顺序栈
 void DestroyStack(SeqStack &amp;S) {
     // 1. 判断栈底指针是否为空，为空则没有需要销毁的空间，直接返回
@@ -186,7 +186,7 @@ void DestroyStack(SeqStack &amp;S) {
     }
 }</code></pre>
                 
-<h4 id="seq-stack-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">// ClearStack 清空顺序栈
 void ClearStack(SeqStack &amp;S) {
     // 1. 判断栈底指针是否为空，为空则无需清空
@@ -195,7 +195,7 @@ void ClearStack(SeqStack &amp;S) {
         S.top = S.base;
 }</code></pre>
                 
-<h4 id="seq-stack-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">// StackEmpty 判断顺序栈是否为空
 bool StackEmpty(const SeqStack &amp;S) {
     // 直接判断栈顶指针是否等于栈底指针返回结果即可
@@ -203,14 +203,14 @@ bool StackEmpty(const SeqStack &amp;S) {
     else return false;
 }</code></pre>
                 
-<h4 id="seq-stack-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">// StackLength 返回顺序栈的长度
 int StackLength(const SeqStack &amp;S) {
     // 直接返回栈顶指针与栈底指针的差值，即为栈中元素个数
     return S.top - S.base;
 }</code></pre>
                 
-<h4 id="seq-stack-gettop">取栈顶元素</h4>
+<h4>取栈顶元素</h4>
 <pre><code class="language-cpp">// GetTop 获取顺序栈的栈顶元素，并用 e 返回其值
 bool GetTop(const SeqStack &amp;S, ElemType &amp;e) {
     // 1. 判断栈是否为空，若空则返回 false
@@ -220,7 +220,7 @@ bool GetTop(const SeqStack &amp;S, ElemType &amp;e) {
     return true;
 }</code></pre>
                 
-<h4 id="seq-stack-push">入栈</h4>
+<h4>入栈</h4>
 <pre><code class="language-cpp">// Push 向顺序栈中插入元素 e 作为新的栈顶元素
 bool Push(SeqStack &amp;S, ElemType e) {
     // 1. 判断栈是否已满，若满则返回 false
@@ -232,7 +232,7 @@ bool Push(SeqStack &amp;S, ElemType e) {
     return true;
 }</code></pre>
                 
-<h4 id="seq-stack-pop">出栈</h4>
+<h4>出栈</h4>
 <pre><code class="language-cpp">// Pop 删除顺序栈的栈顶元素，并用 e 返回其值
 bool Pop(SeqStack &amp;S, ElemType &amp;e) {
     // 1. 判断栈是否为空，若空则返回 false
@@ -244,7 +244,7 @@ bool Pop(SeqStack &amp;S, ElemType &amp;e) {
     return true;
 }</code></pre>
                 
-<h4 id="seq-stack-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">// StackTraverse 遍历顺序栈（从栈底到栈顶依次访问每个元素）
 void StackTraverse(const SeqStack &amp;S) {
     // 1. 定义临时指针，从栈底开始遍历
@@ -273,16 +273,16 @@ void StackTraverse(const SeqStack &amp;S, void (*visit)(ElemType)) {
     }
 }</code></pre>
                 
-                <h2 id="stack-linked-storage">栈的链式存储结构</h2>
-                <h3 id="stack-linked-storage-definition">链栈的定义</h3>
+                <h2>栈的链式存储结构</h2>
+                <h3>链栈的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/stack-and-queue/链栈.svg" alt="链栈">
                     <figcaption>图 链栈</figcaption>
                 </figure>
                 <p>采用链式存储结构的栈称为链栈。一般采用单链表且不需要头结点，top 指针指向首元节点。</p>
 
-                <h3 id="stack-linked-storage-code">链栈的代码实现</h3>
-<h4 id="link-stack-definition">定义</h4>
+                <h3>链栈的代码实现</h3>
+<h4>定义</h4>
 <pre><code class="language-cpp">typedef struct StackNode{
     // 1. 结点数据域，存储栈元素
     ElemType data;
@@ -290,14 +290,14 @@ void StackTraverse(const SeqStack &amp;S, void (*visit)(ElemType)) {
     struct StackNode *next;
 } StackNode, *LinkStack;</code></pre>
                 
-<h4 id="link-stack-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">// InitStack 初始化链栈
 void InitStack(LinkStack &amp;S) {
     // 将栈顶指针置为 NULL，表示空栈
     S.top = NULL;
 }</code></pre>
                 
-<h4 id="link-stack-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">// DestroyStack 销毁链栈
 void DestroyStack(LinkStack &amp;S) {
     // 1. 定义临时指针，用于遍历释放结点
@@ -313,7 +313,7 @@ void DestroyStack(LinkStack &amp;S) {
     }
 }</code></pre>
                 
-<h4 id="link-stack-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">// ClearStack 清空链栈
 void ClearStack(LinkStack &amp;S) {
     // 1. 链栈的清空操作与销毁操作逻辑一致，释放所有结点并将栈顶指针置为 NULL
@@ -330,7 +330,7 @@ void ClearStack(LinkStack &amp;S) {
     }
 }</code></pre>
                 
-<h4 id="link-stack-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">// StackEmpty 判断链栈是否为空
 bool StackEmpty(const LinkStack &amp;S) {
     // 直接判断栈顶指针是否为 NULL 返回结果即可
@@ -338,7 +338,7 @@ bool StackEmpty(const LinkStack &amp;S) {
     else return false;
 }</code></pre>
                 
-<h4 id="link-stack-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">// StackLength 返回链栈的长度
 int StackLength(const LinkStack &amp;S) {
     // 1. 定义计数器，初始化为 0
@@ -356,7 +356,7 @@ int StackLength(const LinkStack &amp;S) {
     return len;
 }</code></pre>
                 
-<h4 id="link-stack-gettop">取栈顶元素</h4>
+<h4>取栈顶元素</h4>
 <pre><code class="language-cpp">// GetTop 获取链栈的栈顶元素，并用 e 返回其值
 bool GetTop(const LinkStack &amp;S, ElemType &amp;e) {
     // 1. 判断栈是否为空，若空则返回 false
@@ -366,7 +366,7 @@ bool GetTop(const LinkStack &amp;S, ElemType &amp;e) {
     return true;
 }</code></pre>
                 
-<h4 id="link-stack-push">入栈</h4>
+<h4>入栈</h4>
 <pre><code class="language-cpp">// Push 向链栈中插入元素 e 作为新的栈顶元素
 bool Push(LinkStack &amp;S, ElemType e) {
     // 1. 新建一个结点，为其分配内存空间
@@ -382,7 +382,7 @@ bool Push(LinkStack &amp;S, ElemType e) {
     return true;
 }</code></pre>
                 
-<h4 id="link-stack-pop">出栈</h4>
+<h4>出栈</h4>
 <pre><code class="language-cpp">// Pop 删除链栈的栈顶元素，并用 e 返回其值
 bool Pop(LinkStack &amp;S, ElemType &amp;e) {
     // 1. 判断栈是否为空，若空则返回 false
@@ -398,7 +398,7 @@ bool Pop(LinkStack &amp;S, ElemType &amp;e) {
     return true;
 }</code></pre>
                 
-<h4 id="link-stack-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">// StackTraverse 遍历链栈（从栈顶到栈底依次访问每个元素）
 void StackTraverse(const LinkStack &amp;S) {
     // 1. 定义临时指针，从栈顶开始遍历
@@ -427,7 +427,7 @@ void StackTraverse(const LinkStack &amp;S, void (*visit)(ElemType)) {
     }
 }</code></pre>
                 
-                <h2 id="queue-definition">队列的定义</h2>
+                <h2>队列的定义</h2>
                 <figure>
                     <img src="/assets/images/posts/data-structure/stack-and-queue/队列.svg" alt="队列">
                     <figcaption>图 队列</figcaption>
@@ -440,10 +440,10 @@ void StackTraverse(const LinkStack &amp;S, void (*visit)(ElemType)) {
                     <li>从队头删除元素的操作，称为出队（DeQueue）。</li>
                 </ul>
                 
-                <h2 id="queue-features">队列的特点</h2>
+                <h2>队列的特点</h2>
                 <p>先进先出（FIFO）</p>
                 
-<h2 id="queue-adt">队列的抽象数据类型</h2>
+<h2>队列的抽象数据类型</h2>
 <pre><code class="language-cpp">ADT Queue {
     数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
     数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
@@ -468,8 +468,8 @@ void StackTraverse(const LinkStack &amp;S, void (*visit)(ElemType)) {
         QueueTraverse(Q)
 } ADT Queue</code></pre>
                 
-                <h2 id="queue-sequential-storage">队列的顺序存储结构</h2>
-                <h3 id="queue-sequential-storage-definition">顺序队列的定义</h3>
+                <h2>队列的顺序存储结构</h2>
+                <h3>顺序队列的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/stack-and-queue/顺序队列.svg" alt="顺序队列">
                     <figcaption>图 顺序队列</figcaption>
@@ -480,14 +480,14 @@ void StackTraverse(const LinkStack &amp;S, void (*visit)(ElemType)) {
                     <li>另设 rear 指针，指示队尾元素在顺序队列中的位置。（rear 通常指向队尾元素的下一个位置，而非队尾元素本身。）</li>
                 </ul>
                 
-                <h3 id="queue-sequential-storage-falseoverflow">顺序队列的假溢出问题</h3>
+                <h3>顺序队列的假溢出问题</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/stack-and-queue/顺序队列的假溢出.svg" alt="顺序队列的假溢出">
                     <figcaption>图 顺序队列的假溢出</figcaption>
                 </figure>
                 <p>当顺序队列的 rear 指针到达队列的末尾时，则无法再插入新的元素，否则会出现溢出现象。但是此时队列中可能仍然还有空闲空间，这就是顺序队列的假溢出问题。</p>
 
-                <h3 id="circular-queue-definition">循环队列的定义</h3>
+                <h3>循环队列的定义</h3>
                 <p>循环队列（Circular Queue）：通过取模运算将普通顺序队列的首尾逻辑上连接起来，形成一个环状结构。从而避免了普通顺序队列的假溢出问题。</p>
                 <figure>
                     <img src="/assets/images/posts/data-structure/stack-and-queue/循环队列.svg" alt="循环队列">
@@ -505,8 +505,8 @@ void StackTraverse(const LinkStack &amp;S, void (*visit)(ElemType)) {
                 </figure>
                 <p>解决循环队列判空和判满问题的一个比较好的方法就是：在队列中预留一个位置，front = rear 时，队列为空；front = (rear + 1) % MAXQSIZE 时，队列已满。</p>
 
-                <h3 id="queue-sequential-storage-code">循环队列的代码实现</h3>
-<h4 id="cir-queue-definition">定义</h4>
+                <h3>循环队列的代码实现</h3>
+<h4>定义</h4>
 <pre><code class="language-cpp">typedef struct {
     // 1. 动态分配的数组首地址，存储队列所有元素
     ElemType *base;
@@ -516,7 +516,7 @@ void StackTraverse(const LinkStack &amp;S, void (*visit)(ElemType)) {
     int rear;
 } SeqQueue;</code></pre>
                 
-<h4 id="cir-queue-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">// InitQueue 初始化顺序循环队列
 bool InitQueue(SeqQueue &amp;Q) {
     // 1. 新建一个 ElemType 类型的一维数组，申请指定大小的内存空间
@@ -526,7 +526,7 @@ bool InitQueue(SeqQueue &amp;Q) {
     return true;
 }</code></pre>
                 
-<h4 id="cir-queue-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">// DestroyQueue 销毁顺序循环队列
 void DestroyQueue(SeqQueue &amp;Q) {
     // 1. 判断数组指针是否为空，不为空则释放其占用的内存
@@ -539,14 +539,14 @@ void DestroyQueue(SeqQueue &amp;Q) {
     Q.front = Q.rear = 0;
 }</code></pre>
                 
-<h4 id="cir-queue-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">// ClearQueue 清空顺序循环队列
 void ClearQueue(SeqQueue &amp;Q) {
     // 直接将队头和队尾指针都置为 0 即可
     Q.front = Q.rear = 0;
 }</code></pre>
                 
-<h4 id="cir-queue-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">// QueueEmpty 判断顺序循环队列是否为空
 bool QueueEmpty(SeqQueue &amp;Q) {
     // 直接判断队头指针是否等于队尾指针返回结果即可
@@ -554,14 +554,14 @@ bool QueueEmpty(SeqQueue &amp;Q) {
     else return false;
 }</code></pre>
                 
-<h4 id="cir-queue-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">// QueueLength 返回顺序循环队列的长度
 int QueueLength(const SeqQueue &amp;Q) {
     // 1. 循环队列长度计算公式：(队尾指针 - 队头指针 + 最大容量) % 最大容量
     return (Q.rear - Q.front + MAXQSIZE) % MAXQSIZE;
 }</code></pre>
                 
-<h4 id="cir-queue-gethead">取队头元素</h4>
+<h4>取队头元素</h4>
 <pre><code class="language-cpp">// GetHead 获取顺序循环队列的队头元素，并用 e 返回其值
 bool GetHead(const SeqQueue &amp;Q, ElemType &amp;e) {
     // 1. 判断队列是否为空，为空则返回 false
@@ -571,7 +571,7 @@ bool GetHead(const SeqQueue &amp;Q, ElemType &amp;e) {
     return true;
 }</code></pre>
                 
-<h4 id="cir-queue-enqueue">入队</h4>
+<h4>入队</h4>
 <pre><code class="language-cpp">// EnQueue 向顺序循环队列中插入元素 e 作为新的队尾元素
 bool EnQueue(SeqQueue &amp;Q, ElemType e) {
     // 1. 判断队列是否已满，满则返回 false
@@ -583,7 +583,7 @@ bool EnQueue(SeqQueue &amp;Q, ElemType e) {
     return true;
 }</code></pre>
                 
-<h4 id="cir-queue-dequeue">出队</h4>
+<h4>出队</h4>
 <pre><code class="language-cpp">// DeQueue 删除顺序循环队列的队头元素，并用 e 返回其值
 bool DeQueue(SeqQueue &amp;Q, ElemType &amp;e) {
     // 1. 判断队列是否为空，为空则返回 false
@@ -595,7 +595,7 @@ bool DeQueue(SeqQueue &amp;Q, ElemType &amp;e) {
     return true;
 }</code></pre>
                 
-<h4 id="cir-queue-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">// QueueTraverse 遍历顺序循环队列（从队头到队尾依次访问每个元素）
 void QueueTraverse(SeqQueue &amp;Q) {
     // 1. 定义临时指针，从队头开始遍历
@@ -624,16 +624,16 @@ void QueueTraverse(SeqQueue &amp;Q, void (*visit)(ElemType)) {
     }
 }</code></pre>
                 
-                <h2 id="queue-linked-storage">队列的链式存储结构</h2>
-                <h3 id="queue-linked-storage-definition">链式队列的定义</h3>
+                <h2>队列的链式存储结构</h2>
+                <h3>链式队列的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/stack-and-queue/链式队列.svg" alt="链式队列">
                     <figcaption>图 链式队列</figcaption>
                 </figure>
                 <p>采用链式存储结构的队列称为链式队列。一般采用单链表且带有头结点，front 指针指向头结点，rear 指针指向尾结点。</p>
 
-                <h3 id="queue-linked-storage-code">链式队列的代码实现</h3>
-<h4 id="link-queue-definition">定义</h4>
+                <h3>链式队列的代码实现</h3>
+<h4>定义</h4>
 <pre><code class="language-cpp">// 链队结点结构
 typedef struct QNode {
     // 1. 结点数据域，存储队列元素
@@ -650,7 +650,7 @@ typedef struct {
     QNode *rear;
 } LinkQueue;</code></pre>
                 
-<h4 id="link-queue-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">// InitQueue 初始化链队（带头结点）
 bool InitQueue(LinkQueue &amp;Q) {
     // 1. 新建一个头结点，为其分配内存空间
@@ -662,7 +662,7 @@ bool InitQueue(LinkQueue &amp;Q) {
     return true;
 }</code></pre>
                 
-<h4 id="link-queue-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">// DestroyQueue 销毁链队
 bool DestroyQueue(LinkQueue &amp;Q) {
     // 1. 定义临时指针，用于遍历释放结点
@@ -681,7 +681,7 @@ bool DestroyQueue(LinkQueue &amp;Q) {
     return true;
 }</code></pre>
                 
-<h4 id="link-queue-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">// ClearQueue 清空链队（保留头结点）
 bool ClearQueue(LinkQueue &amp;Q) {
     // 1. 定义临时指针，指向队头结点的下一个结点（第一个数据结点）
@@ -704,7 +704,7 @@ bool ClearQueue(LinkQueue &amp;Q) {
     return true;
 }</code></pre>
                 
-<h4 id="link-queue-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">// QueueEmpty 判断链队是否为空
 bool QueueEmpty(const LinkQueue &amp;Q) {
     // 1. 判断队头指针的下一个结点是否为 NULL，是则返回 true，否则返回 false
@@ -714,7 +714,7 @@ bool QueueEmpty(const LinkQueue &amp;Q) {
         return false;
 }</code></pre>
                 
-<h4 id="link-queue-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">// QueueLength 返回链队的长度
 int QueueLength(const LinkQueue &amp;Q) {
     // 1. 定义计数器，初始化为 0
@@ -732,7 +732,7 @@ int QueueLength(const LinkQueue &amp;Q) {
     return len;
 }</code></pre>
                 
-<h4 id="link-queue-gethead">取队头元素</h4>
+<h4>取队头元素</h4>
 <pre><code class="language-cpp">// GetHead 获取链队的队头元素，并用 e 返回其值
 bool GetHead(const LinkQueue &amp;Q, ElemType &amp;e) {
     // 1. 判断队列是否为空，为空则返回 false
@@ -742,7 +742,7 @@ bool GetHead(const LinkQueue &amp;Q, ElemType &amp;e) {
     return true;
 }</code></pre>
                 
-<h4 id="link-queue-enqueue">入队</h4>
+<h4>入队</h4>
 <pre><code class="language-cpp">// EnQueue 向链队中插入元素 e 作为新的队尾元素
 bool EnQueue(LinkQueue &amp;Q, ElemType e) {
     // 1. 新建一个结点，为其分配内存空间
@@ -760,7 +760,7 @@ bool EnQueue(LinkQueue &amp;Q, ElemType e) {
     return true;
 }</code></pre>
                 
-<h4 id="link-queue-dequeue">出队</h4>
+<h4>出队</h4>
 <pre><code class="language-cpp">// DeQueue 删除链队的队头元素，并用 e 返回其值
 bool DeQueue(LinkQueue &amp;Q, ElemType &amp;e) {
     // 1. 判断队列是否为空，为空则返回 false
@@ -779,7 +779,7 @@ bool DeQueue(LinkQueue &amp;Q, ElemType &amp;e) {
     return true;
 }</code></pre>
                 
-<h4 id="link-queue-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">// QueueTraverse 遍历链队（从队头到队尾依次访问每个元素）
 void QueueTraverse(const LinkQueue &amp;Q) {
     // 1. 定义临时指针，从第一个数据结点开始遍历

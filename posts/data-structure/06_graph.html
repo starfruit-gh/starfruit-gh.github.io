@@ -83,9 +83,9 @@
         <!-- 中间正文 -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1 id="graph">（六）图</h1>
+                <h1>（六）图</h1>
                 
-                <h2 id="graph-definition">图的定义</h2>
+                <h2>图的定义</h2>
                 <p>图（Graph）：由两个集合 V 和 E 组成，记为 G = (V, E)。</p>
 				<ul>
 					<li>V 是顶点（Vertex）的有穷非空集合。</li>
@@ -118,7 +118,7 @@
 					<li>有向图的边用尖括号表示，&lt;A,B&gt; 不等于 &lt;B,A&gt;。</li>
 				</ul>
                 
-                <h2 id="graph-terminology">图的术语</h2>
+                <h2>图的术语</h2>
                 <ul class="graph-term-list">
 					<figure>
 						<img src="/assets/images/posts/data-structure/graph/非简单图.svg" alt="非简单图">
@@ -243,7 +243,7 @@
                     <li><strong>有向树和生成森林</strong>：有一个顶点的入度为 0，其余顶点的入度均为 1 的有向图称为有向树。一个有向图的生成森林是由若干棵有向树组成，含有图中全部顶点，但只有足以构成若干棵不相交的有向树的弧。</li>
                 </ul>
                 
-<h2 id="graph-adt">图的抽象数据类型</h2>
+<h2>图的抽象数据类型</h2>
 <pre><code class="language-cpp">ADT Graph{
     数据对象：V 是具有相同特性的数据元素的集合，称为顶点集。
     数据关系：
@@ -279,8 +279,8 @@
         BFSTraverse(G)
 }ADT Graph</code></pre>
                 
-                <h2 id="graph-storage">图的存储结构</h2>
-                <h3 id="adjacency-matrix">邻接矩阵</h3>
+                <h2>图的存储结构</h2>
+                <h3>邻接矩阵</h3>
                 <p>邻接矩阵（Adjacency Matrix）：是用两个数组来表示图。一个一维数组存储图中顶点信息，一个二维数组（称为邻接矩阵）存储图中的边或弧的信息。</p>
                 <p>设图 \(G\) 有 \(n\) 个顶点，则邻接矩阵是一个 \(n \times n\)的方阵，定义为：</p>
 				<div>
@@ -341,7 +341,7 @@ typedef struct {
 				</ul>
 				<p>现实中的图一般都是稀疏图，即边的数量 \(E\) 远小于顶点数量 \(V\) 的平方 \((E \ll V^2)\)，因此一般不使用邻接矩阵来表示图。但是由于邻接矩阵可以在 \(O(1)\) 时间内快速判断两个顶点之间是否有边以及边的权值，因此在图非常小、稠密图或者需要快速判断两点间是否有边的场景，邻接矩阵还是很有用的。</p>
                 
-                <h3 id="adjacency-list">邻接表</h3>
+                <h3>邻接表</h3>
 				<p>邻接表（Adjacency List）：对图中每个顶点 \(v_i\) 建立一个单链表，把与 \(v_i\) 相邻接的顶点放在这个链表中。邻接表中每个单链表的第一个结点存放有关顶点的信息，把这一结点看成链表的表头，其余结点存放有关边的信息，这样邻接表便由两部分组成：表头结点表和边表。</p>
 				<figure>
 					<img src="/assets/images/posts/data-structure/graph/表头结点和边结点.svg" alt="表头结点和边结点">
@@ -397,7 +397,7 @@ typedef struct {                         // 邻接表
 					<li>不便于计算有向图各个顶点的度。对于无向图，在邻接表表示中顶点 \(v_i\) 的度是第 \(i\) 个边表中的结点个数。在有向图的邻接表中，第 \(i\) 个边表上的结点个数是顶点 \(v_i\) 的出度，但求 \(v_i\) 的入度较困难，需遍历各顶点的边表。若有向图采用逆邻接表表示，则与邻接表表示相反，求顶点的入度容易，而求顶点的出度较难。</li>
 				</ul>
 
-				<h3 id="cross-list">十字链表</h3>
+				<h3>十字链表</h3>
 				<p>对于有向图来说，使用邻接表求顶点的出度容易，但求顶点的入度难，必须遍历整个图才能确定。使用逆邻接表则相反，求顶点的入度容易，而求顶点的出度较难。因此，可以把邻接表与逆邻接表结合起来，这就是十字链表。</p>
                 <figure>
 					<img src="/assets/images/posts/data-structure/graph/顶点结点和弧结点.svg" alt="顶点结点和弧结点">
@@ -429,7 +429,7 @@ typedef struct {
     int vexnum, arcnum;            //有向图的当前顶点数和弧数
 } OLGraph;</code></pre>
 
-				<h3 id="adjacency-multilist">邻接多重表</h3>
+				<h3>邻接多重表</h3>
 				<p>对于无向图来说，使用邻接表会出现每条边被重复存储两次的情况。这就导致要删除一条边时，需要找到这条边的两个边表结点进行操作，这是比较麻烦的。使用邻接多重表可以避免这个问题。</p>
 				<figure>
 					<img src="/assets/images/posts/data-structure/graph/顶点结点和边结点.svg" alt="顶点结点和边结点">
@@ -463,10 +463,10 @@ typedef struct{
     int vexnum, edgenum;           //无向图的当前顶点数和边数
 } AMLGraph;</code></pre>
 
-				<h2 id="graph-implementation-code">图的代码实现</h2>
+				<h2>图的代码实现</h2>
 				<p>由于邻接矩阵仅适用于图非常小、稠密图或者需要快速判断两点间是否有边的场景，而十字链表专为有向图优化，邻接多重表专为无向图优化，因此在图的四种常见存储结构中，邻接表是最常用的。以下是基于邻接表的图的代码实现：</p>
 
-<h3 id="create-graph">创建</h3>
+<h3>创建</h3>
 <pre><code class="language-cpp">int LocateVex(ALGraph G, VerTexType u);
 
 bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int arnum) {
@@ -508,7 +508,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     return true;
 }</code></pre>
 
-<h3 id="destroy-graph">销毁</h3>
+<h3>销毁</h3>
 <pre><code class="language-cpp">void DestroyGraph(ALGraph &G) {
     ArcNode *p, *q;
     for (int i = 0; i < G.vexnum; ++i) {
@@ -524,7 +524,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     G.arcnum = 0;
 }</code></pre>
 
-<h3 id="locate-vex">获取顶点在图中的位置</h3>
+<h3>获取顶点在图中的位置</h3>
 <pre><code class="language-cpp">int LocateVex(ALGraph G, VerTexType u) {
     for (int i = 0; i < G.vexnum; ++i) {
         if (G.vertices[i].data == u) return i;
@@ -532,21 +532,21 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     return -1;
 }</code></pre>
 
-<h3 id="get-vex">获取顶点的值</h3>
+<h3>获取顶点的值</h3>
 <pre><code class="language-cpp">bool GetVex(ALGraph G, int v, VerTexType &value) {
     if (v < 0 || v >= G.vexnum) return false;
     value = G.vertices[v].data;
     return true;
 }</code></pre>
 
-<h3 id="put-vex">修改顶点的值</h3>
+<h3>修改顶点的值</h3>
 <pre><code class="language-cpp">bool PutVex(ALGraph &G, int v, VerTexType value) {
     if (v < 0 || v >= G.vexnum) return false;
     G.vertices[v].data = value;
     return true;
 }</code></pre>
 
-<h3 id="first-adj-vex">获取顶点的第一个邻接顶点</h3>
+<h3>获取顶点的第一个邻接顶点</h3>
 <pre><code class="language-cpp">int FirstAdjVex(ALGraph G, int v) {
     if (v < 0 || v >= G.vexnum) return -1;
     if (G.vertices[v].firstarc) {
@@ -555,7 +555,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     return -1;
 }</code></pre>
 
-<h3 id="next-adj-vex">获取顶点的下一个邻接顶点</h3>
+<h3>获取顶点的下一个邻接顶点</h3>
 <pre><code class="language-cpp">int NextAdjVex(ALGraph G, int v, int w) {
     if (v < 0 || v >= G.vexnum) return -1;
     ArcNode *p = G.vertices[v].firstarc;
@@ -564,7 +564,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     return -1;
 }</code></pre>
 
-<h3 id="insert-vex">插入顶点</h3>
+<h3>插入顶点</h3>
 <pre><code class="language-cpp">bool InsertVex(ALGraph &G, VerTexType v) {
     if (G.vexnum >= MVNum) return false;
     G.vertices[G.vexnum].data = v;
@@ -573,7 +573,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     return true;
 }</code></pre>
 
-<h3 id="delete-vex">删除顶点</h3>
+<h3>删除顶点</h3>
 <pre><code class="language-cpp">bool DeleteVex(ALGraph &G, VerTexType v) {
     int pos = LocateVex(G, v);
     if (pos == -1) return false;
@@ -625,7 +625,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     return true;
 }</code></pre>
 
-<h3 id="insert-arc">插入弧</h3>
+<h3>插入弧</h3>
 <pre><code class="language-cpp">bool InsertArc(ALGraph &G, VerTexType v, VerTexType w, OtherInfo info) {
     int i = LocateVex(G, v);
     int j = LocateVex(G, w);
@@ -657,7 +657,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     */
 }</code></pre>
 
-<h3 id="delete-arc">删除弧</h3>
+<h3>删除弧</h3>
 <pre><code class="language-cpp">bool DeleteArc(ALGraph &G, VerTexType v, VerTexType w) {
     int i = LocateVex(G, v);
     int j = LocateVex(G, w);
@@ -692,7 +692,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
     return true;
 }</code></pre>
 
-                <h2 id="graph-traversal">图的遍历</h2>
+                <h2>图的遍历</h2>
 				<figure>
 					<img src="/assets/images/posts/data-structure/graph/DFS.svg" alt="DFS" />
 					<figcaption>深度优先遍历</figcaption>
@@ -717,7 +717,7 @@ bool CreateGraph(ALGraph &G, VerTexType V[], int vnum, VerTexType VR[][3], int a
 				</ol>
 				<p>以上流程最关键的就是步骤 4，也就是取出点 \(v\) 的方式，如果点集 \(F\) 是一个栈，那整个遍历过程就是深度优先遍历。如果点集 \(F\) 是一个队列，那整个遍历过程就是广度优先遍历。</p>
                 
-				<h3 id="dfs">深度优先遍历 (DFS)</h3>
+				<h3>深度优先遍历 (DFS)</h3>
 				<p>深度优先遍历除了一般流程外，还可以通过递归实现。</p>
 				<p>递归实现的流程为：</p>
 				<ol>
@@ -791,7 +791,7 @@ bool DFSTraverse(ALGraph G, VerTexType start) {
     return true; 
 }</code></pre>
 
-<h3 id="bfs">广度优先遍历 (BFS)</h3>
+<h3>广度优先遍历 (BFS)</h3>
 <pre><code class="language-cpp">// BFS 队列实现
 bool BFSTraverse(ALGraph G, VerTexType start) {
     int startIdx = LocateVex(G, start);
@@ -821,11 +821,11 @@ bool BFSTraverse(ALGraph G, VerTexType start) {
     return true; 
 }</code></pre>
 
-                <h2 id="graph-applications">图的应用</h2>
-                <h3 id="minimum-spanning-tree">最小生成树</h3>
+                <h2>图的应用</h2>
+                <h3>最小生成树</h3>
 				<p>最小生成树（Minimum Spanning Tree，MST）：给定一个无向网，在该网的所有生成树中，使得各边的权值之和最小的那棵生成树称为该网的最小生成树。</p>
 				
-				<h4 id="prim-algorithm">Prim（普里姆）算法</h4>
+				<h4>Prim（普里姆）算法</h4>
 				<figure>
 					<img src="/assets/images/posts/data-structure/graph/Prim（普里姆）算法.svg" alt="Prim（普里姆）算法" />
 					<figcaption>Prim（普里姆）算法</figcaption>
@@ -910,7 +910,7 @@ bool Prim(ALGraph G, VerTexType start_vertex) {
     return true;
 }</code></pre>
 
-				<h4 id="kruskal-algorithm">Kruskal（克鲁斯卡尔）算法</h4>
+				<h4>Kruskal（克鲁斯卡尔）算法</h4>
 				<figure>
 					<img src="/assets/images/posts/data-structure/graph/Kruskal（克鲁斯卡尔）算法.svg" alt="Kruskal（克鲁斯卡尔）算法" />
 					<figcaption>Kruskal（克鲁斯卡尔）算法</figcaption>
@@ -1030,8 +1030,8 @@ bool Kruskal(ALGraph G) {
     return true;
 }</code></pre>
 
-				<h3 id="shortest-path">最短路径</h3>
-				<h4 id="dijkstra-algorithm">Dijkstra（迪杰斯特拉）算法</h4>
+				<h3>最短路径</h3>
+				<h4>Dijkstra（迪杰斯特拉）算法</h4>
 				<div style="display: flex; gap: 10px; align-items: center;">
 					<figure>
 						<img src="/assets/images/posts/data-structure/graph/迪杰斯特拉算法示例图.svg" alt="迪杰斯特拉算法示例图" />
@@ -1187,7 +1187,7 @@ bool Dijkstra(ALGraph G, VerTexType start) {
 }
 </code></pre>
 
-				<h4 id="floyd-algorithm">Floyd（弗洛伊德）算法</h4>
+				<h4>Floyd（弗洛伊德）算法</h4>
 				<figure>
 					<img src="/assets/images/posts/data-structure/graph/弗洛伊德算法示例图.png" alt="弗洛伊德算法示例图" />
 					<figcaption>图 弗洛伊德算法示例图</figcaption>
@@ -1457,7 +1457,7 @@ bool Floyd(MGraph G) {
 }
 </code></pre>
 
-				<h3 id="topological-sort">拓扑排序</h3>
+				<h3>拓扑排序</h3>
 				<p>有向无环图：一个无环的有向图称作有向无环图（Directed AcyclineGraph），简称DAG图。</p>
                 <p>AOV-网：用顶点表示活动，用弧表示活动间的优先关系的有向图称为顶点表示活动的网（Activity On Vertex - Network），简称AOV-网。</p>
 				<p>拓扑排序：就是将图中所有点按照先后顺序排成序列。拓扑排序的充分必要条件是给定的有向图必须是一个有向无环图（DAG）。</p>
@@ -1517,7 +1517,7 @@ bool Floyd(MGraph G) {
     return true;
 }</code></pre>
 
-				<h3 id="aoe-critical">AOE-网和关键路径</h3>
+				<h3>AOE-网和关键路径</h3>
                 <p>AOE-网：用弧表示活动，用顶点表示事件（中间状态）有向图称为弧表示活动的网（Activity On Edge - Network），简称AOE-网。AOE-网也必须是有向无环图（DAG）。</p>
                 <figure>
 					<img src="/assets/images/posts/data-structure/graph/AOE-网.svg" alt="AOE-网" />

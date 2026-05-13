@@ -83,9 +83,9 @@
         <!-- 中间正文 -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1 id="string-array-and-glist">（四）串、数组和广义表</h1>
+                <h1>（四）串、数组和广义表</h1>
 
-                <h2 id="string-definition">串的定义</h2>
+                <h2>串的定义</h2>
                 <div>
                     $$ s = a_1a_2...a_n $$
                 </div>
@@ -102,7 +102,7 @@
                     <li>串相等：当且仅当两个串的长度相等并且各个对应位置上的字符都相同时，这两个串才是相等的。</li>
                 </ul>
                 
-<h2 id="string-adt">串的抽象数据类型</h2>
+<h2>串的抽象数据类型</h2>
 <pre><code class="language-cpp">ADT String {
     数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
     数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
@@ -135,7 +135,7 @@
         StrDelete(&amp;S, pos, len)
 } ADT String</code></pre>
 
-<h2 id="string-sequential-storage">串的顺序存储结构</h2>
+<h2>串的顺序存储结构</h2>
 <pre><code class="language-cpp">//静态数组（定长顺序存储）
 #define MAXSIZE 255
 typedef struct {
@@ -149,7 +149,7 @@ typedef struct {
     int length;
 } HString;</code></pre>
 
-<h2 id="string-linked-storage">串的链式存储结构</h2>
+<h2>串的链式存储结构</h2>
 <pre><code class="language-cpp">//一个节点存放一个字符
 typedef struct StringNode {
     char ch;
@@ -169,8 +169,8 @@ typedef struct {
 } String;
 </code></pre>
 
-                <h2 id="string-pattern-matching">串的模式匹配</h2>
-                <h3 id="bf-algorithm">BF算法</h3>
+                <h2>串的模式匹配</h2>
+                <h3>BF算法</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/string-array-and-glist/BF算法.svg" alt="BF算法">
                     <figcaption>图 BF算法</figcaption>
@@ -199,7 +199,7 @@ typedef struct {
     }
 }</code></pre>
 
-                <h3 id="kmp-algorithm">KMP算法</h3>
+                <h3>KMP算法</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/string-array-and-glist/KMP算法.svg" alt="KMP算法">
                     <figcaption>图 KMP算法</figcaption>
@@ -330,7 +330,7 @@ int KMP(SString S, SString T, int next[]) {
     }
 }</code></pre>
 
-                <h2 id="array-definition">数组的定义</h2>
+                <h2>数组的定义</h2>
                 <div style="text-align: center; margin-bottom: 10px;">
                     arr1 = [1,2,3,4,5]
                 </div>
@@ -374,7 +374,7 @@ arr2 = [
                         </ul>
                 </ul>
                 
-<h2 id="array-adt">数组的抽象数据类型</h2>
+<h2>数组的抽象数据类型</h2>
 <pre><code class="language-cpp">ADT Array {
     数据对象：D = { a_{j₁j₂…jₙ} | a_{j₁j₂…jₙ} ∈ ElemSet, jᵢ = 0,1,…,bᵢ-1, i=1,2,…,n, n≥1, bᵢ为第i维的界长 }
     数据关系：R = { &lt;a_{j₁…jᵢ…jₙ}, a_{j₁…jᵢ+1…jₙ}&gt; | a_{j₁…jᵢ…jₙ}, a_{j₁…jᵢ+1…jₙ} ∈ D, 0≤jₖ≤bₖ-1(k≠i), 0≤jᵢ≤bᵢ-2, i=1,2,…,n }
@@ -395,7 +395,7 @@ arr2 = [
         CopyArray(A, &B)
 } ADT Array</code></pre>
 
-                <h2 id="array-sequential-storage">数组的顺序存储</h2>
+                <h2>数组的顺序存储</h2>
                 <p>由于数组一般不做插入或删除操作，也就是说，一旦建立了数组，则结构中的数据元素个数和元素之间的关系就不再发生变动。因此，采用顺序存储结构表示数组比较合适。</p>
                 <p>另外，由于数组可以是多维的，但存储数据元素的内存单元地址是一维的，因此，在存储数组结构之前，需要解决将多维关系映射到一维关系的问题。</p>
 
@@ -418,7 +418,7 @@ arr2 = [
                     <li>以列序为主序时，数组元素 \(a[i][j]\) 的存储地址为：\(LOC(a[i][j]) = LOC(a[0][0]) + (j×m+i) \times sizeof(ElemType)\)</li>
                 </ul>
 
-                <h2 id="generalized-list-definition">广义表的定义</h2>
+                <h2>广义表的定义</h2>
                 <div>
                     $$ LS = (a_1,a_2,...,a_n) $$
                 </div>

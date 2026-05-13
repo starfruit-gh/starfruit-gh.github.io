@@ -83,7 +83,7 @@
         <!-- 中间正文 -->
         <div class="main-content-wrapper">
             <div class="article-content">
-				<h1 id="sort">（八）排序</h1>
+				<h1>（八）排序</h1>
 
 				<h2>排序的基本概念</h2>
 				<ul>
@@ -93,10 +93,10 @@
 					<li>外部排序：指的是待排序记录的数量很大，以致内存一次不能容纳全部记录，在排序过程中尚需对外存进行访问的排序过程。</li>
 				</ul>
 
-                <h2 id="internal-sort">内部排序</h2>
-				<h3 id="comparison-sorting">比较类排序</h3>
-				<h4 id="insertion-sort">插入排序</h4>
-<h5 id="straight-insertion-sort">直接插入排序</h5>
+                <h2>内部排序</h2>
+				<h3>比较类排序</h3>
+				<h4>插入排序</h4>
+<h5>直接插入排序</h5>
 <pre><code class="language-go">func StraightInsertionSort(arr []int) {
     n := len(arr)
     if n <= 1 {
@@ -113,7 +113,7 @@
     }
 }</code></pre>
 
-<h5 id="binary-insertion-sort">折半插入排序</h5>
+<h5>折半插入排序</h5>
 <pre><code class="language-go">func BinaryInsertionSort(arr []int) {
     n := len(arr)
     if n <= 1 {
@@ -137,7 +137,7 @@
     }
 }</code></pre>
 
-<h5 id="shell-sort">希尔排序</h5>
+<h5>希尔排序</h5>
 <pre><code class="language-go">func ShellSort(arr []int) {
     n := len(arr)
     if n <= 1 {
@@ -156,8 +156,8 @@
     }
 }</code></pre>
 
-				<h4 id="exchange-sorting">交换排序</h4>
-<h5 id="bubble-sort">冒泡排序</h5>
+				<h4>交换排序</h4>
+<h5>冒泡排序</h5>
 <pre><code class="language-go">func BubbleSort(arr []int) {
     n := len(arr)
     if n <= 1 {
@@ -177,7 +177,7 @@
     }
 }</code></pre>
 
-<h5 id="quick-sort">快速排序</h5>
+<h5>快速排序</h5>
 <pre><code class="language-go">func QuickSort(arr []int) {
     if len(arr) <= 1 {
         return
@@ -211,8 +211,8 @@ func partition(arr []int, low, high int) int {
     }
 }</code></pre>
 
-				<h4 id="selection-sorting">选择排序</h4>
-<h5 id="simple-selection-sort">简单选择排序</h5>
+				<h4>选择排序</h4>
+<h5>简单选择排序</h5>
 <pre><code class="language-go">func SelectionSort(arr []int) {
     n := len(arr)
     if n <= 1 {
@@ -229,7 +229,7 @@ func partition(arr []int, low, high int) int {
     }
 }</code></pre>
 
-<h5 id="heap-sort">堆排序</h5>
+<h5>堆排序</h5>
 <pre><code class="language-go">func HeapSort(arr []int) {
     n := len(arr)
     if n <= 1 {
@@ -269,8 +269,8 @@ func heapify(arr []int, heapSize, root int) {
     }
 }</code></pre>
 
-				<h4 id="merge-sort">归并排序</h4>
-<h5 id="two-way-merge-sort">二路归并排序</h5>
+				<h4>归并排序</h4>
+<h5>二路归并排序</h5>
 <pre><code class="language-go">func MergeSort(arr []int) {
     if len(arr) <= 1 {
         return
@@ -309,8 +309,8 @@ func merge(arr, left, right []int) {
     copy(arr, temp)
 }</code></pre>
 
-				<h3 id="non-comparison-sorting">非比较类排序</h3>
-<h4 id="bucket-sort">桶排序</h4>
+				<h3>非比较类排序</h3>
+<h4>桶排序</h4>
 <pre><code class="language-go">func BucketSort(arr []int) {
     if len(arr) <= 1 {
         return
@@ -347,7 +347,7 @@ func merge(arr, left, right []int) {
     }
 }</code></pre>
 
-<h4 id="count-sort">计数排序</h4>
+<h4>计数排序</h4>
 <p>支持负数：</p>
 <ul>
     <li>分组法</li>
@@ -409,7 +409,7 @@ func CountingSort(arr []int) {
     }
 }</code></pre>
 
-<h4 id="radix-sort">基数排序</h4>
+<h4>基数排序</h4>
 <p>支持负数：</p>
 <ul>
     <li>分组法</li>
@@ -557,7 +557,7 @@ func RadixSortFloat(arr []float64) {
         arr[i] = float64(v)/scale - offset
     }
 }</code></pre>
-				<h2 id="external-sort">外部排序</h2>
+				<h2>外部排序</h2>
                 <figure>
                     <img src="/assets/images/posts/data-structure/sort/外部排序示意图.svg" alt="外部排序示意图">
                     <figcaption>图 外部排序示意图</figcaption>
@@ -576,7 +576,7 @@ func RadixSortFloat(arr []float64) {
                     <figcaption>图 外部排序归并过程</figcaption>
                 </figure>
 
-                <h3 id="merge-tree">归并树</h3>
+                <h3>归并树</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/sort/归并树.svg" alt="归并树">
                     <figcaption>图 归并树</figcaption>
@@ -585,14 +585,14 @@ func RadixSortFloat(arr []float64) {
                 <p>其中，影响最大的部分就是：外存信息读/写的时间（硬盘I/O）。</p>
                 <p>对于上述归并树：总I/O次数为：8*4+16*2+32+8*4=128。</p>
 
-                <h3 id="multi-way-merge">多路归并</h3>
+                <h3>多路归并</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/sort/四路归并树.svg" alt="四路归并树">
                     <figcaption>图 四路归并树</figcaption>
                 </figure>
                 <p>一般地，对r个初始归并段，做k路归并排序，设归并趟数为s，则\(k^s≥r\)。可见，当k增大时，s即可减少，进而减少IO次数，从而减少外排时间。</p>
 
-                <h3 id="loser-tree">败者树</h3>
+                <h3>败者树</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/sort/四路归并比较.svg" alt="四路归并比较">
                     <figcaption>图 四路归并比较</figcaption>
@@ -612,7 +612,7 @@ func RadixSortFloat(arr []float64) {
                     <figcaption>图 败者树</figcaption>
                 </figure>
 
-                <h3 id="replacement-selection-sort">置换选择排序</h3>
+                <h3>置换选择排序</h3>
                 <p>减少初始归并段的个数也可以减少归并所需要的趟数，可以通过增长初始归并段的长度来减少初始归并段的个数。</p>
                 <p>假设初始待排序文件为FI，初始归并段文件为输出文件FO，内存工作区为WA(work area)，FO与WA的初始状态为空，并假设内存工作区WA的容量可容纳w个记录，以下是置换选择排序的算法步骤：</p>
                 <ol>
@@ -629,7 +629,7 @@ func RadixSortFloat(arr []float64) {
                     <figcaption>图 置换选择排序</figcaption>
                 </figure>
 
-                <h3 id="best-merge-tree">最佳归并树</h3>
+                <h3>最佳归并树</h3>
                 <p>置换选择排序会生成长度不一样的初始归并段，每个归并段所占的磁盘块数可能不同，归并过程也可能不同。</p>
                 <figure>
                     <img src="/assets/images/posts/data-structure/sort/普通归并树.svg" alt="普通归并树">

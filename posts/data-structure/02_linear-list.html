@@ -83,9 +83,9 @@
         <!-- 中间正文 -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1 id="linear-list">（二）线性表</h1>
+                <h1>（二）线性表</h1>
                 
-                <h2 id="linear-list-definition">线性表的定义</h2>
+                <h2>线性表的定义</h2>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/线性表.svg" alt="线性表">
                     <figcaption>图 线性表</figcaption>
@@ -96,14 +96,14 @@
                     <li>对于单独的一个元素来说，它前一个元素被称为它的直接前驱，后一个元素被称为直接后继，或者直接简称前驱和后继。</li>
                 </ul>
 
-                <h2 id="linear-list-features">线性表的特点</h2>
+                <h2>线性表的特点</h2>
                 <ul>
                     <li>有限：线性表的元素个数必须是有限的。事实上，计算机处理的对象都是有限的，那种无限的序列，只存在于数学的概念中。</li>
                     <li>有序：不同于<code class="code-inline">数字0-9</code>或者<code class="code-inline">字符a-z</code>这种由元素本身属性值决定的属性有序，线性表的有序是一种基于元素插入的先后顺序的逻辑上的位置有序———线性表存在唯一一个被称作“第一个”的数据元素，又称表头元素；存在唯一一个被称作“最后一个”的数据元素，又称表尾元素。除第一个元素外，每个元素均有且仅有一个直接前驱；除最后一个元素外，每个元素均有且仅有一个直接后继。</li>
                     <li>类型相同：线性表的元素必须具有相同的数据类型。就像排队买票的队列里，所有成员都是需要购票的人，书包、雨伞等物品本质上不属于这个队列的合格成员，售票员不可能把票卖给书包、雨伞等物品。</li>
                 </ul>
                 
-<h2 id="linear-list-adt">线性表的抽象数据类型</h2>
+<h2>线性表的抽象数据类型</h2>
 <pre><code class="language-cpp">ADT List {
     数据对象：D = {aᵢ | aᵢ ∈ ElemSet, i = 1,2,...,n, n ≥ 0}
     数据关系：R = {&lt;aᵢ₋₁, aᵢ&gt; | aᵢ₋₁, aᵢ ∈ D, i = 2,...,n}
@@ -134,15 +134,15 @@
         TraverseList(L)
 } ADT List</code></pre>
                 
-                <h2 id="sequential-storage">线性表的顺序存储结构</h2>
-                <h3 id="sequential-list-definition">顺序表的定义</h3>
+                <h2>线性表的顺序存储结构</h2>
+                <h3>顺序表的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/顺序表.svg" alt="顺序表">
                     <figcaption>图 顺序表</figcaption>
                 </figure>
                 <p>用一段地址连续的存储单元依次存储线性表中的数据元素，从而使逻辑上相邻的元素在存储地址上也相邻。这种存储结构称为线性表的顺序存储结构，采用顺序存储结构的线性表通常称为顺序表。</p>
                 
-                <h3 id="sequential-list-random-access">顺序表的随机存取</h3>
+                <h3>顺序表的随机存取</h3>
                 <p>顺序表在内存中占用连续的存储空间，且每个元素占用相同大小的存储空间。假设顺序表的基地址（第一个元素的存储地址）为 \(LOC(a_1)\)，每个元素占用的存储空间为 \(sizeof(ElemType)\)，则：</p>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/顺序表的随机存取.svg" alt="顺序表的随机存取">
@@ -154,7 +154,7 @@
                 </ul>
                 <p>因此，顺序表中的任意一个元素的存储地址都能在 \(O(1)\) 时间内通过基地址和序号 \(i\) 直接计算得出，而无需经过其他元素。这种基于地址计算的直接访问特性，使得顺序表成为一种支持随机存取的数据结构。</p>
                 
-                <h3 id="sequential-list-code">顺序表的代码实现</h3>
+                <h3>顺序表的代码实现</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/顺序表的实现.svg" alt="顺序表的实现">
                     <figcaption>图 顺序表的实现</figcaption>
@@ -162,7 +162,7 @@
                 <p>由于顺序表采用顺序存储结构，其元素占用地址连续的存储单元、逻辑上依次存放、所有元素类型相同，并且支持随机存取，这些特性与一维数组完全一致，因此可以用一维数组来存储顺序表的元素。</p>
                 <p>另外，数组的长度是固定的，而顺序表允许增删元素，其长度需要动态变化。为记录当前表中的元素个数，必须额外用一个整型变量来表示顺序表的当前长度。</p>
 
-<h4 id="sequential-list-struct">定义</h4>
+<h4>定义</h4>
 <pre><code class="language-cpp">typedef struct {
     // 1. 一个用来存储顺序表元素的一维数组
     ElemType *elem;
@@ -170,7 +170,7 @@
     int length;
 } SeqList;</code></pre>
 
-<h4 id="sequential-list-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">// InitList 初始化顺序表
 bool InitList(SeqList &L) {
     // 1. 新建一个 ElemType 类型的一维数组，并为该数组申请一块指定大小的内存空间，让顺序表的数组指针 elem 指向该数组
@@ -180,7 +180,7 @@ bool InitList(SeqList &L) {
     return true;
 }</code></pre>
 
-<h4 id="sequential-list-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">// DestroyList 销毁顺序表
 void DestroyList(SeqList &L) {
     // 1. 判断顺序表的数组指针是否为空，为空则没有需要销毁的空间，直接返回
@@ -194,14 +194,14 @@ void DestroyList(SeqList &L) {
     }
 }</code></pre>
 
-<h4 id="sequential-list-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">// ClearList 清空顺序表
 void ClearList(SeqList &L) {
     // 直接将表长置为 0 即可
     L.length = 0;
 }</code></pre>
 
-<h4 id="sequential-list-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">// ListEmpty 判断顺序表是否为空
 bool ListEmpty(SeqList L) {
     // 直接判断 length 的值是否为 0 返回结果即可
@@ -209,14 +209,14 @@ bool ListEmpty(SeqList L) {
     else return false;
 }</code></pre>
 
-<h4 id="sequential-list-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">// ListLength 返回顺序表的长度
 int ListLength(SeqList L) {
     // 直接返回 length 的值即可
     return (L.length);
 }</code></pre>
 
-<h4 id="sequential-list-locate">查找</h4>
+<h4>查找</h4>
 <pre><code class="language-cpp">// LocateElem 按值查找元素
 int LocateElem(SeqList L, ElemType e) {
     // 1. 遍历顺序表
@@ -264,7 +264,7 @@ int LocateElem(SeqList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
                 </div>
                 <p>因此，顺序表的查找的时间复杂度为 \(O(n)\)。</p>
 
-<h4 id="sequential-list-get">取值</h4>
+<h4>取值</h4>
 <pre><code class="language-cpp">// GetElem 按位查找
 bool GetElem(SeqList L, int i, ElemType &e) {
     // 1. 判断要查找的位置 i 是否合法，如果不合法则返回 false
@@ -274,7 +274,7 @@ bool GetElem(SeqList L, int i, ElemType &e) {
     return true;
 }</code></pre>
 
-<h4 id="sequential-list-insert">插入</h4>
+<h4>插入</h4>
 <pre><code class="language-cpp">// ListInsert 在顺序表的第 i 个位置插入新元素 e
 bool ListInsert(SeqList &L, int i, ElemType e) {
     // 1. 检查插入位置是否合法，如果不合法则返回 false
@@ -308,7 +308,7 @@ bool ListInsert(SeqList &L, int i, ElemType e) {
                 </ul>
                 <p>因此，顺序表的插入的时间复杂度为 \(O(n)\)。</p>
 
-<h4 id="sequential-list-delete">删除</h4>
+<h4>删除</h4>
 <pre><code class="language-cpp">// ListDelete 删除顺序表的第 i 个元素，并用 e 返回其值
 bool ListDelete(SeqList &L, int i, ElemType &e) {
     // 1. 检查删除位置是否合法，如果不合法则返回 false
@@ -332,7 +332,7 @@ bool ListDelete(SeqList &L, int i, ElemType &e) {
                 </div>
                 <p>因此，顺序表的删除的时间复杂度为 \(O(n)\)。</p>
 
-<h4 id="sequential-list-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">// ListTraverse 遍历顺序表并打印每个元素
 void ListTraverse(SeqList L) {
     // 1. 遍历顺序表
@@ -351,8 +351,8 @@ void ListTraverse(SeqList L, void (*visit)(ElemType)) {
     }
 }</code></pre>
                 
-                <h2 id="linked-storage">线性表的链式存储结构</h2>
-                <h3 id="linked-list-definition">链表的定义</h3>
+                <h2>线性表的链式存储结构</h2>
+                <h3>链表的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/链表.svg" alt="链表">
                     <figcaption>图 链表</figcaption>
@@ -596,21 +596,21 @@ void CreateListHead(LinkedList &L, int n) {
                 <p><strong>4. 简化算法的实现</strong></p>
                 <p>在处理合并、逆序、排序等复杂链表算法时，头结点可以作为一个固定的 "哨兵结点"，提供一个稳定的起点，避免频繁修改头指针，让算法逻辑更简洁、更不易出错。例如：合并两个有序链表时，直接创建一个结果链表的头结点，所有结点的插入逻辑完全统一，无需单独处理结果链表为空的情况。</p>
                 
-                <h3 id="linked-list-sequential-access">链表的顺序存取</h3>
+                <h3>链表的顺序存取</h3>
                 <p>对于单链表，任意一个未知结点的地址只有通过其前驱结点才能获得，而前驱结点的地址只有通过该前驱结点的前驱结点才能获得，逻辑上需要一直追溯到某个已知地址的结点，才能从这个已知结点出发，依次遍历后继结点，最终逐步找到目标结点的地址。而这个已知地址的结点通常只有头指针指向的头结点。</p>
                 <p>双向链表同理，任意一个未知结点的地址只有通过其前驱或后继结点才能获得，即使双向链表支持双向遍历，但仍然无法直接计算出任意未知结点的地址。</p>
                 <p>因此链表中任意一个未知结点的访问都需要通过已知结点依次遍历，无法像顺序表那样通过地址计算直接访问，其访问任意未知结点的时间复杂度为 \(O(n)\)。</p>
                 <p>这种访问目标结点需要通过已知结点依次遍历的特性，使得链表成为一种只支持顺序存取而不支持随机存取的数据结构。</p>
                 
-                <h3 id="singly-linked-list-definition">单链表的定义</h3>
+                <h3>单链表的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/单链表.svg" alt="单链表">
                     <figcaption>图 单链表</figcaption>
                 </figure>
                 <p>每个结点中只包含一个指向后继结点的指针域的链表，称为单链表。</p>
                 
-                <h3 id="singly-linked-list-code">单链表的代码实现</h3>
-<h4 id="singly-linked-list-struct">定义</h4>
+                <h3>单链表的代码实现</h3>
+<h4>定义</h4>
 <pre><code class="language-cpp">typedef struct LNode{
     // 1. 结点的数据域
     ElemType data;
@@ -618,7 +618,7 @@ void CreateListHead(LinkedList &L, int n) {
     struct LNode *next;
 } LNode, *LinkedList;</code></pre>
 
-<h4 id="singly-linked-list-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">// InitList 初始化单链表
 bool InitList(LinkedList &L) {
     // 1. 新建一个结点（头结点）并分配内存空间，让头指针指向该结点
@@ -628,7 +628,7 @@ bool InitList(LinkedList &L) {
     return true;
 }</code></pre>
 
-<h4 id="singly-linked-list-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">// DestroyList 销毁单链表
 void DestroyList(LinkedList &L) {
     // 1. 声明一个临时存储结点地址的辅助指针 p，用来暂存当前要释放的结点地址，辅助完成结点的释放
@@ -644,7 +644,7 @@ void DestroyList(LinkedList &L) {
     }
 }</code></pre>
 
-<h4 id="singly-linked-list-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">// ClearList 清空单链表
 void ClearList(LinkedList &L) {
     // 1. 声明两个辅助指针 p 和 q，一个用来暂存当前要释放的结点地址，另一个用来暂存下一个结点的地址
@@ -664,7 +664,7 @@ void ClearList(LinkedList &L) {
     L->next = NULL;
 }</code></pre>
 
-<h4 id="singly-linked-list-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">// ListEmpty 判断单链表是否为空
 bool ListEmpty(LinkedList L) {
     // 直接判断头结点的指针域是否为空返回结果即可
@@ -672,7 +672,7 @@ bool ListEmpty(LinkedList L) {
     else return false;
 }</code></pre>
 
-<h4 id="singly-linked-list-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">// ListLength 求单链表的表长
 int ListLength(LinkedList L) {
     // 1. 定义一个整型变量 length 用来计数，初始值为 0
@@ -690,7 +690,7 @@ int ListLength(LinkedList L) {
     return length;
 }</code></pre>
 
-<h4 id="singly-linked-list-locate">查找</h4>
+<h4>查找</h4>
 <pre><code class="language-cpp">// LocateElem 按值查找元素
 int LocateElem(LinkedList L, ElemType e) {
     // 1. 定义一个整型变量 i 用来表示当前查找到的位置，初始值为 1
@@ -722,7 +722,7 @@ int LocateElem(LinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     else return 0;
 }</code></pre>
 
-<h4 id="singly-linked-list-get">取值</h4>
+<h4>取值</h4>
 <pre><code class="language-cpp">// GetElem 按位查找
 bool GetElem(LinkedList L, int i, ElemType &e) {
     // 1. 定义一个整型变量 j 用来表示当前查找到的位置，初始值为 1
@@ -743,7 +743,7 @@ bool GetElem(LinkedList L, int i, ElemType &e) {
     return true;
 }</code></pre>
 
-                <h4 id="singly-linked-list-insert">插入</h4>
+                <h4>插入</h4>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/单链表的插入.svg" alt="单链表的插入">
                     <figcaption>图 单链表的插入</figcaption>
@@ -773,7 +773,7 @@ bool ListInsert(LinkedList &L, int i, ElemType e) {
     return true;
 }</code></pre>
 
-                <h4 id="singly-linked-list-delete">删除</h4>
+                <h4>删除</h4>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/单链表的删除.svg" alt="单链表的删除">
                     <figcaption>图 单链表的删除</figcaption>
@@ -802,7 +802,7 @@ bool ListDelete(LinkedList &L, int i, ElemType &e) {
     return true;
 }</code></pre>
 
-<h4 id="singly-linked-list-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">// ListTraverse 遍历单链表并打印每个元素
 void ListTraverse(LinkedList L) {
     // 1. 定义一个辅助指针 p，指向首元结点
@@ -826,7 +826,7 @@ void ListTraverse(LinkedList L, void (*visit)(ElemType)) {
     printf("\n");
 }</code></pre>
 
-<h4 id="singly-linked-list-create-head">头插法创建单链表</h4>
+<h4>头插法创建单链表</h4>
 <pre><code class="language-cpp">// CreateListHead 头插法创建单链表
 void CreateListHead(LinkedList &L, int n) {
     // 1. 新建一个结点（头结点）并分配内存空间，让头指针指向该结点
@@ -846,7 +846,7 @@ void CreateListHead(LinkedList &L, int n) {
     }
 }</code></pre>
 
-<h4 id="singly-linked-list-create-tail">尾插法创建单链表</h4>
+<h4>尾插法创建单链表</h4>
 <pre><code class="language-cpp">// CreateListTail 尾插法创建单链表
 void CreateListTail(LinkedList &L, int n) {
     // 1. 新建一个结点（头结点）并分配内存空间，让头指针指向该结点
@@ -870,27 +870,27 @@ void CreateListTail(LinkedList &L, int n) {
     }
 }</code></pre>
 
-                <h3 id="singly-linked-list-analysis">单链表的查找、插入、删除的性能分析</h3>
+                <h3>单链表的查找、插入、删除的性能分析</h3>
                 <ul>
                     <li>查找：由于单链表只能顺序存取，因此时间复杂度为 \(O(n)\)。</li>
                     <li>插入和删除：对于单链表，结点插入和删除的指针修改操作本身时间复杂度为 \(O(1)\)；但在绝大多数实际场景中，需要先遍历找到目标位置的前驱结点，这一步时间复杂度为 \(O(n)\)。因此，按值查找后执行的单链表插入和删除操作，整体时间复杂度为 \(O(n)\)。</li>
                 </ul>
 
-                <h3 id="circular-singly-linked-list-definition">单循环链表的定义</h3>
+                <h3>单循环链表的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/单循环链表.svg" alt="单循环链表">
                     <figcaption>图 单循环链表</figcaption>
                 </figure>
                 <p>将单链表的尾结点的指针域指向链表的第一个结点（带头结点时为头结点，不带头结点时为首元结点），使整个单链表形成一个首尾相接的闭合环状结构，称为单循环链表。</p>
                 
-                <h3 id="circular-singly-linked-list-code">单循环链表的代码实现</h3>
-<h4 id="circular-singly-linked-list-struct">定义</h4>
+                <h3>单循环链表的代码实现</h3>
+<h4>定义</h4>
 <pre><code class="language-cpp">typedef struct LNode {
     ElemType data;
     struct LNode *next;
 } LNode, *LinkedList;</code></pre>
 
-<h4 id="circular-singly-linked-list-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">bool InitList(LinkedList &L) {
     L = new LNode;
     // 将头结点的指针域指向自身
@@ -898,7 +898,7 @@ void CreateListTail(LinkedList &L, int n) {
     return true;
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">void DestroyList(LinkedList &L) {
     LNode *p, *q;
     // 先跳过头结点，最后再单独释放头结点
@@ -915,7 +915,7 @@ void CreateListTail(LinkedList &L, int n) {
     L = NULL; 
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">void ClearList(LinkedList &L) {
     LNode *p, *q;
     p = L->next;
@@ -929,14 +929,14 @@ void CreateListTail(LinkedList &L, int n) {
     L->next = L;
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">bool ListEmpty(LinkedList L) {
     // 判断头结点的指针域是否指向自身
     if (L->next == L) return true;
     else return false;
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">int ListLength(LinkedList L) {
     int length = 0;
     LNode *p = L->next;
@@ -948,7 +948,7 @@ void CreateListTail(LinkedList &L, int n) {
     return length;
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-locate">查找</h4>
+<h4>查找</h4>
 <pre><code class="language-cpp">int LocateElem(LinkedList L, ElemType e) {
     int i = 1;
     LNode *p = L->next;
@@ -973,7 +973,7 @@ int LocateElem(LinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     else return 0;
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-get">取值</h4>
+<h4>取值</h4>
 <pre><code class="language-cpp">bool GetElem(LinkedList L, int i, ElemType &e) {
     int j = 1;
     LNode *p = L->next;
@@ -988,7 +988,7 @@ int LocateElem(LinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-insert">插入</h4>
+<h4>插入</h4>
 <pre><code class="language-cpp">bool ListInsert(LinkedList &L, int i, ElemType e) {
     int j = 1;
     LNode *p = L;
@@ -1007,7 +1007,7 @@ int LocateElem(LinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-delete">删除</h4>
+<h4>删除</h4>
 <pre><code class="language-cpp">bool ListDelete(LinkedList &L, int i, ElemType &e) {
     int j = 1;
     LNode *p = L;
@@ -1026,7 +1026,7 @@ int LocateElem(LinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">void ListTraverse(LinkedList L) {
     LNode *p = L->next;
     // 循环结束的条件是辅助指针 p 回到头结点
@@ -1045,7 +1045,7 @@ void ListTraverse(LinkedList L, void (*visit)(ElemType)) {
     }
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-create-head">头插法创建单循环链表</h4>
+<h4>头插法创建单循环链表</h4>
 <pre><code class="language-cpp">void CreateListHead(LinkedList &L, int n) {
     L = new LNode;
     // 将头结点的指针域指向自身
@@ -1058,7 +1058,7 @@ void ListTraverse(LinkedList L, void (*visit)(ElemType)) {
     }
 }</code></pre>
 
-<h4 id="circular-singly-linked-list-create-tail">尾插法创建单循环链表</h4>
+<h4>尾插法创建单循环链表</h4>
 <pre><code class="language-cpp">void CreateListTail(LinkedList &L, int n) {
     L = new LNode;
     // 将头结点的指针域指向自身
@@ -1074,7 +1074,7 @@ void ListTraverse(LinkedList L, void (*visit)(ElemType)) {
     }
 }</code></pre>
 
-                <h3 id="circular-singly-linked-list-tail-pointer">使用尾指针的单循环链表</h3>
+                <h3>使用尾指针的单循环链表</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/单循环链表.svg" alt="使用头指针的单循环链表">
                     <figcaption>图 使用头指针的单循环链表</figcaption>
@@ -1094,7 +1094,7 @@ void ListTraverse(LinkedList L, void (*visit)(ElemType)) {
                     <li>\(a_1\) 的位置是：r->next->next，时间复杂度为：\(O(1)\)</li>
                     <li>\(a_n\) 的位置是：r，时间复杂度为：\(O(1)\)</li>
                 </ul>
-                <h3 id="merge-singly-circular-linked-lists-with-tail-pointer">使用尾指针的单循环链表的合并</h3>
+                <h3>使用尾指针的单循环链表的合并</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/使用尾指针的单循环链表的合并.svg" alt="使用尾指针的单循环链表的合并">
                     <figcaption>图 使用尾指针的单循环链表的合并</figcaption>
@@ -1115,15 +1115,15 @@ LinkList Connect(LinkList ta, LinkList tb) {
 }
 </code></pre>
 
-                <h3 id="doubly-linked-list-definition">双向链表的定义</h3>
+                <h3>双向链表的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/双向链表.svg" alt="双向链表">
                     <figcaption>图 双向链表</figcaption>
                 </figure>
                 <p>每个结点中包含两个指针域，分别指向其前驱结点和后继结点的链表，称为双向链表。</p>
                 
-                <h3 id="doubly-linked-list-code">双向链表的代码实现</h3>
-<h4 id="doubly-linked-list-struct">定义</h4>
+                <h3>双向链表的代码实现</h3>
+<h4>定义</h4>
 <pre><code class="language-cpp">typedef struct DNode {
     ElemType data;
     // 结点的指针域（包括一个指向前驱结点的指针和一个指向后继结点的指针）
@@ -1131,7 +1131,7 @@ LinkList Connect(LinkList ta, LinkList tb) {
     struct DNode *next;
 } DNode, *DLinkedList;</code></pre>
 
-<h4 id="doubly-linked-list-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">bool InitDList(DLinkedList &L) {
     L = new DNode;
     // 将头结点的前驱和后继指针都置空
@@ -1140,7 +1140,7 @@ LinkList Connect(LinkList ta, LinkList tb) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-linked-list-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">void DestroyDList(DLinkedList &L) {
     DNode *p;
     while (L) {
@@ -1150,7 +1150,7 @@ LinkList Connect(LinkList ta, LinkList tb) {
     }
 }</code></pre>
 
-<h4 id="doubly-linked-list-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">void ClearDList(DLinkedList &L) {
     DNode *p, *q;
     p = L->next;
@@ -1162,13 +1162,13 @@ LinkList Connect(LinkList ta, LinkList tb) {
     L->next = NULL;
 }</code></pre>
 
-<h4 id="doubly-linked-list-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">bool DListEmpty(DLinkedList L) {
     if (L->next == NULL) return true;
     else return false;
 }</code></pre>
 
-<h4 id="doubly-linked-list-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">int DListLength(DLinkedList L) {
     int length = 0;
     DNode *p = L->next;
@@ -1179,7 +1179,7 @@ LinkList Connect(LinkList ta, LinkList tb) {
     return length;
 }</code></pre>
 
-<h4 id="doubly-linked-list-locate">查找</h4>
+<h4>查找</h4>
 <pre><code class="language-cpp">int LocateElem(DLinkedList L, ElemType e) {
     int i = 1;
     DNode *p = L->next;
@@ -1202,7 +1202,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     else return 0;
 }</code></pre>
 
-<h4 id="doubly-linked-list-get">取值</h4>
+<h4>取值</h4>
 <pre><code class="language-cpp">bool GetElem(DLinkedList L, int i, ElemType &e) {
     int j = 1;
     DNode *p = L->next;
@@ -1215,7 +1215,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-linked-list-get-prev">获取前驱</h4>
+<h4>获取前驱</h4>
 <pre><code class="language-cpp">bool PriorElem(DLinkedList L, ElemType cur_e, ElemType &pre_e) {
     DNode *p = L->next;               // 从第一个数据结点开始查找
     while (p && p->data != cur_e) {   // 查找值为 cur_e 的结点
@@ -1229,7 +1229,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-linked-list-get-next">获取后继</h4>
+<h4>获取后继</h4>
 <pre><code class="language-cpp">bool NextElem(DLinkedList L, ElemType cur_e, ElemType &next_e) {
     DNode *p = L->next;               // 从第一个数据结点开始查找
     while (p && p->data != cur_e) {   // 查找值为 cur_e 的结点
@@ -1243,7 +1243,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-                <h4 id="doubly-linked-list-insert">插入</h4>
+                <h4>插入</h4>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/双向链表的插入.svg" alt="双向链表的插入">
                     <figcaption>图 双向链表的插入</figcaption>
@@ -1285,7 +1285,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-                <h4 id="doubly-linked-list-delete">删除</h4>
+                <h4>删除</h4>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/双向链表的删除.svg" alt="双向链表的删除">
                     <figcaption>图 双向链表的删除</figcaption>
@@ -1310,7 +1310,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-linked-list-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">void DListTraverse(DLinkedList L) {
     DNode *p = L->next;
     while (p) {
@@ -1329,7 +1329,7 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     printf("\n");
 }</code></pre>
 
-<h4 id="doubly-linked-list-create-head">头插法创建双向链表</h4>
+<h4>头插法创建双向链表</h4>
 <pre><code class="language-cpp">void CreateDListHead(DLinkedList &L, int n) {
     L = new DNode;
     // 将头结点的前驱和后继指针都置空
@@ -1347,7 +1347,7 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     }
 }</code></pre>
 
-<h4 id="doubly-linked-list-create-tail">尾插法创建双向链表</h4>
+<h4>尾插法创建双向链表</h4>
 <pre><code class="language-cpp">void CreateDListTail(DLinkedList &L, int n) {
     L = new DNode;
     // 将头结点的前驱和后继指针都置空
@@ -1365,22 +1365,22 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     }
 }</code></pre>
                 
-                <h3 id="doubly-circular-linked-list-definition">双向循环链表的定义</h3>
+                <h3>双向循环链表的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/双向循环链表.svg" alt="双向循环链表">
                     <figcaption>图 双向循环链表</figcaption>
                 </figure>
                 <p>将双向链表的第一个结点（带头结点时为头结点，不带头结点时为首元结点）的前驱指针指向尾结点，尾结点的后继指针指向第一个结点，使整个双向链表形成一个首尾相接的闭合环状结构，称为双向循环链表。</p>
                 
-                <h3 id="doubly-circular-linked-list-code">双向循环链表的代码实现</h3>
-<h4 id="doubly-circular-linked-list-struct">定义</h4>
+                <h3>双向循环链表的代码实现</h3>
+<h4>定义</h4>
 <pre><code class="language-cpp">typedef struct DNode {
     ElemType data;
     struct DNode *prev;
     struct DNode *next;
 } DNode, *DLinkedList;</code></pre>
 
-<h4 id="doubly-circular-linked-list-init">初始化</h4>
+<h4>初始化</h4>
 <pre><code class="language-cpp">bool InitDList(DLinkedList &L) {
     L = new DNode;
     // 将头结点的前驱和后继指针都指向自身
@@ -1389,7 +1389,7 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-destroy">销毁</h4>
+<h4>销毁</h4>
 <pre><code class="language-cpp">void DestroyDList(DLinkedList &L) {
     DNode *p, *q;
     p = L->next;
@@ -1402,7 +1402,7 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     L = NULL;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-clear">清空</h4>
+<h4>清空</h4>
 <pre><code class="language-cpp">void ClearDList(DLinkedList &L) {
     DNode *p, *q;
     p = L->next;
@@ -1416,13 +1416,13 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     L->prev = L;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-empty">判空</h4>
+<h4>判空</h4>
 <pre><code class="language-cpp">bool DListEmpty(DLinkedList L) {
     if (L->next == L) return true;
     else return false;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-length">求表长</h4>
+<h4>求表长</h4>
 <pre><code class="language-cpp">int DListLength(DLinkedList L) {
     int length = 0;
     DNode *p = L->next;
@@ -1433,7 +1433,7 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     return length;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-locate">查找</h4>
+<h4>查找</h4>
 <pre><code class="language-cpp">int LocateElem(DLinkedList L, ElemType e) {
     int i = 1;
     DNode *p = L->next;
@@ -1457,7 +1457,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     else return 0;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-get">取值</h4>
+<h4>取值</h4>
 <pre><code class="language-cpp">bool GetElem(DLinkedList L, int i, ElemType &e) {
     int j = 1;
     DNode *p = L->next;
@@ -1470,7 +1470,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-get-prev">获取前驱</h4>
+<h4>获取前驱</h4>
 <pre><code class="language-cpp">bool PriorElem_DCL(DLinkedList L, ElemType cur_e, ElemType &pre_e) {
     DNode *p = L->next;               // 第一个数据结点
     while (p != L && p->data != cur_e) {   // 循环终止条件改为 p != L
@@ -1483,7 +1483,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-get-next">获取后继</h4>
+<h4>获取后继</h4>
 <pre><code class="language-cpp">bool NextElem_DCL(DLinkedList L, ElemType cur_e, ElemType &next_e) {
     DNode *p = L->next;
     while (p != L && p->data != cur_e) {
@@ -1496,7 +1496,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-insert">插入</h4>
+<h4>插入</h4>
 <pre><code class="language-cpp">bool DListInsert(DLinkedList &L, int i, ElemType e) {
     int j = 1;
     DNode *p = L;
@@ -1516,7 +1516,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-delete">删除</h4>
+<h4>删除</h4>
 <pre><code class="language-cpp">bool DListDelete(DLinkedList &L, int i, ElemType &e) {
     int j = 1;
     DNode *p = L;
@@ -1535,7 +1535,7 @@ int LocateElem(DLinkedList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     return true;
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-traverse">遍历</h4>
+<h4>遍历</h4>
 <pre><code class="language-cpp">void DListTraverse(DLinkedList L) {
     DNode *p = L->next;
     while (p != L) {
@@ -1555,7 +1555,7 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     printf("\n");
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-create-head">头插法创建双向循环链表</h4>
+<h4>头插法创建双向循环链表</h4>
 <pre><code class="language-cpp">void CreateDListHead(DLinkedList &L, int n) {
     L = new DNode;
     // 将头结点的前驱和后继指针都指向自身
@@ -1572,7 +1572,7 @@ void DListTraverse(DLinkedList L, void (*visit)(ElemType)) {
     }
 }</code></pre>
 
-<h4 id="doubly-circular-linked-list-create-tail">尾插法创建双向循环链表</h4>
+<h4>尾插法创建双向循环链表</h4>
 <pre><code class="language-cpp">void CreateDListTail(DLinkedList &L, int n) {
     L = new DNode;
     // 将头结点的前驱和后继指针都指向自身

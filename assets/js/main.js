@@ -130,7 +130,12 @@ function generateDynamicCatalog() {
         // 1. 准备 ID 和链接
         let titleId = title.getAttribute('id');
         if (!titleId) {
-            titleId = 'title-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            // 使用 UUID，如果不支持则使用时间戳和随机数组合生成一个简单的 ID
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+                titleId = crypto.randomUUID();
+            } else {
+                titleId = 'title-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            }
             title.setAttribute('id', titleId);
         }
 
