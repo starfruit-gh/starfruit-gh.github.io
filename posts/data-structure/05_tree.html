@@ -90,13 +90,13 @@
                     <img src="/assets/images/posts/data-structure/tree/树.svg" alt="树">
                     <figcaption>图 树</figcaption>
                 </figure>
-                <p><strong>树（Tree）</strong>：是 n(n≥0) 个结点的有限集。</p>
+                <p><strong>树（Tree）</strong>：是 \( n \)（\( n \ge 0 \)）个结点的有限集。</p>
                 <ul>
-                    <li>若 n = 0，称为<strong>空树</strong>；</li>
-                    <li>若 n &gt; 0，则它满足如下两个条件：
+                    <li>若 \( n = 0 \)，称为<strong>空树</strong>；</li>
+                    <li>若 \( n > 0 \)，则它满足如下两个条件：
                         <ol>
                             <li>有且仅有一个特定的称为<strong>根</strong>的结点；</li>
-                            <li>其余结点可分为 m (m≥0) 个互不相交的有限集 T<sub>1</sub>, T<sub>2</sub>, T<sub>3</sub>, …, T<sub>m</sub>，其中每一个集合本身又是一棵树，并称为根的<strong>子树</strong>。</li>
+                            <li>其余结点可分为 \( m \)（\( m \ge 0 \)）个互不相交的有限集 \( T_1, T_2, T_3, …, T_m \) ，其中每一个集合本身又是一棵树，并称为根的<strong>子树</strong>。</li>
                         </ol>
                     </li>
                 </ul>
@@ -121,13 +121,13 @@
                 </ul>
                 
                 <h2>二叉树的定义</h2>
-                <p><strong>二叉树（Binary Tree）</strong>：是 n(n≥0) 个结点的有限集。</p>
+                <p><strong>二叉树（Binary Tree）</strong>：是 \( n \)（\( n \ge 0 \)）个结点的有限集。</p>
                 <ul>
-                    <li>若 n = 0，称为空树；</li>
-                    <li>若 n &gt; 0，则它满足如下两个条件：
+                    <li>若 \( n = 0 \)，称为空树；</li>
+                    <li>若 \( n > 0 \)，则它满足如下两个条件：
                         <ol>
                             <li>有且仅有一个特定的称为根的结点；</li>
-                            <li>其余结点分为两个互不相交的子集 T<sub>1</sub> 和 T<sub>2</sub>，分别称为 T 的<strong>左子树</strong>和<strong>右子树</strong>，且 T<sub>1</sub> 和 T<sub>2</sub> 本身又都是二叉树。</li>
+                            <li>其余结点分为两个互不相交的子集 \( T_1, T_2 \)，分别称为 T 的<strong>左子树</strong>和<strong>右子树</strong>，且 \( T_1, T_2 \) 本身又都是二叉树。</li>
                         </ol>
                     </li>
                 </ul>
@@ -220,9 +220,9 @@
                 
                 <h2>二叉树的性质</h2>
                 <ul>
-                    <li><strong>性质1</strong>：在二叉树的第 \(i\) 层上至多有 \(2^{i-1}\) 个结点 \((i ≥ 1)\)。</li>
-                    <li><strong>性质2</strong>：深度为 \(k\) 的二叉树至多有 \(2^k - 1\) 个结点 \((k ≥ 1)\)。</li>
-                    <li><strong>性质3</strong>：对任何一棵二叉树 \(T\)，如果其叶子数为 \(n_0\)，度为 2 的结点数为 \(n_2\)，则 \(n_0 = n_2 + 1\)。</li>
+                    <li><strong>性质1</strong>：在二叉树的第 \( i \) 层上至多有 \( 2^{i-1} \) 个结点 \( (i ≥ 1) \)。</li>
+                    <li><strong>性质2</strong>：深度为 \( k \) 的二叉树至多有 \( 2^k - 1 \) 个结点 \( (k ≥ 1) \)。</li>
+                    <li><strong>性质3</strong>：对任何一棵二叉树 \( T \) ，如果其叶子数为 \( n_0 \)，度为 2 的结点数为 \( n_2 \)，则 \( n_0 = n_2 + 1 \)。</li>
                 </ul>
                 
                 <h2>满二叉树</h2>
@@ -231,7 +231,7 @@
                     <img src="/assets/images/posts/data-structure/tree/满二叉树.svg" alt="满二叉树">
                     <figcaption>图 满二叉树</figcaption>
                 </figure>
-                <p>一棵深度为 \(k\) 且有 \(2^k - 1\) 个结点的二叉树称为<strong>满二叉树</strong>。</p>
+                <p>一棵深度为 \( k \) 且有 \( 2^k - 1 \) 个结点的二叉树称为<strong>满二叉树</strong>。</p>
                 
                 <h3>满二叉树的特点</h3>
                 <ul>
@@ -245,22 +245,22 @@
                     <img src="/assets/images/posts/data-structure/tree/完全二叉树.svg" alt="完全二叉树">
                     <figcaption>图 完全二叉树</figcaption>
                 </figure>
-                <p>深度为 \(k\) 的具有 \(n\) 个结点的二叉树，当且仅当其每一个结点都与深度为 \(k\) 的满二叉树中编号为 1~n 的结点一一对应时，称之为<strong>完全二叉树</strong>。</p>
+                <p>深度为 \( k \) 的具有 \( n \) 个结点的二叉树，当且仅当其每一个结点都与深度为 \( k \) 的满二叉树中编号为 \( 1 \,\sim\, n \) 的结点一一对应时，称之为<strong>完全二叉树</strong>。</p>
                 
                 <h3>完全二叉树的特点</h3>
                 <ul>
-                    <li>前 \(k-1\) 层全满，最后一层左满右空。</li>
+                    <li>前 \( k-1 \) 层全满，最后一层左满右空。</li>
                 </ul>
                 
                 <h3>完全二叉树的性质</h3>
                 <ul>
-                    <li><strong>性质4</strong>：有 \(n\) 个结点的完全二叉树的深度为 \(\lfloor \log_2 n \rfloor + 1\)。<br>
-                    （注：\(\lfloor x \rfloor\) 称作 \(x\) 的底，表示不大于 \(x\) 的最大整数）</li>
-                    <li><strong>性质5</strong>：如果对一棵有 \(n\) 个结点的完全二叉树（其深度为 \(\lfloor \log_2 n \rfloor + 1\)）的结点按层序编号（从第 1 层到第 \(\lfloor \log_2 n \rfloor + 1\) 层，每层从左到右），则对任一结点 \(i\) \((1 ≤ i ≤ n)\)，有：
+                    <li><strong>性质4</strong>：有 \( n \) 个结点的完全二叉树的深度为 \( \lfloor \log_2 n \rfloor + 1 \)。<br>
+                    （注：\(\lfloor x \rfloor\) 称作 \( x \) 的底，表示不大于 \( x \) 的最大整数）</li>
+                    <li><strong>性质5</strong>：如果对一棵有 \( n \) 个结点的完全二叉树（其深度为 \( \lfloor \log_2 n \rfloor + 1 \)）的结点按层序编号（从第 1 层到第 \( \lfloor \log_2 n \rfloor + 1 \) 层，每层从左到右），则对任一结点 \( i \) \( (1 ≤ i ≤ n) \)，有：
                         <ol>
-                            <li>如果 \(i=1\)，则结点 \(i\) 是二叉树的根，无双亲；如果 \(i>1\)，则其双亲是结点 \(\lfloor i/2 \rfloor\)。</li>
-                            <li>如果 \(2i &gt; n\)，则结点 \(i\) 无左孩子（结点 \(i\) 为叶子结点）；否则其左孩子是结点 \(2i\)。</li>
-                            <li>如果 \(2i + 1 &gt; n\)，则结点 \(i\) 无右孩子；否则其右孩子是结点 \(2i + 1\)。</li>
+                            <li>如果 \( i = 1 \) ，则结点 \( i \) 是二叉树的根，无双亲；如果 \( i > 1 \)，则其双亲是结点 \( \lfloor \frac{i}{2} \rfloor \)。</li>
+                            <li>如果 \( 2i &gt; n \)， ，则结点 \( i \) 无左孩子（结点 \( i \) 为叶子结点）；否则其左孩子是结点 \( 2i \)。</li>
+                            <li>如果 \( 2i + 1 &gt; n \)，则结点 \( i \) 无右孩子；否则其右孩子是结点 \( 2i + 1 \)。</li>
                         </ol>
                     </li>
                 </ul>
@@ -277,7 +277,7 @@
                 </figure>
                 <p>二叉树的顺序存储最坏的情况就是：二叉树退化为一棵斜树时，此时树中仅有单侧连续结点有效，大量数组空间因无对应结点而被闲置空占，存储利用率极低。</p>
                 <p>由于二叉树的顺序存储结构比较浪费存储空间，因此仅适用于存储满二叉树和完全二叉树。</p>
-                <pre><code class="language-cpp">#define MAXTSIZE 100
+<pre><code class="language-cpp">#define MAXTSIZE 100
 typedef ElemType SeqBiTree[MAXTSIZE];</code></pre>
                 
                 <h2>二叉树的链式存储结构</h2>
@@ -290,7 +290,7 @@ typedef ElemType SeqBiTree[MAXTSIZE];</code></pre>
     ElemType data;
     struct BiNode *lchild, *rchild;
 } BiNode, *BiTree;</code></pre>
-                <p>在 n 个结点的二叉链表中，有 n+1 个空指针域。</p>
+                <p>在 \( n \) 个结点的二叉链表中，有 \( n + 1 \) 个空指针域。</p>
 
                 <h3>三叉链表</h3>
                 <figure>
@@ -341,10 +341,7 @@ bool PostOrderTraverse(BiTree T, void (*visit)(BiTree)) {
         visit(T);
     }
 }</code></pre>
-                <p><strong>遍历算法的效率</strong><br>
-                时间复杂度：O(n)<br>
-                空间复杂度：O(n)</p>
-                
+
 <h4>二叉树的迭代遍历</h4>
 <pre><code class="language-cpp">// 先序遍历
 bool PreOrderTraverse(BiTree T) {
@@ -715,7 +712,7 @@ BiNode* Parent(BiTree T, ElemType e) {
                 <p>遍历二叉树就是以一定规则将二叉树中的结点排列成一个线性序列，也就是各结点的排列从一棵树变成了一个线性表。</p>
                 <p>通过遍历之后得到的结点序列，我们可以很清楚的知道任意一个结点，它的前驱和后继是哪一个。但是，这是建立在遍历的基础上的，每次想要获得一个结点的前驱或后继，都必须重新遍历整棵树。所以这种方式效率比较低。</p>
                 <p>或者可以在每个结点中增加两个指针域来存放在遍历时得到的有关前驱和后继信息，但这样做使得结构的存储密度大大降低。</p>
-                <p>由于有 n 个结点的二叉链表中必定存在 n+1 个空指针域，因此可以充分利用这些空指针域来存放结点的前驱和后继信息。</p>
+                <p>由于有 \( n \) 个结点的二叉链表中必定存在 \( n + 1 \) 个空指针域，因此可以充分利用这些空指针域来存放结点的前驱和后继信息。</p>
                 <p>利用二叉链表中的空指针域：</p>
                 <ul>
                     <li>如果某个结点的左指针为空，则将其指向其前驱结点。</li>
@@ -1103,115 +1100,117 @@ void Select(HuffmanTree HT, int k, int &s1, int &s2) {
             <p>举一个哈夫曼编码的例子：</p>
             <p>假设要传输的字符序列为："this is an example of a huffman tree"</p>
             <p>以下是该字符串中各字符的出现频率及对应的哈夫曼编码（左 0 右 1 规则）：</p>
-            <div class="table-caption">表1 哈夫曼编码表</div>
-            <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
-                <thead>
-                    <tr style="background-color: #f5f5f5;">
-                        <th style="border:1px solid #eee; padding:8px; text-align:left;">字符</th>
-                        <th style="border:1px solid #eee; padding:8px; text-align:left;">频率</th>
-                        <th style="border:1px solid #eee; padding:8px; text-align:left;">编码</th>
-                        <th style="border:1px solid #eee; padding:8px; text-align:left;">码长</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">空格</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">7</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">111</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">3位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">a</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">010</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">3位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">e</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">000</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">3位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">f</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">3</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1101</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">h</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">2</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1010</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">i</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">2</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1000</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">m</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">2</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">0111</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">n</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">2</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">0010</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">s</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">2</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1011</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">t</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">2</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">0110</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">4位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">l</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">11001</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">5位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">o</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">00110</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">5位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">p</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">10011</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">5位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">r</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">11000</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">5位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">u</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">00111</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">5位</td>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">x</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">1</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">10010</td>
-                        <td style="border:1px solid #eee; padding:8px; text-align:left;">5位</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="article-table-container">
+                <table class="article-table">
+                    <caption class="table-caption caption-top">表 哈夫曼编码表</caption>
+                    <thead>
+                        <tr>
+                            <th>字符</th>
+                            <th>频率</th>
+                            <th>编码</th>
+                            <th>码长</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>空格</td>
+                            <td>7</td>
+                            <td>111</td>
+                            <td>3位</td>
+                        </tr>
+                        <tr>
+                            <td>a</td>
+                            <td>4</td>
+                            <td>010</td>
+                            <td>3位</td>
+                        </tr>
+                        <tr>
+                            <td>e</td>
+                            <td>4</td>
+                            <td>000</td>
+                            <td>3位</td>
+                        </tr>
+                        <tr>
+                            <td>f</td>
+                            <td>3</td>
+                            <td>1101</td>
+                            <td>4位</td>
+                        </tr>
+                        <tr>
+                            <td>h</td>
+                            <td>2</td>
+                            <td>1010</td>
+                            <td>4位</td>
+                        </tr>
+                        <tr>
+                            <td>i</td>
+                            <td>2</td>
+                            <td>1000</td>
+                            <td>4位</td>
+                        </tr>
+                        <tr>
+                            <td>m</td>
+                            <td>2</td>
+                            <td>0111</td>
+                            <td>4位</td>
+                        </tr>
+                        <tr>
+                            <td>n</td>
+                            <td>2</td>
+                            <td>0010</td>
+                            <td>4位</td>
+                        </tr>
+                        <tr>
+                            <td>s</td>
+                            <td>2</td>
+                            <td>1011</td>
+                            <td>4位</td>
+                        </tr>
+                        <tr>
+                            <td>t</td>
+                            <td>2</td>
+                            <td>0110</td>
+                            <td>4位</td>
+                        </tr>
+                        <tr>
+                            <td>l</td>
+                            <td>1</td>
+                            <td>11001</td>
+                            <td>5位</td>
+                        </tr>
+                        <tr>
+                            <td>o</td>
+                            <td>1</td>
+                            <td>00110</td>
+                            <td>5位</td>
+                        </tr>
+                        <tr>
+                            <td>p</td>
+                            <td>1</td>
+                            <td>10011</td>
+                            <td>5位</td>
+                        </tr>
+                        <tr>
+                            <td>r</td>
+                            <td>1</td>
+                            <td>11000</td>
+                            <td>5位</td>
+                        </tr>
+                        <tr>
+                            <td>u</td>
+                            <td>1</td>
+                            <td>00111</td>
+                            <td>5位</td>
+                        </tr>
+                        <tr>
+                            <td>x</td>
+                            <td>1</td>
+                            <td>10010</td>
+                            <td>5位</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <figure>
                 <img src="/assets/images/posts/data-structure/tree/哈夫曼树.svg" alt="哈夫曼树" />
                 <figcaption>图 哈夫曼树</figcaption>
@@ -1356,7 +1355,7 @@ void Union(int x, int y) {
                 <figcaption>图 并查集树的合并</figcaption>
             </figure>
             <p>并查集在合并后，会导致树的高度增加。这会导致 Find 操作的时间复杂度增加。</p>
-            <p>路径压缩：在 Find 操作中，可以将访问过的结点都直接指向根结点，这样后续的 Find 操作可以在 O(1) 的时间完成。</p>
+            <p>路径压缩：在 Find 操作中，可以将访问过的结点都直接指向根结点，这样后续的 Find 操作可以在 \( O(1) \) 的时间完成。</p>
             <p>实现路径压缩非常简单，只需要在 Find 操作中，找到根结点后，将访问过的结点都直接指向根结点即可。</p>
             <pre><code class="language-cpp">int Find(int x) {
     if(p[x] == x) 
@@ -1372,16 +1371,16 @@ void Union(int x, int y) {
                 <figcaption>图 高度不同的树的合并</figcaption>
             </figure>
             <p>在合并操作中，如果两个树的高度不同，那将低树合并到高树上会比将高树合并到低树上得到的树的高度小。</p>
-            <p>按秩合并：在 Union 操作中，可以将秩较小的树的根结点指向秩较大的树的根结点，若两树秩相等则任选一个根作为新根并将其秩加一。这样合并后的树高度不会无故增加，从而保证后续 Find 操作的时间复杂度为 O(log n)。</p>
+            <p>按秩合并：在 Union 操作中，可以将秩较小的树的根结点指向秩较大的树的根结点，若两树秩相等则任选一个根作为新根并将其秩加一。这样合并后的树高度不会无故增加，从而保证后续 Find 操作的时间复杂度为 \( O(\log n) \)。</p>
             <p>秩的两种常见定义：</p>
             <ul>
                 <li>标准定义：树的高度（深度）。</li>
                 <ul>
-                    <li>可以用一个 h 数组存储树的高度。例如，\(h[root_i] = 2\)。在使用路径压缩的并查集中，由于路径压缩可能会改变树的高度，所以 h 数组记录的是估计的高度。</li>
+                    <li>可以用一个 \( h \) 数组存储树的高度。例如，\( h[root_i] = 2 \)。在使用路径压缩的并查集中，由于路径压缩可能会改变树的高度，所以 \( h \) 数组记录的是估计的高度。</li>
                 </ul>
                 <li>等价变体：树的大小（结点总数）。</li>
                 <ul>
-                    <li>可以用一个 s 数组存储树的大小。例如，\(s[root_i] = 3\)。</li>
+                    <li>可以用一个 \( s \) 数组存储树的大小。例如，\( s[root_i] = 3 \)。</li>
                 </ul>
             </ul>
 <pre><code class="language-cpp">// 秩为树的高度
@@ -1415,7 +1414,7 @@ void Union(int x, int y) {
     }
 }</code></pre>
             <p>使用路径压缩 + 按秩合并，并查集的查找效率为：\(O(α(n))\)，\(α(n)\)为阿克曼函数的反函数，近似为 \(O(1)\)。</p>
-            <p>另外，可以通过将 p 数组中根结点的值修改为负的树的高度或大小，这样既可以区分根结点又可以通过根结点来存储树的高度或大小。这样就省去了额外的 h 数组或 s 数组。</p>
+            <p>另外，可以通过将 \( p \) 数组中根结点的值修改为负的树的高度或大小，这样既可以区分根结点又可以通过根结点来存储树的高度或大小。这样就省去了额外的 \( h \) 数组或 \( s \) 数组。</p>
             <pre><code class="language-cpp">int p[MAXN];
 void Initial(int n) {
     for(int i = 0; i < n; i++) {

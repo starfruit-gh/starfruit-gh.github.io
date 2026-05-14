@@ -562,14 +562,14 @@ func RadixSortFloat(arr []float64) {
                     <img src="/assets/images/posts/data-structure/sort/外部排序示意图.svg" alt="外部排序示意图">
                     <figcaption>图 外部排序示意图</figcaption>
                 </figure>
-                <p>将外存上含 n 个记录的文件分成若干长度为 l 的子文件或段（segment），依次读入内存并利用有效的内部排序方法对它们进行排序，并将排序后得到的有序子文件重新写入外存，通常称这些有序子文件为归并段。</p>
-                <p>假设内存中只有两个输入缓冲区、一个输出缓冲区，如何将外存中磁盘块0-7进行排序？</p>
+                <p>将外存上含 \( n \) 个记录的文件分成若干长度为 \( l \) 的子文件或段（segment），依次读入内存并利用有效的内部排序方法对它们进行排序，并将排序后得到的有序子文件重新写入外存，通常称这些有序子文件为归并段。</p>
+                <p>假设内存中只有两个输入缓冲区、一个输出缓冲区，如何将外存中磁盘块 0-7 进行排序？</p>
                 <figure>
                     <img src="/assets/images/posts/data-structure/sort/生成归并段示意图.svg" alt="生成归并段示意图">
                     <figcaption>图 生成归并段示意图</figcaption>
                 </figure>
-                <p>首先，通过内部排序将磁盘块0、1，2、3，4、5，6、7通过内部排序，生成4个归并段。</p>
-                <p>然后，利用归并排序的方法将4个归并段进行合并，最终得到一个有序文件。</p>
+                <p>首先，通过内部排序将磁盘块 0、1、2、3、4、5、6、7 生成 4 个归并段。</p>
+                <p>然后，利用归并排序的方法将 4 个归并段进行合并，最终得到一个有序文件。</p>
                 <p>举个例子：</p>
                 <figure>
                     <img src="/assets/images/posts/data-structure/sort/外部排序归并过程.svg" alt="外部排序归并过程">
@@ -590,7 +590,7 @@ func RadixSortFloat(arr []float64) {
                     <img src="/assets/images/posts/data-structure/sort/四路归并树.svg" alt="四路归并树">
                     <figcaption>图 四路归并树</figcaption>
                 </figure>
-                <p>一般地，对r个初始归并段，做k路归并排序，设归并趟数为s，则\(k^s≥r\)。可见，当k增大时，s即可减少，进而减少IO次数，从而减少外排时间。</p>
+                <p>一般地，对 \( r \) 个初始归并段，做 \( k \) 路归并排序，设归并趟数为 \( s \)，则 \( k^s \ge r \)。可见，当 \( k \) 增大时，\( s \) 即可减少，进而减少 IO 次数，从而减少外排时间。</p>
 
                 <h3>败者树</h3>
                 <figure>
@@ -635,13 +635,13 @@ func RadixSortFloat(arr []float64) {
                     <img src="/assets/images/posts/data-structure/sort/普通归并树.svg" alt="普通归并树">
                     <figcaption>图 普通归并树</figcaption>
                 </figure>
-                <p>这棵归并树的带权路径长度 WPL =  2*1 + (5+1+6+2) * 3 = 44 = 读磁盘的次数 = 写磁盘的次数。</p>
+                <p>这棵归并树的带权路径长度 \( WPL = 2*1 + (5+1+6+2) * 3 = 44 \)，等于读磁盘的次数和写磁盘的次数。</p>
                 <p>可以使用哈夫曼树的思想来进行优化。</p>
                 <figure>
                     <img src="/assets/images/posts/data-structure/sort/最佳归并树.svg" alt="最佳归并树">
                     <figcaption>图 最佳归并树</figcaption>
                 </figure>
-                <p>最佳归并树 \(WPL_{min} = (1+2)*4 + 2*3 +5*2 + 6*1 = 34\)</p>
+                <p>最佳归并树 \( WPL_{min} = (1+2)*4 + 2*3 +5*2 + 6*1 = 34 \)</p>
                 <p>读磁盘次数 = 写磁盘次数 = 34 次；总的磁盘 I/O 次数 = 68</p>
                 <p>对于多路归并，同样可以使用哈夫曼树的思想来构建最佳归并树。</p>
                 <p>但是，注意：对于k叉归并，若初始归并段的数量无法构成严格的Κ叉归并树，则需要补充几个长度为0的“虚段”，再进行k叉哈夫曼树的构造。</p>
@@ -651,8 +651,8 @@ func RadixSortFloat(arr []float64) {
                     <figcaption>图 多路归并最佳归并树</figcaption>
                 </figure>
                 <p>k叉的最佳归并树一定是一棵严格的k叉树，即树中只包含度为k、度为0的结点。</p>
-                <p>设度为k的结点有 \(n_k\) 个，度为0的结点有 \(n_0\) 个，归并树总结点数=\(n\) 则：</p>
-                <p>初始归并段数量+虚段数量=\(n_0\)</p>
+                <p>设度为 \( k \) 的结点有 \( n_k \) 个，度为 \( 0 \) 的结点有 \( n_0 \) 个，归并树总结点数 = \( n \) 则：</p>
+				<p>初始归并段数量+虚段数量 = \( n_0 \)</p>
                 <div>
                     $$
                     \begin{array}{c}
@@ -664,8 +664,8 @@ func RadixSortFloat(arr []float64) {
                     $$
                 </div>
                 <ol>
-                    <li>若 \((\text{初始归并段数量} - 1) \% (k-1) = 0\)，说明刚好可以构成严格k叉树，此时不需要添加虚段</li>
-                    <li>若 \((\text{初始归并段数量} - 1) \% (k-1) = u \neq 0\)，则需要补充 \((k-1) - u\) 个虚段</li>
+                    <li>若 \( (\text{初始归并段数量} - 1) \% (k-1) = 0 \)，说明刚好可以构成严格 \( k \) 叉树，此时不需要添加虚段</li>
+				<li>若 \( (\text{初始归并段数量} - 1) \% (k-1) = u \neq 0 \)，则需要补充 \( (k-1) - u \) 个虚段</li>
                 </ol>
             </div>
         </div>

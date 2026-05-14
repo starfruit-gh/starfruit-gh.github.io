@@ -232,42 +232,6 @@ int LocateElem(SeqList L, ElemType e, bool (*compare)(ElemType, ElemType)) {
     }
     return 0;
 }</code></pre>
-                <p><strong>顺序表的查找算法分析</strong></p>
-                <blockquote>
-                    <ul>
-                        <li>查找表（Search Table）：是由同一类型的数据元素构成的集合。</li>
-                        <li>关键字（Key）：是数据元素中某个数据项的值，用它可以标识一个数据元素。</li>
-                        <li>平均查找长度（Average Search Length, ASL） ：是指在查找表中进行一次查找操作，所需比较关键字的平均次数。</li>
-                    </ul>
-                    <p>对于含有 \( n \) 个数据元素的查找表，查找成功时的平均查找长度为：</p>
-                    <div>
-                        $$ASL = \sum_{i=1}^{n} P_i \cdot C_i$$
-                    </div>
-                    <p>如果每个数据元素的查找概率相等（\( P_i = \frac{1}{n} \)）：</p>
-                    <div>
-                        $$ASL = \frac{1}{n} \sum_{i=1}^{n} C_i$$
-                    </div>
-                    <p>其中，</p>
-                    <ul>
-                        <li>\( n \)：查找表中元素的总个数</li>
-                        <li>\( P_i \)：查找第 \( i \) 个元素的概率，且 \( \sum\limits_{i=1}^{n} P_i = 1 \)</li>
-                        <li>\( C_i \)：找到第 \( i \) 个元素所需的关键字比较次数</li>
-                    </ul>
-                </blockquote>
-                
-                <p>对于顺序表的查找算法，在等概率查找每个元素的情况下，查找成功时的平均查找长度为：</p>
-                <div>
-                    $$ASL_{ss} = \sum_{i=1}^{n} P_i C_i = \frac{1}{n} \sum_{i=1}^{n} i = \frac{n+1}{2}$$
-                </div>
-                <ul>
-                    <li>时间复杂度：</li>
-                    <ul>
-                        <li>最好：\( O(1) \)</li>
-                        <li>最坏：\( O(n) \)</li>
-                        <li>平均：\( O(n) \)</li>
-                    </ul>
-                    <li>空间复杂度：\( O(1) \)</li>
-                </ul>
 
 <h4>取值</h4>
 <pre><code class="language-cpp">// GetElem 按位查找
@@ -296,25 +260,6 @@ bool ListInsert(SeqList &L, int i, ElemType e) {
     L.length++;
     return true;
 }</code></pre>
-                <p><strong>顺序表的插入算法分析</strong></p>
-                <p>对于顺序表的插入操作，在等概率插入到表中任意位置的情况下，平均需要移动元素的次数为：</p>
-                <div>
-                    $$
-                    \begin{align*}
-                    E_{\text{ins}} &= \frac{1}{n+1} \sum_{i=1}^{n+1} (n-i+1) = \frac{1}{n+1}(n+\cdots+1+0) \\
-                    &= \frac{1}{n+1} \cdot \frac{n(n+1)}{2} = \frac{n}{2}
-                    \end{align*}
-                    $$
-                </div>
-                <ul>
-                    <li>时间复杂度：</li>
-                    <ul>
-                        <li>最好：\( O(1) \)</li>
-                        <li>最坏：\( O(n) \)</li>
-                        <li>平均：\( O(n) \)</li>
-                    </ul>
-                    <li>空间复杂度：\( O(1) \)</li>
-                </ul>
 
 <h4>删除</h4>
 <pre><code class="language-cpp">// ListDelete 删除顺序表的第 i 个元素，并用 e 返回其值
@@ -331,22 +276,6 @@ bool ListDelete(SeqList &L, int i, ElemType &e) {
     L.length--;
     return true;
 }</code></pre>
-                <p><strong>顺序表的删除算法分析</strong></p>
-                <p>对于顺序表的删除操作，在等概率删除表中任意元素的情况下，平均需要移动元素的次数为：</p>
-                <div>
-                    $$
-                    E_{\text{del}} = \frac{1}{n} \sum_{i=1}^{n} (n-i) = \frac{1}{n} \cdot \frac{n(n-1)}{2} = \frac{n-1}{2}
-                    $$
-                </div>
-                <ul>
-                    <li>时间复杂度：</li>
-                    <ul>
-                        <li>最好：\( O(1) \)</li>
-                        <li>最坏：\( O(n) \)</li>
-                        <li>平均：\( O(n) \)</li>
-                    </ul>
-                    <li>空间复杂度：\( O(1) \)</li>
-                </ul>
 
 <h4>遍历</h4>
 <pre><code class="language-cpp">// ListTraverse 遍历顺序表并打印每个元素
@@ -889,49 +818,43 @@ void CreateListTail(LinkedList &L, int n) {
     }
 }</code></pre>
 
-                <h3>单链表的查找、插入、删除的性能分析</h3>
-                <p>对于单链表的查找算法，在等概率查找每个元素的情况下，查找成功时的平均查找长度为：</p>
-                <div>
-                    $$ASL_{ss} = \sum_{i=1}^{n} P_i C_i = \frac{1}{n} \sum_{i=1}^{n} i = \frac{n+1}{2}$$
-                </div>
-                <ul>
-                    <li>时间复杂度：</li>
-                    <ul>
-                        <li>最好：\( O(1) \)</li>
-                        <li>最坏：\( O(n) \)</li>
-                        <li>平均：\( O(n) \)</li>
-                    </ul>
-                    <li>空间复杂度：\( O(1) \)</li>
-                </ul>
-                <p>单链表的插入操作：</p>
-                <ul>
-                    <li>时间复杂度：</li>
-                    <ul>
-                        <li>最好：\( O(1) \)</li>
-                        <li>最坏：\( O(n) \)</li>
-                        <li>平均：\( O(n) \)</li>
-                    </ul>
-                    <li>空间复杂度：\( O(1) \)</li>
-                </ul>
-                <p>单链表的删除操作：</p>
-                <ul>
-                    <li>时间复杂度：</li>
-                    <ul>
-                        <li>最好：\( O(1) \)</li>
-                        <li>最坏：\( O(n) \)</li>
-                        <li>平均：\( O(n) \)</li>
-                    </ul>
-                    <li>空间复杂度：\( O(1) \)</li>
-                </ul>
-
                 <h3>单循环链表的定义</h3>
                 <figure>
                     <img src="/assets/images/posts/data-structure/linear-list/单循环链表.svg" alt="单循环链表">
                     <figcaption>图 单循环链表</figcaption>
                 </figure>
                 <p>将单链表的尾结点的指针域指向链表的第一个结点（带头结点时为头结点，不带头结点时为首元结点），使整个单链表形成一个首尾相接的闭合环状结构，称为单循环链表（Singly Linked Circular List）。</p>
-                
+
                 <h3>单循环链表的代码实现</h3>
+                <p>循环链表与非循环链表的代码实现，主要区别在于：</p>
+                <ul>
+                    <li>链表为空时，头结点的 next 指针不再是指向空，而是指向自身。</li>
+                    <div>
+                        $$
+                        \begin{array}{c}
+                        L \rightarrow \text{next} = \text{NULL}
+                        \end{array}
+                        \quad \rightarrow \quad
+                        \begin{array}{c}
+                        L \rightarrow \text{next} = L
+                        \end{array}
+                        $$
+                    </div>
+                    <li>遍历链表时，循环的终止条件不再是 p 或 p->next 是否为空，而是判断它们是否等于头指针。</li>
+                    <div>
+                        $$
+                        \begin{array}{c}
+                        p \neq \text{NULL} \\
+                        p \rightarrow \text{next} \neq \text{NULL}
+                        \end{array}
+                        \quad \rightarrow \quad
+                        \begin{array}{c}
+                        p \neq L \\
+                        p \rightarrow \text{next} \neq L
+                        \end{array}
+                        $$
+                    </div>
+                </ul>
 <h4>定义</h4>
 <pre><code class="language-cpp">typedef struct LNode {
     ElemType data;
