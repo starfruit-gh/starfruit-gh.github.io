@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机组成原理</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 使用 MathJax 渲染 LaTeX 数学公式 -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 引语 -->
+                <div class="author-quote">
+                    Have a good day!
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/02_linear-list.html" class="related-article-link">（二）线性表</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文 -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+                
+                <h2>编码</h2>
+                <ul>
+                    <li><strong>动词层面</strong>：是按照一套预先约定、标准化的映射规则，将人们熟悉的数据形式（如数值、字符、表、图、音频、视频等），转换为计算机能够存储、传输、处理的符号格式（计算机场景下绝大多数为二进制格式）的过程。</li>
+                    <li><strong>名词层面</strong>：特指上述这套约定好的映射规则体系本身，比如我们常说的 UTF-8 编码、GBK 编码、H.264 编码，这里的 “编码” 就是指可落地执行的标准规则。</li>
+                </ul>
+                
+                <div class="article-table-container">
+                    <table class="article-table">
+                        <thead>
+                            <tr><th>编码类型</th><th>核心用途</th><th>典型示例</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>数值编码</td><td>解决整数、小数的计算机二进制表示</td><td>原码 / 反码 / 补码、IEEE 754 浮点数编码</td></tr>
+                            <tr><td>字符编码</td><td>实现人类文字、符号到二进制的映射</td><td>ASCII、GBK、UTF-8、UTF-16</td></tr>
+                            <tr><td>多媒体编码</td><td>压缩并转换图像、音频、视频数据</td><td>JPEG/PNG（图像）、MP3/AAC（音频）、H.264/H.265（视频）</td></tr>
+                            <tr><td>结构化数据编码</td><td>转换表格、JSON 等业务结构化数据，提升传输存储效率</td><td>Protocol Buffers、Avro、MessagePack</td></tr>
+                            <tr><td>专用场景编码</td><td>满足特定计算机场景的需求</td><td>机器指令编码、CRC 纠错编码、曼彻斯特编码</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p>数据在计算机中以二进制的形式进行表示。例如：数字、字符串、表、图、音频、视频等数据都需要输入设备转换成二进制数据才能在计算机内部进行存储和处理。</p>
+                <p>主要来看数值数据在计算机内部的表示。</p>
+                <p>一段数值数据的二进制编码在计算机内部可能表示的内容有：无符号数、有符号整数、有符号纯小数（纯小数：整数部分为0的小数）、有符号带小数（带小数：整数部分不为0的小数）。</p>
+                <p>整数和纯小数的小数点位置是固定的</p>
+                <p>整数的小数点位置固定在数值最低位的右侧</p>
+                <p>而纯小数的小数点固定在符号位右侧，数值最高位的左侧</p>
+                <p>因此整数和纯小数也被称为定点数</p>
+                <p>对于带小数的小数点位置并不是固定的，而是可以左右移动的又称为浮点数</p>
+                
+                <h2>计算机内部数值数据的表示格式（机器码）</h2>
+                <p>假设一个数，整数部分有n位，用小写字母b表示比特，而其下标用来表示不同的数位，其中b0为最低位，bn-1为最高位，小数部分有m位，其中b-1为最高位，b-m为最低位。</p>
+                <p>这是无符号数的格式</p>
+                
+                <h2>真值</h2>
+                <p>真值是相对于机器码而言的，指用 “+” 或 “-” 号标注正负，后跟数值本身来表示其真实大小  的数。真值可以用任意进制表示，一般采用十进制和二进制。</p>
+                <p>举个例子：</p>
+                <p>假设我们有一个8位的机器数：<code>1000 0101</code></p>
+                <ol>
+                    <li>若该机器数是“原码”表示
+                        <ul><li>最高位 1 代表符号为负，后面的 0000101 代表数值为 5。</li><li>那么，它对应的真值是：-5。</li></ul>
+                    </li>
+                    <li>若该机器数是“补码”表示
+                        <ul><li>根据补码转原码的规则（减1再取反），该二进制序列代表的数值是 -123。</li><li>那么，它对应的真值是：-123。</li></ul>
+                    </li>
+                </ol>
+                
+                <h2>计数制</h2>
+                <ol>
+                    <li><strong>古老的计数方式</strong>
+                        <ul><li>一一对应</li><li>缺点：读、写、核对，极其耗时耗力、极易出错；几乎无法表示万级、亿级的数字；没有运算的概念；计数与实物绑定，无法流通。</li></ul>
+                    </li>
+                    <li><strong>不同符权的计数方式</strong>
+                        <ul><li>用特殊的符号来代表一定数量（也就是计数符号有了权重，符权）</li><li>缺点：由于没有位权，计数只能用符号累加，导致表示大数时符号过长或需要不断创造新符号；运算极其复杂。</li></ul>
+                    </li>
+                    <li><strong>不同符权+不同位权的计数方式（进位计数）</strong>
+                        <ul><li>符号有权重（符权），且符号的位置也有了权重（位权）</li><li>例如：975.36 = 9x10² + 7×10¹ + 5×10⁰ + 3×10⁻¹ + 3×10⁻²</li></ul>
+                    </li>
+                </ol>
+                <p>常用的进位计数制：二进制（Binary）、八进制（Octal）、十进制（Decimal）、十六进制（Hexadecimal）</p>
+                <p>数码：用来表示数的基本符号。<br>例如：十进制数码：0~9；二进制数码：0,1；八进制数码：0~7；十六进制数码：0-9,A-F。</p>
+                <p>基数：每个数码位所用到的不同符号的个数。二进制r=2，八进制r=8，十进制r=10，十六进制r=16。</p>
+                <p>位权：每个数位所对应的权重，位权 = 基数的位置次方。</p>
+                <p>进位：当某一数位上的数值达到该进制的基数时，就向相邻的高位进 1，同时该数位归零的计数规则。</p>
+                
+                <h2>进制数的书写表示方法</h2>
+                <p>十进制数：\((数)_{10}或数D\)；二进制数：\((数)_{2}或数B\)；八进制数：\((数)_{8}或数O\)；十六进制数：\((数)_{16}或数H\)。</p>
+                <p>以上进制，十进制方便人的使用。二进制方便计算机的使用。</p>
+                <ul>
+                    <li>计算机适用二进制的原因：方便用具有两个稳定状态的物理器件表示；0,1正好对应逻辑值假、真，方便实现逻辑运算；可很方便地使用逻辑门电路实现算术运算。</li>
+                </ul>
+                <p>八进制和十六进制则是为了二进制数的书写和阅读方便。</p>
+                
+                <h2>进制转换</h2>
+                <h3>常用2的幂次方数</h3>
+                <div class="article-table-container">
+                    <table class="article-table">
+                        <tbody>
+                            <tr><td>\( 2^{16} \)</td><td>65536</td><td>\( 2^{15} \)</td><td>32768</td><td>\( 2^{14} \)</td><td>16384</td><td>\( 2^{13} \)</td><td>8192</td><td>\( 2^{12} \)</td><td>4096</td><td>\( 2^{11} \)</td><td>2048</td><td>\( 2^{10} \)</td><td>1024</td><td>\( 2^{9} \)</td><td>512</td></tr>
+                            <tr><td>\( 2^{8} \)</td><td>256</td><td>\( 2^{7} \)</td><td>128</td><td>\( 2^{6} \)</td><td>64</td><td>\( 2^{5} \)</td><td>32</td><td>\( 2^{4} \)</td><td>16</td><td>\( 2^{3} \)</td><td>8</td><td>\( 2^{2} \)</td><td>4</td><td>\( 2^{1} \)</td><td>2</td></tr>
+                            <tr><td>\( 2^{0} \)</td><td>1</td><td>\( 2^{-1} \)</td><td>0.5</td><td>\( 2^{-2} \)</td><td>0.25</td><td>\( 2^{-3} \)</td><td>0.125</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="article-table-container">
+                    <table class="article-table">
+                        <thead><tr><th>十进制</th><th>二进制</th><th>八进制</th><th>十六进制</th></tr></thead>
+                        <tbody>
+                            <tr><td>0</td><td>0000</td><td>0</td><td>0</td></tr>
+                            <tr><td>1</td><td>0001</td><td>1</td><td>1</td></tr>
+                            <tr><td>2</td><td>0010</td><td>2</td><td>2</td></tr>
+                            <tr><td>3</td><td>0011</td><td>3</td><td>3</td></tr>
+                            <tr><td>4</td><td>0100</td><td>4</td><td>4</td></tr>
+                            <tr><td>5</td><td>0101</td><td>5</td><td>5</td></tr>
+                            <tr><td>6</td><td>0110</td><td>6</td><td>6</td></tr>
+                            <tr><td>7</td><td>0111</td><td>7</td><td>7</td></tr>
+                            <tr><td>8</td><td>1000</td><td>10</td><td>8</td></tr>
+                            <tr><td>9</td><td>1001</td><td>11</td><td>9</td></tr>
+                            <tr><td>10</td><td>1010</td><td>12</td><td>A</td></tr>
+                            <tr><td>11</td><td>1011</td><td>13</td><td>B</td></tr>
+                            <tr><td>12</td><td>1100</td><td>14</td><td>C</td></tr>
+                            <tr><td>13</td><td>1101</td><td>15</td><td>D</td></tr>
+                            <tr><td>14</td><td>1110</td><td>16</td><td>E</td></tr>
+                            <tr><td>15</td><td>1111</td><td>17</td><td>F</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p>任意进制转十进制（按权展开）：\( D = \sum \) 符权×位权。</p>
+                <div>$$ D = d_{n-1} \times r^{n-1} + d_{n-2} \times r^{n-2} + \dots + d_1 \times r^1 + d_0 \times r^0 + d_{-1} \times r^{-1} + d_{-2} \times r^{-2} + \dots + d_{-n} \times r^{-n} $$</div>
+                <p>\( (1011.101)_2 = 1 \times 2^3 + 0 \times 2^2 + 1 \times 2^1 + 1 \times 2^0 + 1 \times 2^{-1} + 0 \times 2^{-2} + 1 \times 2^{-3} = 11.625 \)</p>
+                <p>\( (702.6)_8 = 7 \times 8^2 + 0 \times 8^1 + 2 \times 8^0 + 6 \times 8^{-1} = 450.75 \)</p>
+                <p>\( (A9DE.CF)_{16} = 10 \times 16^3 + 9 \times 16^2 + 13 \times 16^1 + 14 \times 16^0 + 12 \times 16^{-1} + 15 \times 16^{-2} = 43486.80859375 \)</p>
+                
+                <p>二进制↔八、十六进制（三/四位对应法）</p>
+                <ul>
+                    <li>二进制 → 八进制：每3个二进制位对应转换为1个八进制位（不够3位，整数前补0，小数后补0）</li>
+                    <li>二进制 → 十六进制：每4个二进制位对应转换为1个十六进制位</li>
+                </ul>
+                <p>\( (1011001100.11011)_2 \rightarrow (1314.66)_8 \)</p>
+                <p>\( (1011001100.11011)_2 \rightarrow (2CC.D8)_{16} \)</p>
+                <p>\( (320.16)_8 \rightarrow (011010000.001110)_2 \) 去掉首尾多余的0: \( (11010000.00111)_2 \)</p>
+                <p>\( (D0.38)_{16} \rightarrow (11010000.00111000)_2 \) 去掉末尾多余的0：\( (11010000.00111)_2 \)</p>
+                <p>八进制与十六进制之间的转换直接借助二进制或十进制作为桥梁即可。</p>
+                
+                <p>十进制转任意进制（整数部分：除基取余（低位先得）、小数部分：乘基取整（高位先得））</p>
+                <p>\( (123)_{10} \rightarrow (1111011)_2 \)</p>
+                <pre>除基取余过程略</pre>
+                <p>十进制转任意进制的精度丢失问题</p>
+                <p>十进制转二进制（凑值法）：\( (13)_{10} \)</p>
+                
+                <h2>什么是原码、反码、补码、移码</h2>
+                <p>原码、反码、补码、移码是按不同规则编码出的二进制数。</p>
+                
+                <h2>为什么要有原码、补码、反码、移码，为什么不直接都用普通的二进制来表示数据呢？</h2>
+                <p>计算机运算核心是加法器，有符号数需要考虑正负号，因此需要用二进制编码同时表示正负与大小，并使减法能用加法器完成。于是有了原码、补码、反码、移码。</p>
+                
+                <h2>定点数机器码的格式（符号位、数值位、符号位与数值位的分割）</h2>
+                <p>对于原码，符号位为0表示正数，1表示负数，数值位为真值的绝对值。</p>
+                
+                <h2>原码的表示思想</h2>
+                <p>真值→原码举例：</p>
+                <div>定点整数：\( x = +11110 \), \([x]_{\text{原}} = 0,11110\)；\( x = -11110 \), \([x]_{\text{原}} = 1,11110\)。<br>
+                定点小数：\( x = +0.11101 \), \([x]_{\text{原}} = 0.11101\)；\( x = -0.11101 \), \([x]_{\text{原}} = 1.11101\)。</div>
+                
+                <p>定点整数的原码定义：假设真值x为定点整数，n为数值位的位数，</p>
+                <div>$$ [x]_{\text{原}} = \begin{cases} x, & 0\leq x <2^n \\ 2^n-x = 2^n+|x|, & -2^n < x \leq 0 \end{cases} $$</div>
+                <p>例如：\( x = -11110 \), \([x]_{\text{原}} = 2^4 + 11110 = 10000 + 11110 = 1,1110\)。</p>
+                <p>定点小数的原码定义：</p>
+                <div>$$ [x]_{\text{原}} = \begin{cases} x, & 0\leq x <1 \\ 1-x, & -1 < x \leq 0 \end{cases} $$</div>
+                <p>例如：\( x = -0.1101 \), \([x]_{\text{原}} = 1 + 0.1101 = 1.1101\)。</p>
+                <p>原码优缺点：表示简单直观，但0有两种表示，符号位不能直接参与运算。</p>
+                
+                <h2>模和补数</h2>
+                <p>时钟例子：时针从6拨到2，逆时针4格或顺时针8格，-4和+8等价。模数M=12，补数定义为a ≡ b (mod M)。</p>
+                <p>补码的表示思想：负数的补码等于模数加上该负数本身（模数为最高位进位的位权值）。</p>
+                <p>定点整数的补码定义：</p>
+                <div>$$ [x]_{\text{补}} = \begin{cases} x, & 0\leq x <2^n \\ 2^{n+1}+x = 2^{n+1}-|x|, & -2^n \leq x < 0 \end{cases} $$</div>
+                <p>例如：\( x = -(101010)_2 \), \([x]_{\text{补}} = 2^8 + (-1010101) = 1,1101011\)。</p>
+                <p>定点小数的补码定义：</p>
+                <div>$$ [x]_{\text{补}} = \begin{cases} x, & 0\leq x <1 \\ 2+x, & -1 \leq x < 0 \end{cases} $$</div>
+                <p>例如：\( x = -0.0101 \), \([x]_{\text{补}} = 2 - 0.0101 = 1.1011\)。</p>
+                <p>补码优点：减法转加法，0只有一种表示，符号位可直接参与运算；缺点：表示相对复杂。</p>
+                <p>负数的原码→补码：符号位不变，数值位取反，末位加1。中间过程即反码。</p>
+                
+                <h2>反码的表示思想</h2>
+                <p>正数反码与原码相同；负数反码：符号位为1，数值位取反。</p>
+                <p>反码优缺点：符号位可参与运算，但需循环进位，且0有两种表示。</p>
+                
+                <h2>移码的表示思想</h2>
+                <p>移码用于定点整数，\([x]_{\text{移}} = x + 2^n\)，范围 \(-2^n \leq x < 2^n\)。<br>例如：\( x = +1010110 \), \([x]_{\text{移}} = 1,1010110\)；\( x = -1010110 \), \([x]_{\text{移}} = 0,0101010\)。</p>
+                <p>移码优点：0只有一种表示，保持大小顺序，最小真值为全0，最大为全1。</p>
+                <p>（原码、补码、反码、移码之间的转换方法略）</p>
+                
+                <h2>为什么需要浮点数</h2>
+                <p>带小数用定点表示会溢出或损失精度，比例因子方法麻烦。浮点数采用科学计数法形式：\( N = r^E \times M \)。</p>
+                <p>浮点数的表示格式：阶码E和尾数M。阶码位数决定范围，尾数位数决定精度。</p>
+                <p>浮点数扩大了表示范围：例如8位二进制数，3位阶码5位尾数时最大值约480，而定点数最大127。</p>
+                <p>上溢：阶码大于最大阶码；下溢：阶码小于最小阶码，通常按机器0处理。</p>
+                <p>规格化：使尾数最高数值位为有效值（如基数2时尾数最高位为1），表示唯一且精度最高。</p>
+                
+                <h2>IEEE 754 浮点数标准</h2>
+                <p>32位单精度（float）：符号1位，阶码8位（移码，偏移127），尾数23位（原码，隐藏1）。<br>64位双精度（double）：符号1位，阶码11位（偏移1023），尾数52位。</p>
+                <p>IEEE 754 单精度浮点数可表示的数：</p>
+                <div class="article-table-container">
+                    <table class="article-table">
+                        <thead><tr><th>数值的分类</th><th>符号S</th><th>阶码E</th><th>尾数M</th><th>真值</th></tr></thead>
+                        <tbody>
+                            <tr><td>正零</td><td>0</td><td>0（全0）</td><td>0</td><td>\( +0 \)</td></tr>
+                            <tr><td>负零</td><td>1</td><td>0（全0）</td><td>0</td><td>\( -0 \)</td></tr>
+                            <tr><td>正无穷大</td><td>0</td><td>255（全1）</td><td>0</td><td>\( +\infty \)</td></tr>
+                            <tr><td>负无穷大</td><td>1</td><td>255（全1）</td><td>0</td><td>\( -\infty \)</td></tr>
+                            <tr><td>无定义数（非数）</td><td>0或1</td><td>255（全1）</td><td>\(\neq0\)</td><td>NaN</td></tr>
+                            <tr><td>规格化正数</td><td>0</td><td>\(1\leq E\leq254\)</td><td>M</td><td>\((-1)^0 \times 2^{E-127} \times 1.M\)</td></tr>
+                            <tr><td>规格化负数</td><td>1</td><td>\(1\leq E\leq254\)</td><td>M</td><td>\((-1)^1 \times 2^{E-127} \times 1.M\)</td></tr>
+                            <tr><td>非规格化正数</td><td>0</td><td>0（全0）</td><td>\(M\neq0\)</td><td>\((-1)^0 \times 2^{-126} \times 0.M\)</td></tr>
+                            <tr><td>非规格化负数</td><td>1</td><td>0（全0）</td><td>\(M\neq0\)</td><td>\((-1)^1 \times 2^{-126} \times 0.M\)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>表示范围（部分）：规格化正数最大值 \( 2^{127} \times (2 - 2^{-23}) \approx 3.4 \times 10^{38} \)，最小值 \( 2^{-126} \)；非规格化正数最小值 \( 2^{-149} \)。</p>
+                <div class="article-table-container">
+                    <table class="article-table">
+                        <thead><tr><th>标准</th><th>C语言数据类型</th><th>位宽</th><th>基数</th><th>阶码位数</th><th>阶码偏移常数</th><th>尾数位数</th><th>最大值量级</th></tr></thead>
+                        <tbody>
+                            <tr><td>半精度</td><td>_Float16</td><td>16</td><td>2</td><td>5</td><td>15</td><td>10</td><td>10^5</td></tr>
+                            <tr><td>单精度</td><td>float</td><td>32</td><td>2</td><td>8</td><td>127</td><td>23</td><td>10^38</td></tr>
+                            <tr><td>双精度</td><td>double</td><td>64</td><td>2</td><td>11</td><td>1023</td><td>52</td><td>10^308</td></tr>
+                            <tr><td>四精度</td><td>long double</td><td>128</td><td>2</td><td>15</td><td>16383</td><td>112</td><td>10^4932</td></tr>
+                            <tr><td>八精度</td><td>暂未支持</td><td>256</td><td>2</td><td>19</td><td>262143</td><td>236</td><td>10^78913</td></tr>
+                            <tr><td>Decimal32</td><td>_Decimal32</td><td>32</td><td>10</td><td>6</td><td>101</td><td>20</td><td>10^96</td></tr>
+                            <tr><td>Decimal64</td><td>_Decimal64</td><td>64</td><td>10</td><td>8</td><td>398</td><td>50</td><td>10^384</td></tr>
+                            <tr><td>Decimal128</td><td>_Decimal128</td><td>128</td><td>10</td><td>12</td><td>6176</td><td>110</td><td>10^6144</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>

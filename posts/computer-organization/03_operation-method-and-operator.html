@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机组成原理</title>
+    <!-- 网站图标 -->
+    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png">
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 使用 MathJax 渲染 LaTeX 数学公式 -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 引语 -->
+                <div class="author-quote">
+                    Have a good day!
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/02_linear-list.html" class="related-article-link">（二）线性表</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文 -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+                
+                <h2>逻辑移位的对象</h2>
+                <p>逻辑移位的对象是无符号数</p>
+                
+                <h2>逻辑移位的规则</h2>
+                <p>逻辑左移：高位移除，低位补0</p>
+                <p>逻辑右移：低位移除，高位补0</p>
+                
+                <h2>逻辑移位举例</h2>
+                <p>（举例内容）</p>
+                
+                <h2>逻辑移位的应用</h2>
+                <p>利用逻辑移位运算、”与“运算或者“或”运算，实现将寄存器的某个位清0或置1，而不影响寄存器的其他各位。</p>
+                <p>假设某个8位寄存器，在不知道存储的内容的情况下，将该寄存器的第6位存储的内容清零，而不影响其他各位存储的内容</p>
+                <p>创建一个8位无符号变量，其最低位B₀的初始值为1，其他位的初始值为0，然后将该变量的内容逻辑左移6位，高位移除，低位补零，这样就得到了B6位的掩码</p>
+                <p>然后将这个变量全部按位取反，然后使用这个变量与寄存器中的内容进行“与”运算，与1相与的那些位会保持不变，而与0相与的位会被清零</p>
+                <p>这样，就利用逻辑移位运算、取反运算与“与”运算，实现了将寄存器的某个位清零而不影响寄存器的其他各位</p>
+                <p>或者可以直接用掩码进行或运算，与0相或的那些位会保持不变，与1相或的位会被置1</p>
+                <p>这样，我们就利用逻辑移位运算、“或”运算，实现了将寄存器的某个位置1而不影响寄存器的其他各位</p>
+                
+                <h2>算术移位的对象</h2>
+                <p>算术移位运算的对象是有符号数。</p>
+                <p>这里的有符号数是指定点数，包括定点整数和定点小数。</p>
+                
+                <h2>算术移位的思想</h2>
+                <p>不论正数还是负数，符号位保持不变，仅对数值位进行移位。</p>
+                
+                <h2>真值为正时，算术移位规则</h2>
+                <p>当真值为正数时，真值的原码、反码和补码都相同</p>
+                <p>因此，对它们进行算术移位后，它们各自所对应的新的真值自然是保持一致的</p>
+                <p>对于移位后出现的空位，规定填补0</p>
+                
+                <h2>真值为正时，算术移位举例</h2>
+                <p>（举例内容）</p>
+                
+                <h2>真值为正时，算术移位结论</h2>
+                <p>左移时若最高位丢1，则结果出错；右移时若最低位丢1，则结果的精度缺失。</p>
+                
+                <h2>真值为负时，</h2>
+                <p>当真值为负数时，真值的原码、反码和补码各不相同</p>
+                <p>因此，对它们进行算术移位后，为了确保它们各自所对应的新的真值保持一致，对于移位后出现的空位，填补规则各不相同</p>
+                
+                <h2>真值为负时，原码的算术移位规则和结论</h2>
+                <p>空位补0</p>
+                <p>最高位丢1，则结果出错；最低位丢1，则精度缺失</p>
+                
+                <h2>真值为负时，反码的算术移位规则和结论</h2>
+                <p>空位补1</p>
+                <p>最高位丢0，则结果出错；最低位丢0，则精度缺失</p>
+                
+                <h2>真值为负时，补码的算术移位规则和结论</h2>
+                <p>左移时：空位补0；右移时：空位补1;</p>
+                <p>最高位丢0，则结果出错；最低位丢1，则精度缺失。</p>
+                
+                <h2>补码的特殊算术移位方法</h2>
+                <p>符号位也参与移位</p>
+                <p>具体规则如下：</p>
+                <p>对于左移，高位移除，低位补零</p>
+                <p>移动前后，若符号发生变化，则发生溢出</p>
+                <p>对于右移，低位移除，高位补符号</p>
+                
+                <h2>补码的特殊算术移位方法的优点</h2>
+                <ul>
+                <li>左移时，有检测出发生溢出的方法，即符号位发生变化可判定溢出。</li>
+                <li>符号位与数值位一起移位，方便算术逻辑单元(ALU)处理，也方便人们记忆。</li>
+                </ul>
+                
+                <h2>算术移位的应用</h2>
+                <p>机器内部的乘法运算可由加法运算和算术移位运算来完成，因此可以不设计专门的乘法器来降低硬件成本</p>
+                
+                <h2>循环移位的对象</h2>
+                <p>循环移位的对象是无符号数</p>
+                
+                <h2>循环移位的思想</h2>
+                <p>将无符号数二进制形式中的各个位向左或向右移动，被移出的位会重新出现在另一端，形成循环</p>
+                
+                <h2>进位标志位CF</h2>
+                <p>在很多处理器架构中，循环移位指令会影响状态寄存器中的进位标志位，英文缩写词为CF</p>
+                <p>CF标志位用于标识在执行算术或逻辑操作时是否发生了进位</p>
+                
+                <h2>循环移位的分类</h2>
+                <p>根据CF标志位是否加入循环移位过程，循环移位可分为以下四种：</p>
+                <ol>
+                <li>不带CF标志位的循环右移</li>
+                <li>不带CF标志位的循环左移</li>
+                <li>带CF标志位的循环右移</li>
+                <li>带CF标志位的循环左移</li>
+                </ol>
+                <p>不带CF标志位的循环移位又称为小循环，带CF标志位的循环移位又称为大循环</p>
+                
+                <h2>不带CF标志位的循环右移的思想</h2>
+                <p>对于不带CF标志位的循环右移，寄存器各位存储的二进制数同时向右移动</p>
+                <p>从最低位B₀移出的二进制数会被移入到最高位B₇，这样就构成了循环</p>
+                <p>另外，从最低位B₀移出的二进制数还会存入CF标志位，但是CF标志位本身并不存在于循环右移中，因此称为不带CF标志位的循环右移</p>
+                
+                <h2>不带CF标志位的循环右移的举例</h2>
+                <p>（举例内容）</p>
+                
+                <h2>不带CF标志位的循环左移的思想</h2>
+                <p>对于不带CF标志位的循环左移，寄存器各位存储的二进制数同时向左移动</p>
+                <p>从最高位B₇移出的二进制数会被移入到最低位B₀，这样就构成了循环</p>
+                <p>另外，从最高位B₇移出的二进制数还会存入CF标志位，但是CF标志位本身并不存在于循环左移中，因此称为不带CF标志位的循环左移</p>
+                
+                <h2>不带CF标志位的循环左移的举例</h2>
+                <p>（举例内容）</p>
+                
+                <h2>带CF标志位的循环右移的思想</h2>
+                <p>对于带CF标志位的循环右移，CF标志位存储的二进制数和寄存器各位存储的二进制数同时向右移动</p>
+                <p>为了方便描述，我们将CF标志位初始存储的二进制数记为x_CF</p>
+                <p>从CF标志位移出的二进制数会被移入到寄存器的最高位B₇，而从寄存器最低位B₀移出的二进制数会被移入到CF标志位</p>
+                <p>这样就构成了带CF标志位的循环右移</p>
+                
+                <h2>带CF标志位的循环右移的举例</h2>
+                <p>（举例内容）</p>
+                
+                <h2>带CF标志位的循环左移的思想</h2>
+                <p>对于带CF标志位的循环左移，CF标志位存储的二进制数和寄存器各位存储的二进制数同时向左移动</p>
+                <p>从寄存器的最高位B₇移出的二进制数会被移入到CF标志位，而从CF标志位移出的二进制数会被移入到寄存器的最低位B₀</p>
+                <p>这样就构成了带CF标志位的循环左移</p>
+                
+                <h2>带CF标志位的循环左移的举例</h2>
+                <p>（举例内容）</p>
+                
+                <h2>循环移位的应用</h2>
+                <p>循环移位的应用主要有加密算法、哈希函数、优化算法</p>
+                <ul>
+                <li>对于加密算法，通过循环移位可以实现数据的混淆和置换，增强加密算法的安全性</li>
+                <li>对于哈希函数，通过循环移位可以用来改变输入数据的排列顺序，以产生不同的哈希值，有利于增强哈希函数的混淆性和扩散性</li>
+                <li>对于优化算法，在某些算法中，循环移位可以用于优化性能和节省资源</li>
+                </ul>
+                <p>例如在图形处理和数字信号处理中，循环移位可以用于加速算法的执行</p>
+                
+                <h2>逻辑运算与逻辑门的分类</h2>
+                <p>与非：与运算之后，将结果取非</p>
+                <p>或非：或运算之后，将结果取非</p>
+                <p>异或：两个输入相同时输出 0，不同时输出 1。</p>
+                <p>同或：两个输入相同时输出 1，不同时输出 0。</p>
+                
+                <h2>与/或/非/与非/或非/异或/同或的逻辑表达式、真值表</h2>
+                <p>与运算的逻辑表达式： \( F = A \cdot B = AB \) </p>
+                <p>与运算的真值表：</p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+                </div>
+                <p>或运算的逻辑表达式： \( F = A + B \) </p>
+                <h3>真值表</h3>
+                <div class="article-table-container">
+                <table class="article-table">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+                </div>
+                <p>非运算的逻辑表达式： \( F = \bar{A} \) </p>
+                <h3>真值表</h3>
+                <div class="article-table-container">
+                <table class="article-table">
+                <tr><th>A</th><th>F</th></tr>
+                <tr><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td></tr>
+                </table>
+                </div>
+                <p>与非运算的逻辑表达式： \( F = \overline{A \cdot B} \) </p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+                </div>
+                <p>或非运算的逻辑表达式： \( F = \overline{A + B} \) </p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+                </div>
+                <p>异或运算的逻辑表达式： \( F = A \oplus B = \bar{A} \cdot B + A \cdot \bar{B} \) </p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+                </div>
+                <p>同或运算的逻辑表达式： \( F = A \odot B = \overline{A \oplus B} \) </p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+                </div>
+                
+                <h2>与门/或门/非门/与非门/或非门/异或门/同或门的国际符号</h2>
+                <p>（符号内容）</p>
+                
+                <h2>补码加减法运算公式</h2>
+                <p>补码加法和减法的运算公式如下：</p>
+                <p> \( [A]_{\text{补}} + [B]_{\text{补}} = [A+B]_{\text{补}} \) </p>
+                <p>两数补码的和等于两数和的补码</p>
+                <p> \( [A]_{\text{补}} - [B]_{\text{补}} = [A-B]_{\text{补}} = [A]_{\text{补}} + [-B]_{\text{补}} \) </p>
+                <p>两数补码的差等于两数差的补码</p>
+                
+                <h2>补码加法公式的证明</h2>
+                <p>基于定点小数的补码定义来证明补码的加法和减法运算公式，也可以基于定点整数的补码定义来证明补码的加法和减法运算公式，只是更麻烦一些。</p>
+                <p>假设真值x为定点小数（纯小数），小数点左侧的位为最高位（符号位），其位权值为 \( 2^0 \) ，而最高位进位的位权值为 \( 2^1 \) ，即模数为 \( 2^1 = 2 \) </p>
+                <div>
+                $$
+                [x]_{\text{补}} = \begin{cases} x, & 0\leq x <1 \\ 2+x, & -1 \leq x < 0 \end{cases}
+                $$
+                </div>
+                <p>根据定点小数的补码定义中真值的取值范围，可以得出真值A、B以及A+B的取值范围：</p>
+                <p> \( -1 \leq A \leq 1,\ -1 \leq B \leq 1,\ -1 \leq A+B \leq 1 \quad (\text{无溢出}) \) </p>
+                <p>需要说明的是，将A+B的取值范围规定为与A和B的取值范围都相同，以确保无溢出</p>
+                <p>根据真值A和B的取值范围，需要分以下四种情况证明：</p>
+                <ul>
+                <li>第一种情况是A &gt; 0，B &gt; 0的情况</li>
+                <li>第二种情况是A &gt; 0，B &lt; 0的情况</li>
+                <li>第三种情况是A &lt; 0，B &gt; 0的情况</li>
+                <li>第四种情况是A &lt; 0，B &lt; 0的情况</li>
+                </ul>
+                <p>第一种情况是符号同正的情况，第四种情况是符号同负的情况，而第二、第三种情况是符号相反的情况。因此对于第二种和第三种情况，我们只需证明其中一个即可。</p>
+                <p>求证： \( [A]_{\text{补}} + [B]_{\text{补}} = [A+B]_{\text{补}} \) </p>
+                <p>证明： \( -1 \leq A < 1,\quad -1 \leq B < 1,\quad -1 \leq A+B < 1 \quad (\text{无溢出}) \) </p>
+                <p>(1) 若 \( A > 0,\ B > 0 \implies A+B > 0 \) </p>
+                <p>根据补码定义式可得：</p>
+                <div>
+                $$
+                \left. \begin{aligned}[l] [A]_{\text{补}} &= A \\ [B]_{\text{补}} &= B \\ [A+B]_{\text{补}} &= A+B \end{aligned} \right\} \implies [A]_{\text{补}} + [B]_{\text{补}} = A+B = [A+B]_{\text{补}}
+                $$
+                </div>
+                <p>(2) 若 \( A > 0,\ B < 0 \) </p>
+                <p>根据补码定义式可得：</p>
+                <div>
+                $$
+                \left. \begin{aligned}[l] [A]_{\text{补}} &= A \\ [B]_{\text{补}} &= 2 + B \end{aligned} \right\} \implies [A]_{\text{补}} + [B]_{\text{补}} = 2 + (A+B)
+                $$
+                </div>
+                <p>当 \( A+B > 0 \) 时： \( 2 + (A+B) > 2 \) ，2为模数，可直接舍弃</p>
+                <p>因此可得： \( [A]_{\text{补}} + [B]_{\text{补}} = A+B = [A+B]_{\text{补}} \) </p>
+                <p>当 \( A+B < 0 \) 时： \( [A+B]_{\text{补}} = 2 + (A+B) \) </p>
+                <p>因此可得： \( [A+B]_{\text{补}} = 2 + (A+B) = [A]_{\text{补}} + [B]_{\text{补}} \) </p>
+                <p>(4) 若 \( A < 0,\ B < 0 \) ，根据补码定义式可得：</p>
+                <div>
+                $$
+                \left. \begin{aligned}[l] [A]_{\text{补}} &= 2 + A \\ [B]_{\text{补}} &= 2 + B \end{aligned} \right\} \implies [A]_{\text{补}} + [B]_{\text{补}} = 2 + (2 + A + B) \quad (1)
+                $$
+                </div>
+                <div>
+                $$
+                \left. \begin{aligned}[l] -1 \leq A < 0 \\ -1 \leq B < 0 \end{aligned} \right\} \implies -2 \leq A+B < 0 \implies 0 \leq 2 + A + B < 2 \quad (2)
+                $$
+                </div>
+                <div>
+                $$
+                \left. \begin{aligned} &\text{综合(1)、(2)，舍弃模数2可得: } [A]_{\text{补}} + [B]_{\text{补}} = 2 + A + B \\ &\text{由于 } A < 0,\ B < 0 \implies A+B < 0 \implies [A+B]_{\text{补}} = 2 + A + B \end{aligned} \right\} \implies [A]_{\text{补}} + [B]_{\text{补}} = [A+B]_{\text{补}}
+                $$
+                </div>
+                
+                <h2>补码减法公式的证明</h2>
+                <p>对于补码减法的运算公式，首先证明这一部分：[A-B]补 = [A+(-B)]补</p>
+                <p>利用已证明的补码加法运算公式，可得[A+(-B)]补 = [A]补 + [-B]补</p>
+                <p>这样就证明了补码减法运算公式的这一部分</p>
+                <div>
+                $$
+                \begin{aligned} \text{证明:} &\text{要证明} \quad [A]_{\text{补}} - [B]_{\text{补}} = [A]_{\text{补}} + [-B]_{\text{补}} \\ &\text{只需要证明} \quad [-B]_{\text{补}} = -[B]_{\text{补}} \\ &\text{即需要证明} \quad [-B]_{\text{补}} - (-[B]_{\text{补}}) = 0 \\ &\phantom{\text{即需要证明}} \quad [-B]_{\text{补}} - (-[B]_{\text{补}}) = [-B]_{\text{补}} + [B]_{\text{补}} \quad \text{利用补码加法运算公式 } [A+B]_{\text{补}} = [A]_{\text{补}} + [B]_{\text{补}} \\ &\text{可得} \quad \ \ \phantom{[-B]_{\text{补}} - (-[B]_{\text{补}})} = [-B+B]_{\text{补}} = [0]_{\text{补}} = 0 \end{aligned}
+                $$
+                </div>
+                <p>至此，我们就要证明了补码减法的运算公式</p>
+                <p>从补码减法的运算公式可以看出，补码减法运算可以转换成补码加法运算，这样在机器内部就可以不设计减法器，而将补码减法运算转换成补码加法运算，利用加法器来完成运算</p>
+                
+                <h2>溢出的概念</h2>
+                <p>由于计算机的字长是有限的，因此所能表示的数据范围也是有限的。</p>
+                <p>当运算结果超出所能表示的数据范围时，就会出现溢出（Overflow）。</p>
+                <p>溢出会导致错误的运算结果。</p>
+                
+                <h2>溢出的举例</h2>
+                <div>
+                $$
+                \begin{array}{@{}l@{\hspace{0.5em}}l@{\hspace{0.5em}}r@{\hspace{2em}}l@{}} & x = & -5 & [x]_{\text{补}} = \textcolor{blue}{1}, & 0111 \\ & y = & -4 & [y]_{\text{补}} = \textcolor{blue}{1}, & 1000 \\ + & & & \\ \hline \textcolor{red}{负溢} & & -9 & \textcolor{red}{7} = \textcolor{purple}{\cancel{1}}\textcolor{blue}{0}, & 1111 \end{array}
+                $$
+                </div>
+                <p>真值x+y=-9，超出了计算机的字长为4位时，补码可表示的最小定点整数-8，这称为负溢。</p>
+                <p>x的补码与y的补码相加，符号位的进位的位权值就是模数，舍弃即可，将舍弃模数后的结果转换成真值，结果为-7，显然，这与真值运算结果不符。</p>
+                <div>
+                $$
+                \begin{array}{@{}l@{}l @{}l @{\quad} r@{\quad}l@{}}      & [x]_{\text{补}} = & \textcolor{blue}{0},101 & x = 5 & \\      & [y]_{\text{补}} = & \textcolor{blue}{0},100 & y = 4 & \\ +     & & & & \\ \hline      & & \textcolor{blue}{1},001 = \textcolor{red}{-7} & 9 & \textcolor{red}{正溢} \end{array}
+                $$
+                </div>
+                <p>真值x+y=9，超出了计算机的字长为4位时，补码可表示的最大定点整数7，这称为正溢。</p>
+                <p>x的补码与y的补码相加，结果转换成真值，结果为-7，显然，这与真值运算结果不符。</p>
+                
+                <h2>溢出的检测方法&gt;根据操作数的符号位与运算结果的符号位是否一致进行判断</h2>
+                <p>先证明：两个操作数相加时，当它们的符号位相同（也就是同正或同负）时，才可能发生溢出。</p>
+                <p>证明： \( \text{假设机器字长为 } n+1 \text{ 位} \) </p>
+                <p> \( \text{补码所能表示的真值的范围是：} \boldsymbol{-2^n \leq 真值 < 2^n} \) </p>
+                <div>
+                $$
+                \text{当真值 } x \text{ 和 } y \text{ 同为负数时：}\quad \left. \begin{aligned} -2^n &\leq x < 0 \\ -2^n &\leq y < 0 \end{aligned} \right\} \implies 0 > x+y \geq -2^{n+1} \quad \textcolor{red}{可能负溢}
+                $$
+                </div>
+                <div>
+                $$
+                \text{当真值 } x \text{ 和 } y \text{ 同为正数时：}\quad \left. \begin{aligned} 0 &< x < 2^n \\ 0 &< y < 2^n \end{aligned} \right\} \implies 0 < x+y < 2^{n+1} \quad \textcolor{red}{可能正溢}
+                $$
+                </div>
+                <div>
+                $$
+                \text{当真值 } x \text{ 和 } y \text{ 的符号位不同时} \text{，例如：} \left. \begin{aligned} -2^n &\leq x < 0 \\ 0 &< y < 2^n \end{aligned} \right\} \implies -2^n \leq x + y < 2^n \quad \text{取值范围相同，不会溢出}
+                $$
+                </div>
+                <p>综上所述，两个操作数相加时，当它们的符号位相同（也就是同正或同负）时才可能发生溢出</p>
+                <p>若运算结果的符号位与原操作数的符号位不同，则发生溢出；若运算结果的符号位与原操作数的符号位相同，则未发生溢出</p>
+                <p>例如：</p>
+                <div>
+                $$
+                \begin{array}{@{}r@{\,}r@{}l@{}}      & [x]_{\text{补}} = \textcolor{blue}{1}, 011 \\      & [y]_{\text{补}} = \textcolor{blue}{1}, 101 \\ +     & \\ \hline      & \textcolor{purple}{1}\textcolor{blue}{1}, 000 \end{array} \quad \textcolor{blue}{\text{符号位相同，未溢出}}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{array}{@{}l@{}r@{\,}r@{}l@{}} & [x]_{\text{补}} = & \textcolor{blue}{0}, 101 \\ & [y]_{\text{补}} = & \textcolor{blue}{0}, 011 \\ + & & \\ \hline & & \textcolor{blue}{1}, 000 \end{array} \quad \textcolor{red}{\text{符号位不同，溢出}}
+                $$
+                </div>
+                <p>由于采用补码可将减法运算转换成加法运算，因此不论做加法还是减法，只要实际参加运算的两个操作数符号相同，但运算结果的符号位与原操作数不同，即为溢出</p>
+                <div>
+                $$
+                \begin{array}{@{}l@{}r@{\,}r@{}l@{}} & [x]_{\text{补}} = & \textcolor{blue}{0}, 101 \\ & [-y]_{\text{补}} = & \textcolor{blue}{0}, 011 \\ + & &  \\ \hline & & \textcolor{blue}{1}, 000 \end{array} \quad \textcolor{red}{\text{符号位不同，溢出}}
+                $$
+                </div>
+                <p>本例中，-y才是实际参加运算的操作数</p>
+                <p>这种方法的逻辑表达式为：</p>
+                <p>操作数 \( x \) 的符号位记为 \( x_{n-1} \) ，操作数 \( y \) 的符号位记为 \( y_{n-1} \) ，运算结果 \( s \) 的符号位记为 \( s_{n-1} \) ，溢出标志位记为 \( OF \) ，当 \( OF \) 为 \( 1 \) 时表示发生溢出。</p>
+                <p> \( x \) 与 \( y \) 的符号位相同，与 \( s \) 的符号位相反</p>
+                <div>
+                $$
+                \begin{cases} x_{n-1} \cdot y_{n-1} \cdot \overline{s}_{n-1} \\ \overline{x}_{n-1} \cdot \overline{y}_{n-1} \cdot s_{n-1} \end{cases}
+                $$
+                </div>
+                <div>
+                $$
+                OF = x_{n-1} \cdot y_{n-1} \cdot \overline{s}_{n-1} + \overline{x}_{n-1} \cdot \overline{y}_{n-1} \cdot s_{n-1}
+                $$
+                </div>
+                <p>例如：</p>
+                <div>
+                $$
+                \begin{array}{@{}r@{\,}r@{}l@{}}      & [x]_{\text{补}} = \textcolor{blue}{1}, 011 \\      & [y]_{\text{补}} = \textcolor{blue}{1}, 101 \\ +     & \\ \hline      & \textcolor{purple}{1}\textcolor{blue}{1}, 000 \end{array} \quad \textcolor{blue}{\text{符号位相同，未溢出}}
+                $$
+                </div>
+                <div>
+                $$
+                OF = \textcolor{blue}{1} \cdot \textcolor{blue}{1} \cdot \overline{\textcolor{blue}{1}} + \overline{\textcolor{blue}{1}} \cdot \overline{\textcolor{blue}{1}} \cdot \textcolor{blue}{1} = \textcolor{green}{0}
+                $$
+                </div>
+                
+                <h2>溢出的检测方法&gt;根据运算过程中，最高数值位的进位与符号位的进位是否一致进行判断</h2>
+                <p>方法二：根据运算过程中，最高数值位的进位与符号位的进位是否一致进行判断</p>
+                <p>若不相同，则可判定为产生溢出；若相同，则可判定为没有产生溢出</p>
+                <p>例如：</p>
+                <div>
+                $$
+                \text{进位：}\textcolor{blue}{(符号位的进位) } \textcolor{blue}{0} \textcolor{red}{\boldsymbol{\neq}} 1 \text{(最高数值位的进位)} \\ \begin{array}{@{}l@{}l @{}l @{\quad} r@{\quad}l@{}}      & [x]_{\text{补}} = & \textcolor{blue}{0},101 & x = 5 & \\      & [y]_{\text{补}} = & \textcolor{blue}{0},100 & y = 4 & \\ +     & & & & \\ \hline      & & \textcolor{blue}{1},001 = \textcolor{red}{-7} & 9 & \textcolor{red}{正溢} \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \text{进位：}\textcolor{blue}{(符号位的进位) } \textcolor{blue}{1} \textcolor{red}{\boldsymbol{\neq}} 0 \text{(最高数值位的进位)} \\ \begin{array}{@{}l@{\hspace{0.5em}}l@{\hspace{0.5em}}r@{\hspace{2em}}l@{}} & x = & -5 & [x]_{\text{补}} = \textcolor{blue}{1}, & 0111 \\ & y = & -4 & [y]_{\text{补}} = \textcolor{blue}{1}, & 1000 \\ + & & & \\ \hline \textcolor{red}{负溢} & & -9 & \textcolor{red}{7} = \textcolor{purple}{\cancel{1}}\textcolor{blue}{0}, & 1111 \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \text{进位：}\textcolor{blue}{(符号位的进位) } \textcolor{blue}{1} \textcolor{teal}{\boldsymbol{=}} 1 \text{(最高数值位的进位)} \\ \begin{array}{@{}l @{}r @{}l @{}r @{}c @{}l}      & x = 5  & [x]_{\text{补}} = \textcolor{blue}{0},101 \\      & y = -4 & [y]_{\text{补}} = \textcolor{blue}{1},100 \\ +     &        &            \\ \hline \textcolor{teal}{未溢出} & 1 & \textcolor{blue}{\cancel{1}0},001 = \textcolor{teal}{1} \\ \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \text{进位：}\textcolor{blue}{(符号位的进位) } \textcolor{blue}{0} \textcolor{red}{\boldsymbol{\neq}} 1 \text{(最高数值位的进位)} \\ \begin{array}{@{}r@{\,}r@{}} & x=5 & [x]_{\text{补}} = \textcolor{blue}{0}, 101 &\\ & (-y)=4 & [-y]_{\text{补}} = \textcolor{blue}{0}, 100 &\\ +      &          & \\ \hline \textcolor{red}{正溢} & 9        & \textcolor{blue}{1}, 001 & \!\!\!\!= \textcolor{red}{-7} \\ \end{array}
+                $$
+                </div>
+                <p>这种方法的逻辑表达式：</p>
+                <p>最高数值位的进位记为 \( C_{n-1} \) ，符号位的进位记为 \( C_n \) 。</p>
+                <p>溢出标志位记为 \( OF \) ，当 \( OF \) 为 \( 1 \) 时表示发生溢出。</p>
+                <p> \( C_{n-1} \) 与 \( C_n \) 不同，则产生溢出（即 \( OF \) 为 \( 1 \) ）：</p>
+                <div>
+                $$
+                OF = C_{n-1} \oplus C_n
+                $$
+                </div>
+                
+                <h2>溢出的检测方法&gt;利用变形补码（具有2位符号位的补码）的符号位进行判断</h2>
+                <p>利用变形补码的符号位进行判断，变形补码也称为双符号位补码，具有两个符号位，其余与补码相同。</p>
+                <ul>
+                <li>双符号位为00时，表示正数</li>
+                <li>双符号位为11时，表示负数</li>
+                <li>双符号位为01时，表示正溢出</li>
+                <li>双符号位为10时，表示负溢出</li>
+                </ul>
+                <p>采用双符号位补码进行溢出检测是非常直观的，适合手工运算时的溢出检测，但其硬件成本高，因为需要为多添加的那个符号位来增加机器字长</p>
+                <p>因此在计算机中主要采用单符号溢出检测方案</p>
+                <div>
+                $$
+                \begin{array}{@{}l@{}r@{}l@{}} &[x]_{\text{补}}=\textcolor{blue}{00}.10111\\ &[y]_{\text{补}}=\textcolor{blue}{00}.01111\\ +&&\\ \hline &[x]_{\text{补}}+[y]_{\text{补}}=\textcolor{blue}{01}.00010\\ &\textcolor{red}{01:正溢出}\\ \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{array}{@{}l@{}r@{}l@{}} &[x]_{\text{补}}=\textcolor{blue}{11}.0101\\ &[y]_{\text{补}}=\textcolor{blue}{11}.0011\\ +&&\\ \hline &[x]_{\text{补}}+[y]_{\text{补}}=\textcolor{blue}{10}.1000\\ &\kern2pt\textcolor{red}{10:负溢出}\\ \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{array}{@{}l@{}r@{}l@{}} &[x]_{\text{补}}=\textcolor{blue}{00}.1011\\ &[y]_{\text{补}}=\textcolor{blue}{11}.0011\\ +&&\\ \hline &[x]_{\text{补}}+[y]_{\text{补}}=\textcolor{blue}{11}.1110\\ &\kern2pt\textcolor{green}{11:未溢出}\\ \end{array}
+                $$
+                </div>
+                <p>这个方法的逻辑表达式：</p>
+                <p>左起第一个符号位记为 \( C_{n+1} \) </p>
+                <p>左起第二个符号位记为 \( C_n \) </p>
+                <p>溢出标志位记为 \( OF \) ，当 \( OF \) 为 \( 1 \) 时表示发生溢出。</p>
+                <p> \( C_{n+1} \) 与 \( C_n \) 不同，则产生溢出（即 \( OF \) 为 \( 1 \) ）：</p>
+                <div>
+                $$
+                OF = C_{n+1} \oplus C_n
+                $$
+                </div>
+                
+                <h2>二进制加法的笔算过程</h2>
+                <div>
+                $$
+                \begin{array}{@{}r *{8}{@{}c@{}}@{}} & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 1 \\ & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\ + & \textcolor{red}{1} &  & \textcolor{red}{1} &  & \textcolor{red}{1} & \textcolor{red}{1} & \textcolor{red}{1} &  \\ \hline & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 1 \\ \end{array}
+                $$
+                </div>
+                <p>例如，这是两个8位的二进制数的加法运算，其过程为：</p>
+                <p>从最低位开始：1+0=1，1+1=10，写0向高位进1，1+0+1=10，写0向高位进1，1+1+1=11，写1向高位进1，0+0+1=1，1+1=10，写0向高位进1，0+0+1=1，1+1=10，写0向高位进1。</p>
+                <p>这样，就手工完成了两个8位二进制数的加法运算。</p>
+                
+                <h2>Xi、Yi、Ci、Ci+1、Si</h2>
+                <div>
+                $$
+                \left. \begin{array}{@{}l@{}} \text{来自低位，参与本位计算的进位记为 } C_i \\ \text{本位向高位的进位记为 } C_{i+1} \end{array} \right\} \quad \begin{array}{@{}l@{}} \text{X 中的某一位记为 } X_i \\ \text{Y 中的某一位记为 } Y_i \\ C \text{ 表示进位} \\ \text{S 中的某一位记为 } S_i \\ \mbox{} \end{array} \quad \begin{array}{@{}r@{\,}c *{8}{@{}c@{}}@{}} & X & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 1 \\ & Y & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\ + & C & \textcolor{red}{1} & \textcolor{red}{0} & \textcolor{red}{1} & \textcolor{red}{0} & \textcolor{red}{1} & \textcolor{red}{1} & \textcolor{red}{1} & \textcolor{red}{0} \\ \hline & S & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 1 \\ \mbox{} \end{array}
+                $$
+                </div>
+                <p>为了方便描述，将参与运算的两个8位二进制数分别记为X和Y，将运算结果，也就是和记为S</p>
+                <p>将X中的某个位记为Xᵢ，将Y中的某个位记为Yᵢ，将S中的某个位记为Sᵢ</p>
+                <p>另外，我们用C来表示进位，并且将当前计算的位称为本位，那么来自低位参与本位计算的进位记为cᵢ，而本位向高位的进位记为cᵢ₊₁</p>
+                
+                <h2>一位加法关于Xi、Yi、Ci、Ci+1、Si的真值表</h2>
+                <div>
+                $$
+                \textbf{真值表} \\[1ex] \begin{array}{|c|c|c||c|c|} \hline \mathbf{X_i} & \mathbf{Y_i} & \mathbf{C_i} & \mathbf{S_i} & \mathbf{C_{i+1}} \\ \hline\hline 0 & 0 & 0 & 0 & 0 \\ \hline 0 & 0 & 1 & 1 & 0 \\ \hline 0 & 1 & 0 & 1 & 0 \\ \hline 0 & 1 & 1 & 0 & 1 \\ \hline 1 & 0 & 0 & 1 & 0 \\ \hline 1 & 0 & 1 & 0 & 1 \\ \hline 1 & 1 & 0 & 0 & 1 \\ \hline 1 & 1 & 1 & 1 & 1 \\ \hline \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \textbf{真值表} \\[1ex] \begin{array}{|c|c|c||c|} \hline \mathbf{X_i} & \mathbf{Y_i} & \mathbf{C_i} & \mathbf{S_i} \\ \hline\hline 0 & 0 & 0 & 0 \\ \hline 0 & 0 & 1 & 1 \\ \hline 0 & 1 & 0 & 1 \\ \hline 0 & 1 & 1 & 0 \\ \hline 1 & 0 & 0 & 1 \\ \hline 1 & 0 & 1 & 0 \\ \hline 1 & 1 & 0 & 0 \\ \hline 1 & 1 & 1 & 1 \\ \hline \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \textbf{真值表} \\[1ex] \begin{array}{|c|c|c||c|} \hline \mathbf{X_i} & \mathbf{Y_i} & \mathbf{C_i} & \mathbf{C_{i+1}} \\ \hline\hline 0 & 0 & 0 & 0 \\ \hline 0 & 0 & 1 & 0 \\ \hline 0 & 1 & 0 & 0 \\ \hline 0 & 1 & 1 & 1 \\ \hline 1 & 0 & 0 & 0 \\ \hline 1 & 0 & 1 & 1 \\ \hline 1 & 1 & 0 & 1 \\ \hline 1 & 1 & 1 & 1 \\ \hline \end{array}
+                $$
+                </div>
+                
+                <h2>Si的逻辑表达式</h2>
+                <div>
+                $$
+                \textbf{真值表} \\[1ex] \begin{array}{|c|c|c||c|} \hline \mathbf{X_i} & \mathbf{Y_i} & \mathbf{C_i} & \mathbf{S_i} \\ \hline\hline 0 & 0 & 0 & 0 \\ \hline 0 & 0 & 1 & 1 \\ \hline 0 & 1 & 0 & 1 \\ \hline 0 & 1 & 1 & 0 \\ \hline 1 & 0 & 0 & 1 \\ \hline 1 & 0 & 1 & 0 \\ \hline 1 & 1 & 0 & 0 \\ \hline 1 & 1 & 1 & 1 \\ \hline \end{array} \quad \begin{array}{c} \\ \\ \overline{X_i}\,\overline{Y_i}\,C_i \\ \overline{X_i}\,Y_i\,\overline{C_i} \\ \\ X_i\,\overline{Y_i}\,\overline{C_i} \\ \\ \\ X_i\,Y_i\,C_i \\ \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                S_i = \overline{X_i}\,\overline{Y_i}\,C_i + \overline{X_i}\,Y_i\,\overline{C_i} + X_i\,\overline{Y_i}\,\overline{C_i} + X_i\,Y_i\,C_i
+                $$
+                </div>
+                <div>
+                $$
+                S_i = X_i \oplus Y_i \oplus C_i
+                $$
+                </div>
+                
+                <h2>Ci+1的逻辑表达式</h2>
+                <div>
+                $$
+                \textbf{真值表} \\[1ex] \begin{array}{|c|c|c||c|} \hline \mathbf{X_i} & \mathbf{Y_i} & \mathbf{C_i} & \mathbf{C_{i+1}} \\ \hline\hline 0 & 0 & 0 & 0 \\ \hline 0 & 0 & 1 & 0 \\ \hline 0 & 1 & 0 & 0 \\ \hline 0 & 1 & 1 & 1 \\ \hline 1 & 0 & 0 & 0 \\ \hline 1 & 0 & 1 & 1 \\ \hline 1 & 1 & 0 & 1 \\ \hline 1 & 1 & 1 & 1 \\ \hline \end{array} \quad \begin{array}{c} \\ \\ \\ \\ \overline{X_i}\,Y_i\,C_i \\ \\ X_i\,\overline{Y_i}\,C_i \\ X_i\,Y_i\,\overline{C_i} \\ X_i\,Y_i\,C_i \\ \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                C_{i+1} = \overline{X_i}\,Y_i\,C_i + X_i\,\overline{Y_i}\,C_i + X_i\,Y_i\,\overline{C_i} + X_i\,Y_i\,C_i
+                $$
+                </div>
+                <div>
+                $$
+                C_{i+1} = X_i \cdot Y_i + (X_i \oplus Y_i) \cdot C_i
+                $$
+                </div>
+                
+                <h2>由Si和Ci+1的逻辑表达式得出的组合逻辑电路</h2>
+                <p>由：</p>
+                <div>
+                $$
+                S_i = X_i \oplus Y_i \oplus C_i
+                $$
+                </div>
+                <div>
+                $$
+                C_{i+1} = X_i \cdot Y_i + (X_i \oplus Y_i) \cdot C_i
+                $$
+                </div>
+                
+                <h2>信号经过该逻辑电路所耗费的时间</h2>
+                <p>假设基本逻辑门（例如或门、与门）的传播延迟为1T，复合逻辑门（例如异或门）的传播延迟为3T</p>
+                <p>不考虑信号在逻辑门之间的线路上的传播时延</p>
+                <p>从信号输入到该逻辑电路时刻起：1T时间后，这个与门输出有效信号</p>
+                <p>3T时间后，这个异或门输出有效信号</p>
+                <p>4T时间后，这个与门输出有效信号</p>
+                <p>5T时间后，这个或门输出有效信号，该信号就是本位向高位的进位信号</p>
+                <p>6T时间后，这个异或门输出有效信号，该信号就是本位和的信号</p>
+                
+                <h2>一位全加器FA</h2>
+                <p>当我们不需要研究某个逻辑电路的内部细节时，我们可以用符号进行表示</p>
+                <p>实现了一位二进制加法运算的逻辑电路的符号</p>
+                <p>我们将其称为全加器，英文缩写词为FA</p>
+                <p>符号表示可以屏蔽掉逻辑电路的内部实现细节，对外仅给出输入输出端口即可</p>
+                
+                <h2>串行进位加法器</h2>
+                <div>
+                $$
+                \begin{array}{l *{9}{c}} \text{加数 } X & & X_7 & X_6 & X_5 & X_4 & X_3 & X_2 & X_1 & X_0 \\ \text{加数 } Y & & Y_7 & Y_6 & Y_5 & Y_4 & Y_3 & Y_2 & Y_1 & Y_0 \\ \text{进位 } C & C_{7+1=8} & C_{6+1=7} & C_{5+1=6} & C_{4+1=5} & C_{3+1=4} & C_{2+1=3} & C_{1+1=2} & C_{0+1=1} & C_0 \\ + & & & & & & & & & \\ \hline \text{和数 } S & & S_7 & S_6 & S_5 & S_4 & S_3 & S_2 & S_1 & S_0 \\ \end{array}
+                $$
+                </div>
+                
+                <h2>串行进位加法器溢出检测的实现</h2>
+                <p>（内容）</p>
+                
+                <h2>串行进位加法器补码加减法的实现</h2>
+                <p>当给SUB端输入1时，各异或门的输出即为操作数y的每一位的取反，而输入到SUB端的1也会输入到最低位的一位全加器的进位输入端，进而实现末位加1</p>
+                <p>当给SUB端输入0时，各异或门的输出与操作数y的每一位相同，而输入到SUB端的0也会输入到最低位的一位全加器的进位输入端，这并不影响加法运算结果</p>
+                
+                <h2>串行进位加法器的性能</h2>
+                <p>在n位串行进位加法器中，每个高位的一位全加器的运算依赖于其相邻低位的一位全加器的进位输出，因此所有一位全加器不能并行运行</p>
+                <p>其时间关键延迟（也就是输出所有本位和所需的时间）为(2n+4)*T</p>
+                <p>很显然，这与串行进位加法器的位数n是线性关系</p>
+                <p>当n较大时，性能就较差</p>
+                
+                <h2>串行进位加法器的改进思想</h2>
+                <p>如果能够打破串行进位加法器中的进位依赖，提前得到所有一位全加器所需的进位输入信号，也就是所谓的先行进位，这样所有一位全加器都可以并行运算，从而可以提高运算性能</p>
+                
+                <h2>进位生成函数Gi、进位传递函数Pi</h2>
+                <div>
+                $$
+                \begin{aligned} S_i &= X_i \oplus Y_i \oplus C_i \\ C_{i+1} &= X_i Y_i + (X_i \oplus Y_i) C_i \end{aligned} \quad \xrightarrow{\text{令 } G_i = X_i Y_i,\ P_i = X_i \oplus Y_i} \quad \begin{aligned} S_i &= P_i \oplus C_i \\ C_{i+1} &= G_i + P_i C_i \end{aligned}
+                $$
+                </div>
+                <div>
+                $$
+                \text{当 } X_i = 1,\ Y_i = 1 \text{ 时} \quad \Rightarrow \quad \left\{ \begin{aligned} G_i &= 1 \cdot 1 = 1 \\ P_i &= 1 \oplus 1 = 0 \end{aligned} \right. \quad \Rightarrow \quad C_{i+1} = 1 + 0 \cdot C_i = 1
+                $$
+                </div>
+                <div>
+                $$
+                \text{当 } X_i \neq Y_i \text{ 时} \quad \Rightarrow \quad \left\{ \begin{aligned} G_i &= 0 \\ P_i &= 1 \end{aligned} \right. \quad \Rightarrow \quad C_{i+1} = 0 + 1 \cdot C_i = C_i
+                $$
+                </div>
+                
+                <h2>Ci+1与Ci的逻辑关系</h2>
+                <p>向高位的进位输出Cn由Gi、Pi以及C0经过逻辑运算得到，Cn不再依赖于Cn-1。</p>
+                <p>Gi Pi一个是进位传递一个是进位生成，决定进位</p>
+                <div>
+                $$
+                \begin{aligned} C_1 &= G_0 + P_0 C_0 \\ C_2 &= G_1 + P_1 C_1 = G_1 + P_1 (G_0 + P_0 C_0) = G_1 + P_1 G_0 + P_1 P_0 C_0 \\ C_3 &= G_2 + P_2 C_2 = G_2 + P_2 (G_1 + P_1 G_0 + P_1 P_0 C_0) = G_2 + P_2 G_1 + P_2 P_1 G_0 + P_2 P_1 P_0 C_0 \\ C_4 &= G_3 + P_3 C_3 = G_3 + P_3 (G_2 + P_2 G_1 + P_2 P_1 G_0 + P_2 P_1 P_0 C_0) = G_3 + P_3 G_2 + P_3 P_2 G_1 + P_3 P_2 P_1 G_0 + P_3 P_2 P_1 P_0 C_0 \\ &\vdots \\ C_n &= G_{n-1} + P_{n-1} G_{n-2} + P_{n-1} P_{n-2} G_{n-3} + \cdots + P_{n-1} P_{n-2} \cdots P_1 P_0 C_0 \end{aligned}
+                $$
+                </div>
+                
+                <h2>先行进位电路</h2>
+                <p>（内容）</p>
+                
+                <h2>先行进位电路的上限</h2>
+                <p>先行进位电路的位数越多，逻辑门的扇入系数（可简单认为是输入引脚的数量）就越大，而扇入系数越大，制造难度就越大。一般情况下，逻辑门的扇入系数为1~5，最多不超过8。因此，先行进位电路通常采用4位一组。</p>
+                
+                <h2>先行进位电路的总时间延迟</h2>
+                <p>通过这些与门需要1T时长，通过这些或门需要1T时长，因此该电路的总时间延迟为2T</p>
+                
+                <h2>基于4位先行进位电路构建的4位快速加法器</h2>
+                <p>（内容）</p>
+                
+                <h2>4位快速加法器的性能</h2>
+                <p>假设参与加法运算的两个操作数x和y以及进位输入c₀同时到达4位快速加法器的相应的输入端，则：各个数位的进位产生信号gᵢ经过1T延迟后就可以产生，因为仅通过了与门这种基本逻辑门，其时间延迟为1T</p>
+                <p>而各个数位的进位传递信号pᵢ经过3T延迟后产生，因为仅通过了异或门这种复合逻辑门，其时间延迟为3T</p>
+                <p>当给4位先行进位电路的各输入端输入相应的信号（也就是输入各个数位的进位产生信号gᵢ、进位传递信号pᵢ以及最低位的进位输入c₀），经过2T延迟后，4位先行进位电路即可同时产生出各个数位的进位信号</p>
+                <p>因此，从给4位快速加法器输入参与加法运算的两个操作数x和y以及进位输入c₀时刻起，经过5T延迟，各进位输出信号c₁到c₄就会同时产生</p>
+                <p>有了各数位的进位信号cᵢ和进位传递信号pᵢ，再经过异或门的运算，就可以得出各数位的和数sᵢ</p>
+                <p>由于异或门的时间延迟为3T，因此可以得出各数位的和数sᵢ的产生时刻：s₀的产生时刻为6T，而其他各数位的和数的产生时刻都为8T</p>
+                <p>对比一下4位快速加法器与4位串行进位加法器的性能</p>
+                <p>n位串行进位加法器：当n=4时，为4位串行进位加法器，Sn-1的时间延迟为：(2 × 4 +4)T = 12T</p>
+                <p>4位快速加法器时间延迟为：8T</p>
+                <p>性能提升1.5倍</p>
+                <p>15倍的性能提升并不是很大，这是因为比较的是4位加法器，其位宽比较小，对于串行进位加法器，其时间关键延迟与加法器的位宽n呈线性关系，当n较大时，时间关键延迟就要比较大</p>
+                
+                <h2>基于4位快速加法器的组内并行进位、组间串行进位的16位加法器</h2>
+                <p>（内容）</p>
+                
+                <h2>基于4位快速加法器的组内并行进位、组间串行进位的16位加法器的性能</h2>
+                <p>假设T₀时刻，参与加法运算的两个16位操作数x和y以及进位输入c₀同时到达16位快速加法器的相应的输入端，则：5T延迟后，右起第一个4位快速加法器产生进位信号</p>
+                <p>在经过1T延迟，在6T时刻，该加法器的最低位产生和数的s₀位</p>
+                <p>右起第二个4位快速加法器，在5T时刻收到进位信号，经过2T延迟后，在7T时刻产生进位信号</p>
+                <p>在经过1T延迟，在8T时刻，该加法器的最低位产生和数的s₄位</p>
+                <p>与此同时，右起第一个4位快速加法器产生和数的s₁到s₃这三位</p>
+                <p>右起第三个4位快速加法器，在7T时刻收到进位信号，经过2T延迟后，在9T时刻产生进位信号</p>
+                <p>在经过1T延迟，在10T时刻，该加法器的最低位产生和数的s₈位</p>
+                <p>与此同时，右起第二个4位快速加法器产生和数的s₅到s₇这三位</p>
+                <p>右起第四个4位快速加法器，在9T时刻收到进位信号，经过2T延迟后，在11T时刻产生进位信号</p>
+                <p>在经过1T延迟，在12T时刻，该加法器的最低位产生和数的s₁₂位</p>
+                <p>与此同时，右起第三个4位快速加法器产生和数的s₉到s₁₁这三位</p>
+                <p>再经过2T延迟，在14T时刻，右起第四个4位快速加法器产生和数的s₁₃到s₁₅这三位</p>
+                <p>这个使用四个4位快速加法器构建的16位加法器的时间关键延迟为14T</p>
+                <p>如果用16个一位全加器通过进位串联的方式来构建16位加法器，则时间关键延迟为36T</p>
+                <p>可以看到，使用四个4位快速加法器通过进位串联方式构建的16位加法器的性能，比使用16个一位全加器通过进位串联的方式构建的16位加法器的性能提升了约2.6倍</p>
+                
+                <h2>组进位生成函数G、组进位传递函数P</h2>
+                <div>
+                $$
+                \begin{array}{c} C_4 = \colorbox{lightgray}{$G_3 + P_3 G_2 + P_3 P_2 G_1 + P_3 P_2 P_1 G_0$} + \colorbox{lightgray}{$P_3 P_2 P_1 P_0$} C_0 \\ \hspace{6em}\underbrace{\text{记为 } G^* \qquad\qquad\qquad \text{记为 } P^*} \\[1ex] \hspace{11em}\downarrow \\[1ex] \hspace{11em}C_4 = G^* + P^* C_0 \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                G^* = G_3 + P_3 G_2 + P_3 P_2 G_1 + P_3 P_2 P_1 G_0
+                $$
+                </div>
+                <div>
+                $$
+                P^* = P_3 P_2 P_1 P_0
+                $$
+                </div>
+                
+                <h2>可级联的4位先行进位电路</h2>
+                <p>（内容）</p>
+                
+                <h2>可级联的4位快速加法器</h2>
+                <p>（内容）</p>
+                
+                <h2>基于可级联的4位先行进位电路和可级联的4位快速加法器的组内并行进位、组间并行进位的16位加法器</h2>
+                <p>（内容）</p>
+                
+                <h2>基于可级联的4位先行进位电路和可级联的4位快速加法器的组内并行进位、组间并行进位的16位加法器的性能</h2>
+                <p>假设T₀时刻，参与加法运算的两个16位操作数以及进位输入c₀同时到达该加法器的相应的输入端，则：在5T时刻，各个可级联4位快速加法器的级联输出端输出级联信号，并且右起第一个可级联4位快速加法器输出进位信号</p>
+                <p>由于我们并不使用进位串联方式，因此我们不关心该信号</p>
+                <p>在6T时刻，右起第一个可级联4位快速加法器输出16位和数的最低位s₀</p>
+                <p>在7T时刻，可级联4位先行进位电路同时产生右起第2、3、4个可级联4位快速加法器各自的进位输入信号，同时还产生了可级联4位先行进位电路自身的级联输出信号和16位加法器的进位输出信号</p>
+                <p>在8T时刻，右起第一个可级联4位快速加法器输出和数的s₁到s₃这三位</p>
+                <p>在9T时刻，右起第2、3、4个可级联4位快速加法器同时输出各自的进位输出信号</p>
+                <p>由于我们并不使用进位串联方式，因此我们不关心他们</p>
+                <p>在12T时刻，右起第2、3、4个可级联4位快速加法器同时输出各自应输出的和数中的4位</p>
+                <p>至此就得到了运算结果，即得到了16位和数</p>
+                <p>因此，该加法器的时间关键延迟为12T</p>
+                <p>之前构建的组内并行进位、组间串行进位的16位加法器，它的时间关键延迟为14T</p>
+                
+                <h2>基于可级联的4位先行进位电路和可级联的4位快速加法器的组内并行进位、组间并行进位的64位加法器的性能</h2>
+                <p>组内并行进位、组间串行进位的64位加法器时间关键延迟为38T</p>
+                <p>组内并行进位、组间并行进位的64位加法器时间关键延迟为16T（5 + 2 + 2 + 2 +5）</p>
+                
+                <h2>十进制乘法的笔算过程</h2>
+                <div>
+                $$
+                \begin{array}{l r l} \text{被乘数} & 0.408 & \text{小数点后有3位} \\ \text{乘数} & \underline{\times\ 0.132} & \text{小数点后有3位} \\ & \phantom{000}816 & \\ & \phantom{00}1224\quad \!\!\! & \\ & \underline{+\ \phantom{0}408}\quad & \\ & 0.\textcolor{red}{0}53856 & \text{小数点后应有6位} \\ \end{array}
+                $$
+                </div>
+                
+                <h2>二进制乘法的笔算过程</h2>
+                <div>
+                $$
+                \begin{array}{l r l} \text{被乘数} & 0.1101 & \text{小数点后有4位} \\ \text{乘数} & \underline{\times\ 0.1011} & \text{小数点后有4位} \\ & \phantom{000}1101 & \\ & \phantom{00}1101\quad \!\!\! & \\ & \phantom{0}0000\quad\quad \!\!\!\!\!\! & \\ & \underline{+\ 1101\quad\quad\quad \!\!\!\!\!\!\!\!\! }& \\ & 10001111 & \text{小数点后应有8位} \\ \end{array}
+                $$
+                </div>
+                
+                <h2>模仿二进制乘法笔算方法的机器实现&gt;方法一</h2>
+                <div>
+                $$
+                \begin{array}{l r l} \text{被乘数} & 0.1101 & \text{小数点后有4位} \\ \text{乘数} & \underline{\times\ 0.1011} & \text{小数点后有4位} \\ & 0.00001101 & \text{位积} \\ & 0.0001101\phantom{0} & \text{位积} \\ & 0.000000\phantom{00} & \text{位积} \\ & \underline{+\ 0.01101\phantom{000}} & \text{位积} \\ & 0.10001111 & \text{小数点后应有8位} \\ \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                = 1101 \overset{\downarrow}{\colorbox{yellow}{$\times 2^{-8}$}} \underset{\uparrow}{\colorbox{cyan}{$+$}} 1101 \overset{\downarrow}{\colorbox{yellow}{$\times 2^{-7}$}} \underset{\uparrow}{\colorbox{cyan}{$+$}} 0 \overset{\downarrow}{\colorbox{yellow}{$\times 2^{-6}$}} \underset{\uparrow}{\colorbox{cyan}{$+$}} 1101 \overset{\downarrow}{\colorbox{yellow}{$\times 2^{-5}$}} \quad \begin{array}{r} \colorbox{yellow}{\textbf{移位运算}} \\[5ex] \colorbox{cyan}{\textbf{加法运算}} \end{array}
+                $$
+                </div>
+                <p>这种方法的问题</p>
+                <p>一个是运算过程中产生的多个位积，需要使用多个寄存器进行暂存，以便最后进行一次性相加</p>
+                <p>另一个是乘积的数据宽度增长了一倍，这将造成硬件资源浪费和运算时间的增加</p>
+                
+                <h2>模仿二进制乘法笔算方法的机器实现&gt;方法二</h2>
+                <p>对笔算乘法进行改进，以便用机器实现乘法运算</p>
+                <p>设 \( x=0.1101,\ y=0.\textcolor{orange}{1}\textcolor{blue}{0}\textcolor{green}{1}\textcolor{purple}{1} \) ，计算 \( x \times y \) 。</p>
+                <div>
+                $$
+                \begin{align*} x \times y &= x \times 0.\textcolor{orange}{1}\textcolor{blue}{0}\textcolor{green}{1}\textcolor{purple}{1} \\ &= x \times \left( \textcolor{orange}{1} \times 2^{-1} + \textcolor{blue}{0} \times 2^{-2} + \textcolor{green}{1} \times 2^{-3} + \textcolor{purple}{1} \times 2^{-4} \right) \\ &= x \times \textcolor{orange}{1} \times 2^{-1} + x \times \textcolor{blue}{0} \times 2^{-2} + x \times \textcolor{green}{1} \times 2^{-3} + x \times \textcolor{purple}{1} \times 2^{-4} \\ &= 2^{-1} \left( x \times \textcolor{orange}{1} + \colorbox{lightgray}{$x \times \textcolor{blue}{0} \times 2^{-1} + x \times \textcolor{green}{1} \times 2^{-2} + x \times \textcolor{purple}{1} \times 2^{-3}$} \right) \\ &= 2^{-1} \left( x \times \textcolor{orange}{1} + 2^{-1} \left( x \times \textcolor{blue}{0} + \colorbox{lightgray}{$x \times \textcolor{green}{1} \times 2^{-1} + x \times \textcolor{purple}{1} \times 2^{-2}$} \right) \right) \\ &= 2^{-1} \left( x \times \textcolor{orange}{1} + 2^{-1} \left( x \times \textcolor{blue}{0} + 2^{-1} \left( x \times \textcolor{green}{1} + \colorbox{lightgray}{$x \times \textcolor{purple}{1} \times 2^{-1}$} \right) \right) \right) \\ &= 2^{-1} \left( x \times \textcolor{orange}{1} + 2^{-1} \left( x \times \textcolor{blue}{0} + 2^{-1} \left( x \times \textcolor{green}{1} + 2^{-1} \left( x \times \textcolor{purple}{1} + 0 \right) \right) \right) \right) \end{align*}
+                $$
+                </div>
+                <p>我们对最终得到的这种形式进行分析：</p>
+                <p>步骤一：被乘数x加0，得到结果</p>
+                <p>步骤二：将步骤一得到的结果右移一位，得到结果</p>
+                <p>由于该结果是最终乘积的一部分，因此也称为部分积</p>
+                <p>步骤三：被乘数x加步骤二得到的部分积，得到结果</p>
+                <p>步骤四：将步骤三得到的结果右移一位，得到新的部分积</p>
+                <p>步骤五：相当于被乘数0加步骤四得到的部分积，得到结果</p>
+                <p>步骤六：将步骤五得到的结果右移一位，得到新的部分积</p>
+                <p>步骤七：被乘数x加步骤六得到的部分积，得到结果</p>
+                <p>步骤八：将步骤七得到的结果右移一位，得到最终乘积</p>
+                <p>从上述过程可知，本例一共进行了4个轮次的先加法后移位的运算</p>
+                
+                <h2>无符号数乘法运算的硬件逻辑实现</h2>
+                <p>（内容）</p>
+                
+                <h2>无符号数乘法运算的举例</h2>
+                <div class="article-table-container">
+                <table class="article-table">
+                <thead>
+                <tr><th></th><th>加数<br>被乘数</th><th>进位<br>信号</th><th>被加数、和<br>乘积高位</th><th>乘数<br>乘积低位</th></tr>
+                <tr><th></th><th>X</th><th>C<sub>out</sub></th><th>ACC</th><th>MQ</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>初始状态</td><td>1101</td><td>0</td><td>0000</td><td>1011</td></tr>
+                <tr><td>(X)+(ACC) → ACC</td><td>1101</td><td>0</td><td>1101</td><td>1011</td></tr>
+                <tr><td>(C<sub>out</sub>)、(ACC)、(MQ) >> 1</td><td>1101</td><td>0</td><td>0110</td><td>1101</td></tr>
+                <tr><td>(X)+(ACC) → ACC</td><td>1101</td><td>1</td><td>0011</td><td>1101</td></tr>
+                <tr><td>(C<sub>out</sub>)、(ACC)、(MQ) >> 1</td><td>1101</td><td>0</td><td>1001</td><td>1110</td></tr>
+                <tr><td>(C<sub>out</sub>)、(ACC)、(MQ) >> 1</td><td>1101</td><td>0</td><td>0100</td><td>1111</td></tr>
+                <tr><td>(X)+(ACC) → ACC</td><td>1101</td><td>1</td><td>0001</td><td>1111</td></tr>
+                <tr><td>(C<sub>out</sub>)、(ACC)、(MQ) >> 1</td><td>1101</td><td>0</td><td>1000</td><td>1111</td></tr>
+                </tbody>
+                </table>
+                </div>
+                
+                <h2>一位乘法的含义</h2>
+                <p>这里的一位乘法并不是指参与乘法运算的两个操作数都是一位的，而是指在乘法运算过程中，每次根据乘数中的一位来计算位积</p>
+                
+                <h2>原码一位乘法的方法</h2>
+                <p>设 \( [X]_{\text{原}} = \textcolor{blue}{X_0}.X_1X_2\cdots X_n,\ [Y]_{\text{原}} = \textcolor{blue}{Y_0}.Y_1Y_2\cdots Y_n \) ，其中 \( \textcolor{blue}{X_0} \) 和 \( \textcolor{blue}{Y_0} \) 分别为 \( [X]_{\text{原}} \) 和 \( [Y]_{\text{原}} \) 的符号位。</p>
+                <div>
+                $$
+                \text{则 } [X]_{\text{原}} \times [Y]_{\text{原}} = [X \times Y]_{\text{原}} =  \smash{\underset{\underset{\LARGE\text{乘积的}\textcolor{blue}{\text{符号位}}}{\Huge\downarrow}}{\textcolor{blue}{X_0 \oplus Y_0}}}  \cdot  \left( \left( \smash{\underset{\underset{\LARGE|X|}{\Huge\downarrow}}{0.X_1X_2\cdots X_n}} \right)  \times  \left( \smash{\underset{\underset{\LARGE|Y|}{\Huge\downarrow}}{0.Y_1Y_2\cdots Y_n}} \right) \right) \\[4em]
+                $$
+                </div>
+                
+                <h2>原码一位乘法的逻辑框图</h2>
+                <p>（内容）</p>
+                
+                <h2>原码一位乘法的举例</h2>
+                <div class="article-table-container">
+                <table class="article-table">
+                <thead>
+                <tr><th></th><th>加数<br>被乘数</th><th>进位<br>信号</th><th>被加数、和<br>乘积高位</th><th>乘数<br>乘积低位</th></tr>
+                <tr><th></th><th>X</th><th>C<sub>out</sub></th><th>ACC</th><th>MQ</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>初始状态</td><td>01101</td><td>0</td><td>00000</td><td>01011</td></tr>
+                <tr><td>(X)+(ACC) → ACC</td><td>01101</td><td>0</td><td>01101</td><td>01011</td></tr>
+                <tr><td>(C<sub>out</sub>)、(ACC)、(MQ) >> 1</td><td>01101</td><td>0</td><td>00110</td><td>10101</td></tr>
+                <tr><td>(X)+(ACC) → ACC</td><td>01101</td><td>0</td><td>10011</td><td>10101</td></tr>
+                <tr><td>(C<sub>out</sub>)、(ACC)、(MQ) >> 1</td><td>01101</td><td>0</td><td>01001</td><td>11010</td></tr>
+                <tr><td>(C<sub>out</sub>)、(ACC)、(MQ) >> 1</td><td>01101</td><td>0</td><td>00100</td><td>11101</td></tr>
+                <tr><td>(X)+(ACC) → ACC</td><td>01101</td><td>0</td><td>10001</td><td>11101</td></tr>
+                <tr><td>(C<sub>out</sub>)、(ACC)、(MQ) >> 1</td><td>01101</td><td>0</td><td>01000</td><td>11110</td></tr>
+                </tbody>
+                </table>
+                </div>
+                
+                <h2>布斯算法的推导和分析</h2>
+                <p>被乘数 \( X\quad [X]_{\text{补}} = \textcolor{blue}{X_0}.X_1X_2\cdots X_n,\quad \) 乘数 \( Y\quad [Y]_{\text{补}} = \textcolor{blue}{Y_0}.Y_1Y_2\cdots Y_n \) </p>
+                <p>被乘数X的符号任意、乘数Y的符号为正时，</p>
+                <p> \( \textcolor{red}{根据补码定义可得：}\quad [X]_{\text{补}} = \textcolor{blue}{2} + X = 2^{n+1} + X \pmod{2} \)  \( \quad [Y]_{\text{补}} = \textcolor{blue}{Y_0}.Y_1Y_2\cdots Y_n \) </p>
+                <div>
+                $$
+                \begin{align*} [X]_{\text{补}} \times [Y]_{\text{补}} &= [X]_{\text{补}} \times Y = \left(2^{n+1}+X\right) \times Y &&= 2^{n+1} \times Y + X \times Y \\ & &&= 2^{n+1} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n + X \times Y \\ & &&= 2 \times \left(2^n \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n\right) + X \times Y = 2 \times \left(Y_1Y_2\cdots Y_n\right) + X \times Y \end{align*}
+                $$
+                </div>
+                <div>
+                $$
+                [X]_{\text{补}} \times [Y]_{\text{补}} = 2 + X \times Y = [X \times Y]_{\text{补}}
+                $$
+                </div>
+                <p>被乘数X的符号任意、乘数Y的符号为负时，</p>
+                <div>
+                $$
+                \text{被乘数}x\text{的符号任意，乘数}y\text{的符号为正}\quad [X \times Y]_{\text{补}} = [X]_{\text{补}} \times Y \quad\quad\quad(1)
+                $$
+                </div>
+                <div>
+                $$
+                \begin{align*} \textcolor{red}{根据补码定义可得：}\quad [Y]_{\text{补}} &= 2 + Y = \textcolor{blue}{1}.Y_1Y_2\cdots Y_n \pmod{2} \\ Y &= [Y]_{\text{补}} - 2 = \textcolor{blue}{1}.Y_1Y_2\cdots Y_n - 2 = \textcolor{blue}{1} + \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - 2 = \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - 1 \\ X \times Y &= X \times \left(\textcolor{blue}{0}.Y_1Y_2\cdots Y_n - 1\right) = X \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - X \quad \text{对该式两边同时求补可得：} \\ [X \times Y]_{\text{补}} &= \left[X \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - X\right]_{\text{补}} \quad \text{根据补码减法公式可得：} \\ &= \left[X \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n\right]_{\text{补}} - [X]_{\text{补}} \quad \text{根据上面的式(1)可得：} \\ &= [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - [X]_{\text{补}} \end{align*}
+                $$
+                </div>
+                <p>综上，</p>
+                <div>
+                $$
+                [X \times Y]_{\text{补}} = [X]_{\text{补}} \times Y \quad\quad\quad(1)
+                $$
+                </div>
+                <div>
+                $$
+                [X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - [X]_{\text{补}} \quad\quad\quad(1)
+                $$
+                </div>
+                <div>
+                $$
+                \begin{gather*} \text{符号位参与运算}\quad [X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - [X]_{\text{补}} \times \textcolor{blue}{Y_0} \quad (\text{引入了乘数}Y\text{的符号位}\textcolor{blue}{Y_0}) \\ \text{当乘数}Y\text{的符号为正，则}\textcolor{blue}{Y_0}=0,\quad [X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n \quad (\text{与上面左侧式子一致}) \\ \text{当乘数}Y\text{的符号为负，则}\textcolor{blue}{Y_0}=1,\quad [X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - [X]_{\text{补}} \quad (\text{与上面右侧式子一致}) \end{gather*}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{flalign*} &符号位参与运算\quad [X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - [X]_{\text{补}} \times \textcolor{blue}{Y_0} \quad (\text{引入了乘数}Y\text{的符号位}\textcolor{blue}{Y_0}) &\\ &当乘数Y\text{的符号为正，则}\textcolor{blue}{Y_0}=0,\quad [X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n \quad (\text{与上面左侧式子一致}) &\\ &当乘数Y\text{的符号为负，则}\textcolor{blue}{Y_0}=1,\quad [X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - [X]_{\text{补}} \quad (\text{与上面右侧式子一致}) & \end{flalign*}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{flalign*} &被乘数X\quad [X]_{\text{补}} = X_0.X_1X_2\cdots X_n \quad \text{乘数}Y\quad [Y]_{\text{补}} = \textcolor{blue}{Y_0}.Y_1Y_2\cdots Y_n &\\ &[X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - [X]_{\text{补}} \times \textcolor{blue}{Y_0} &\\ &= [X]_{\text{补}} \times \left(Y_1 \times 2^{-1} + Y_2 \times 2^{-2} + \dots + Y_n \times 2^{-n}\right) - [X]_{\text{补}} \times \textcolor{blue}{Y_0} &\\ &= [X]_{\text{补}} \times \left(-\textcolor{blue}{Y_0} + Y_1 \times 2^{-1} + Y_2 \times 2^{-2} + \dots + Y_n \times 2^{-n}\right) &\\ &= [X]_{\text{补}} \times \left(-\textcolor{blue}{Y_0} + \left(Y_1 - Y_1 \times 2^{-1}\right) + \left(Y_2 \times 2^{-1} - Y_2 \times 2^{-2}\right) + \dots + \left(Y_n \times 2^{-(n-1)} - Y_n \times 2^{-n}\right)\right) &\\ &= [X]_{\text{补}} \times \left(-\textcolor{blue}{Y_0} + Y_1 - Y_1 \times 2^{-1} + Y_2 \times 2^{-1} - Y_2 \times 2^{-2} + \dots + Y_n \times 2^{-(n-1)} - Y_n \times 2^{-n}\right) &\\ &= [X]_{\text{补}} \times \left(\left(Y_1 - \textcolor{blue}{Y_0}\right) + 2^{-1}\left(Y_2 - Y_1\right) + 2^{-2}\left(Y_3 - Y_2\right) + \dots + 2^{-(n-1)}\left(Y_n - Y_{n-1}\right) + 2^{-n}\left(0 - Y_n\right)\right) &\\ &= \left(Y_1 - \textcolor{blue}{Y_0}\right)[X]_{\text{补}} + 2^{-1}\left(Y_2 - Y_1\right)[X]_{\text{补}} + 2^{-2}\left(Y_3 - Y_2\right)[X]_{\text{补}} + \dots + 2^{-(n-1)}\left(Y_n - Y_{n-1}\right)[X]_{\text{补}} + 2^{-n}\left(0 - Y_n\right)[X]_{\text{补}} &\\ &= \left(Y_1 - \textcolor{blue}{Y_0}\right)[X]_{\text{补}} + 2^{-1}\left(\left(Y_2 - Y_1\right)[X]_{\text{补}} + 2^{-1}\left(Y_3 - Y_2\right)[X]_{\text{补}} + \dots + 2^{-(n-1)+1}\left(Y_n - Y_{n-1}\right)[X]_{\text{补}} + 2^{-n+1}\left(0 - Y_n\right)[X]_{\text{补}}\right) &\\ &= \left(Y_1 - \textcolor{blue}{Y_0}\right)[X]_{\text{补}} + 2^{-1}\left(\left(Y_2 - Y_1\right)[X]_{\text{补}} + 2^{-1}\left(\left(Y_3 - Y_2\right)[X]_{\text{补}} + \dots + 2^{-(n-1)+2}\left(Y_n - Y_{n-1}\right)[X]_{\text{补}} + 2^{-n+2}\left(0 - Y_n\right)[X]_{\text{补}}\right)\right) &\\ &\vdots &\\ &= 2^{-1}\left(2^{-1}\left(2^{-1}\left(0 + \left(0 - Y_n\right)[X]_{\text{补}}\right) + \left(Y_n - Y_{n-1}\right)[X]_{\text{补}} + \dots + \left(Y_2 - Y_1\right)[X]_{\text{补}}\right) + \left(Y_1 - \textcolor{blue}{Y_0}\right)[X]_{\text{补}}\right) & \end{flalign*}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{flalign*} &[X \times Y]_{\text{补}} = [X]_{\text{补}} \times \textcolor{blue}{0}.Y_1Y_2\cdots Y_n - [X]_{\text{补}} \times \textcolor{blue}{Y_0} &\\ &= 2^{-1}\!\left(2^{-1}\!\left(2^{-1}\!\left(0+\left(\textcolor{red}{Y_{n+1}}-Y_n\right)[X]_{\text{补}}\right)+\left(Y_n-Y_{n-1}\right)[X]_{\text{补}}\right)+\dots+\left(Y_2-Y_1\right)[X]_{\text{补}}+\left(Y_1-\textcolor{blue}{Y_0}\right)[X]_{\text{补}}\right) & \end{flalign*}
+                $$
+                </div>
+                <p>从以上公式可以看出，进行n个轮次的加法和右移一位的操作，最后还要做一次加法才能得到最终的乘积</p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <thead>
+                <tr><th> \( Y_{i+1}-Y_i \) </th><th>操    作</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>0</td><td>部分积 \( +0 \) </td></tr>
+                <tr><td>1</td><td>部分积 \( +[X]_{\text{补}} \) </td></tr>
+                <tr><td> \( -1 \) </td><td>部分积 \( -[X]_{\text{补}} \) ，相当于 部分积 \( +[-X]_{\text{补}} \) </td></tr>
+                </tbody>
+                </table>
+                </div>
+                
+                <h2>布斯算法的硬件逻辑实现</h2>
+                <p>（内容）</p>
+                
+                <h2>布斯算法的举例</h2>
+                <div>
+                $$
+                \begin{flalign*} &设\ x=-0.1001,\ y=-0.1101,\ 计算\ [x \times y]_{\text{补}}。\quad [x]_{\text{补}}=\textcolor{blue}{11}.0111,\ [-x]_{\text{补}}=\textcolor{blue}{00}.1001,\ [y]_{\text{补}}=\textcolor{blue}{1}.0011\textcolor{red}{0} &\\ &[x \times y]_{\text{补}} = 2^{-1}\!\left(2^{-1}\!\left(2^{-1}\!\left(2^{-1}\!\left(0+\left(\textcolor{red}{0}-1\right)[X]_{\text{补}}\right)+\left(1-1\right)[X]_{\text{补}}+\left(1-0\right)[X]_{\text{补}}+\left(0-0\right)[X]_{\text{补}}\right)+\left(0-1\right)[X]_{\text{补}}\right)\right) &\\ &= 2^{-1}\!\left(2^{-1}\!\left(2^{-1}\!\left(2^{-1}\!\left(0+[-X]_{\text{补}}\right)+0\right)+[X]_{\text{补}}+0\right)+[-X]_{\text{补}}\right) & \end{flalign*}
+                $$
+                </div>
+                <div class="article-table-container">
+                <table class="article-table">
+                <thead>
+                <tr><th></th><th>加数<br>被乘数</th><th>被加数、和<br>乘积高位</th><th>乘数<br>乘积低位</th></tr>
+                <tr><th></th><th>X</th><th>ACC</th><th>MQ</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>初始状态</td><td>110111</td><td>000000</td><td>100110</td></tr>
+                <tr><td> \( (\overline{X}+1)+(\text{ACC}) \to \text{ACC} \) </td><td>110111</td><td>001001</td><td>100110</td></tr>
+                <tr><td>(ACC)、(MQ) >> 1</td><td>110111</td><td>000100</td><td>110011</td></tr>
+                <tr><td>全0+(ACC) → ACC</td><td>110111</td><td>000100</td><td>110011</td></tr>
+                <tr><td>(ACC)、(MQ) >> 1</td><td>110111</td><td>000010</td><td>011001</td></tr>
+                <tr><td>(X)+(ACC) → ACC</td><td>110111</td><td>111001</td><td>011001</td></tr>
+                <tr><td>(ACC)、(MQ) >> 1</td><td>110111</td><td>111100</td><td>101100</td></tr>
+                <tr><td>(X)+(ACC) → ACC</td><td>110111</td><td>111100</td><td>101100</td></tr>
+                <tr><td>(ACC)、(MQ) >> 1</td><td>110111</td><td>111110</td><td>010110</td></tr>
+                <tr><td> \( (\overline{X}+1)+(\text{ACC}) \to \text{ACC} \) </td><td>110111</td><td>000111</td><td>010110</td></tr>
+                </tbody>
+                </table>
+                </div>
+                
+                <h2>一位乘法的缺点</h2>
+                <p>原码、补码一位乘法的硬件逻辑实现需要在时钟节拍下，通过控制逻辑的控制，执行相应轮次的加法、右移操作来实现，速度较慢</p>
+                <p>为了提高运算速度，可以仅采用组合逻辑电路，以专用硬件方式构建阵列乘法器</p>
+                <p>构建阵列乘法器的基本思想是模仿二进制乘法的计算方法</p>
+                
+                <h2>仅采用组合逻辑电路实现的无符号阵列乘法器</h2>
+                <div>
+                $$
+                \begin{array}{l@{\hspace{1em}}cccc} & \text{被乘数 }X & & & X_3 & X_2 & X_1 & X_0 \\ &\text{乘数 }Y & & & Y_3 & Y_2 & Y_1 & Y_0 \\ \times & & & & \\ \hline & & & & X_3Y_0 & X_2Y_0 & X_1Y_0 & X_0Y_0 \\ & & & X_3Y_1 & X_2Y_1 & X_1Y_1 & X_0Y_1 \\ & & X_3Y_2 & X_2Y_2 & X_1Y_2 & X_0Y_2 \\ +& X_3Y_3 & X_2Y_3 & X_1Y_3 & X_0Y_3 \\ \hline \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{array}{rccccccc} & \text{被乘数 }X & & & X_3 & X_2 & X_1 & X_0 \\ & & & & 1 & 0 & 1 & 1 \\ & \text{乘数 }Y & & & Y_3 & Y_2 & Y_1 & Y_0 \\ & & & & 1 & 1 & 0 & 1 \\ \times & & & & & \\ \hline & & & & X_3Y_0 & X_2Y_0 & X_1Y_0 & X_0Y_0 \\ & & & & 1 & 0 & 1 & 1 \\ & & & X_3Y_1 & X_2Y_1 & X_1Y_1 & X_0Y_1 \\ & & & 0 & 0 & 0 & 0 \\ & & X_3Y_2 & X_2Y_2 & X_1Y_2 & X_0Y_2 \\ & & 1 & 0 & 1 & 1 \\ + & X_3Y_3 & X_2Y_3 & X_1Y_3 & X_0Y_3 \\ & 1 & 0 & 1 & 1 \\ \hline 1 & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\ \end{array}
+                $$
+                </div>
+                
+                <h2>阵列乘法器的性能</h2>
+                <p>（内容）</p>
+                
+                <h2>补码阵列乘法器</h2>
+                <p>由于计算机中采用补码表示数据，因此需要设法基于无符号阵列乘法器设计补码阵列乘法器。</p>
+                <p>对于n×n无符号阵列乘法器，其输入为n位无符号被乘数和n位无符号乘数，而输出为2n位无符号乘积</p>
+                <p>如果不考虑原码的符号位，则原码的数值位可看作是无符号数</p>
+                <p>换句话说，如果将原码的符号位单独处理，则原码乘法运算可将被乘数原码的数值位和乘数原码的数值位直接带入无符号阵列乘法器进行运算，得到的结果为无符号乘积，在其前面添加单独处理的符号位，即可得到原码乘法的结果</p>
+                
+                <h2>求补电路的两种实现</h2>
+                <p>（内容）</p>
+                
+                <h2>原码除法的方法</h2>
+                <p>原码除法运算的方法包含恢复余数法和不恢复余数法两种</p>
+                <p>由于原码表示与无符号数非常类似，仅比无符号数多一个符号，因此进行原码除法运算时，可将符号位与数值部分分开处理</p>
+                <ul>
+                <li>商的符号由被除数和除数各自的符号进行异或运算求得；</li>
+                <li>商的数值部分，由被除数和除数各自的数值部分（也就是真值的绝对值）相除求得</li>
+                </ul>
+                <div>
+                $$
+                \begin{aligned} &\text{设 }[X]_{\text{原}}=\textcolor{blue}{X_0}.X_1X_2\cdots X_n,\ [Y]_{\text{原}}=\textcolor{blue}{Y_0}.Y_1Y_2\cdots Y_n,\ \text{其中 }\textcolor{blue}{X_0}\text{ 和 }\textcolor{blue}{Y_0}\text{ 分别为 }[X]_{\text{原}}\text{ 和 }[Y]_{\text{原}}\text{ 的符号位} \\[4pt] &\text{则 }[X]_{\text{原}}\div[Y]_{\text{原}} = [X\div Y]_{\text{原}} = \textcolor{blue}{X_0\oplus Y_0}.\big(\big(0.X_1X_2\cdots X_n\big)\div\big(0.Y_1Y_2\cdots Y_n\big)\big) \\ &\qquad\qquad\qquad\qquad\qquad\downarrow\qquad\qquad\qquad\qquad\downarrow\qquad\qquad\qquad\qquad\downarrow \\ &\qquad\qquad\qquad\quad\ \text{商的符号位}\qquad\qquad\quad |X|\qquad\qquad\qquad\quad |Y| \end{aligned}
+                $$
+                </div>
+                <p>以上是定点小数（也就是纯小数）原码除法运算的处理方法</p>
+                <p>为了确保商和余数也为定点小数（也就是不发生溢出），上述除法的条件为：被除数x的绝对值小于除数y的绝对值</p>
+                <p>同理，定点整数原码除法运算的条件为：被除数x的绝对值大于等于除数y的绝对值</p>
+                <p>原码除法的法则：</p>
+                <ol>
+                <li>
+                <p>前提条件：</p>
+                <ul>
+                <li>除数 ≠ 0</li>
+                <li>定点小数：|被除数| &lt; |除数|</li>
+                <li>定点整数：|被除数| ≥ |除数|</li>
+                </ul>
+                </li>
+                <li>商的符号 = 被除数的符号 ⊕ 除数的符号</li>
+                <li>|商| = |被除数| ÷ |除数|</li>
+                <li>将商的符号与|商|拼接在一起</li>
+                </ol>
+                
+                <h2>二进制除法的笔算过程</h2>
+                <div>
+                $$
+                \quad\quad\ \ 0.1101 \\ 1011 \overline{)1001} \\ \quad\ \ \underline{-0000\ \ } \\ \quad\quad\ 10010\ \ \\ \quad\ \ \underline{-1011\ \ } \\ \quad\quad\ \ 1110\ \ \\ \quad\ \ \ \underline{-1011\ \ } \\ \quad\quad\ \ \ 1100\ \\ \quad\ \ \ \ \underline{-1011\ } \\ \quad\quad\ \ \ \ 0001
+                $$
+                </div>
+                
+                <h2>模仿二进制除法笔算方法的机器实现（恢复余数法）</h2>
+                <div>
+                $$
+                \renewcommand{\arraystretch}{1.3} \begin{array}{r@{\quad}l} & \color{red}0.\color{teal}1\color{red}1\color{teal}0\color{red}1 \\ 1011 & \big/\overline{\,1001} \\ & \underline{-\;1011} \\ & \;\;-10 \;\color{red}{<0} \\ \color{red}\textbf{恢复余数} & \underline{+\;1011} \\ & \;\;1001\,\boxed{0} \\ & \underline{-\;\;\;1011} \\ & \;\;\;\;111\,\boxed{0} \\ & \underline{-\;\;\;1011} \\ & \;\;\;\;\;110\,\boxed{0} \\ & \underline{-\;\;\;\;\;1011} \\ & \;\;\;\;-101 \;\color{red}{<0} \\ \color{red}\textbf{恢复余数} & \underline{+\;\;\;\;\;1011} \\ & \;\;\;\;\;110\,\boxed{0} \\ & \underline{-\;\;\;\;\;\;1011} \\ & 0.00000001 \end{array}
+                $$
+                </div>
+                <div>
+                $$
+                \renewcommand{\arraystretch}{1.4} \begin{array}{r@{\quad}l} & \color{red}0.\color{cyan}1\color{red}1\color{cyan}0\color{red}1 \\ 1011 & \big/\overline{\,1001} \\ & \underline{-\;1011} \\ & \;\;-10 \;\color{red}{<0} \\ \color{red}\textbf{恢复余数} & \colorbox{gray!25}{$\underline{+\;1011}$} \\ & \colorbox{gray!25}{$\;\;1001\,\boxed{0}$} \\ & \underline{-\;\;\;1011} \\ & \;\;\;\;111\,\boxed{0} \\ & \underline{-\;\;\;1011} \\ & \;\;\;\;\;110\,\boxed{0} \\ & \underline{-\;\;\;\;\;1011} \\ & \;\;\;\;-101 \;\color{red}{<0} \\ \color{red}\textbf{恢复余数} & \colorbox{gray!25}{$\underline{+\;\;\;\;\;1011}$} \\ & \colorbox{gray!25}{$\;\;\;\;\;110\,\boxed{0}$} \\ & \underline{-\;\;\;\;\;\;1011} \\ & 0.00000001 \end{array}
+                $$
+                </div>
+                <p>分子/分母</p>
+                
+                <h2>原码除法运算的流程图</h2>
+                <p>（内容）</p>
+                
+                <h2>[|x|]补、[|y|]补、[-|y|]补</h2>
+                <p>（内容）</p>
+                
+                <h2>原码除法—恢复余数法举例</h2>
+                <div>
+                $$
+                \begin{flalign*} &\text{【举例】设 }[x]_{\text{原}} = \textcolor{blue}{1}.1001,\ [y]_{\text{原}} = \textcolor{blue}{0}.1011,\ \text{用恢复余数法求 }[x]_{\text{原}} \div [y]_{\text{原}}。 &\\ &\text{解析：} &\\ &\quad [|x|]_{\text{补}} = \textcolor{blue}{0}.1001 &\\ &\quad [|y|]_{\text{补}} = \textcolor{blue}{0}.1011 &\\ &\quad [-|y|]_{\text{补}} = \textcolor{blue}{1}.0101 &\\ &\quad \text{商的符号} = x\text{的符号} \oplus y\text{的符号} &\\ &\qquad\qquad = \textcolor{blue}{1} \oplus \textcolor{blue}{0} = \textcolor{blue}{1} &\\ &\quad [x]_{\text{原}} \div [y]_{\text{原}} = \textcolor{blue}{1}.1101 &\\ &\quad \text{余数}R = 0.0001 \times 2^{-4} & \end{flalign*}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{flalign*} \begin{array}{l r r l} & \text{余数}R & \text{商}Q & \\ & \textcolor{blue}{0}.1001 & 0.0000 & \text{初始余数}R_0\text{就是被除数}x \\ +[-|y|]_{\text{补}} & \textcolor{blue}{1}.0101 & & \\ \hline & 1.1110 & 0.000\textcolor{red}{0} & R_1<0,\ \text{上商}\textcolor{red}{0} \\ +[|y|]_{\text{补}} & \textcolor{blue}{0}.1011 & & \text{加上除数}y,\ \textcolor{red}{\text{恢复余数}} \\ \hline & 0.1001 & & \\ & \textcolor{blue}{1}.0010 & 0.00\textcolor{red}{0} & R\text{和}Q\text{一起左移一位} \\ +[-|y|]_{\text{补}} & \textcolor{blue}{1}.0101 & & \text{减去除数}y \\ \hline & 0.0111 & 0.00\textcolor{red}{0}\textcolor{green}{1} & R_2>0,\ \text{上商}\textcolor{green}{1} \\ & 0.1110 & 0.0\textcolor{red}{0}\textcolor{green}{1} & R\text{和}Q\text{一起左移一位} \\ +[-|y|]_{\text{补}} & \textcolor{blue}{1}.0101 & & \text{减去除数}y \\ \hline & 0.0011 & 0.0\textcolor{red}{0}\textcolor{green}{1}\textcolor{green}{1} & R_3>0,\ \text{上商}\textcolor{green}{1} \\ & 0.0110 & 0.\textcolor{red}{0}\textcolor{green}{1}\textcolor{green}{1} & R\text{和}Q\text{一起左移一位} \\ +[-|y|]_{\text{补}} & \textcolor{blue}{1}.0101 & & \text{减去除数}y \\ \hline & 1.1011 & 0.\textcolor{red}{0}\textcolor{green}{1}\textcolor{green}{1}\textcolor{red}{0} & R_4<0,\ \text{上商}\textcolor{red}{0} \\ +[|y|]_{\text{补}} & \textcolor{blue}{0}.1011 & & \text{加上除数}y,\ \textcolor{red}{\text{恢复余数}} \\ \hline & 0.0110 & & \\ & \textcolor{blue}{0}.1100 & \textcolor{red}{0}.\textcolor{green}{1}\textcolor{green}{1}\textcolor{red}{0} & R\text{和}Q\text{一起左移一位} \\ +[-|y|]_{\text{补}} & \textcolor{blue}{1}.0101 & & \text{减去除数}y \\ \hline & 0.0001 & \textcolor{red}{0}.\textcolor{green}{1}\textcolor{green}{1}\textcolor{red}{0}\textcolor{green}{1} & R_5>0,\ \text{上商}\textcolor{green}{1} \\ \end{array} & \end{flalign*}
+                $$
+                </div>
+                
+                <h2>Ri、Qi、除数y、Ri+1</h2>
+                <p>在使用恢复余数法进行原码除法运算的过程中，可能需要恢复余数，并且恢复余数的次数和具体的操作数相关，极端情况下呢，每一步运算都需要恢复余数</p>
+                <p>因此，恢复余数法的最大缺点是运算时间不确定，另外其控制电路也比较复杂</p>
+                <div>
+                $$
+                \begin{flalign*} &\text{将运算过程中某次的余数记为 } R_i &\\ &\text{将相应的上商位记为 } Q_i &\\[6pt] &\text{若 } R_i \geq 0 &\\ &\quad \text{则 } Q_i = \textcolor{green}{1}, \quad R_{i+1} = 2R_i - y &\\[12pt] &\text{若 } R_i < 0 &\\ &\quad \text{则 } Q_i = \textcolor{red}{0}, \quad R_{i+1} = 2(R_i + y) - y = 2R_i + y & \end{flalign*}
+                $$
+                </div>
+                <p>当余数Rᵢ &lt; 0时，可以将余数Rᵢ直接左移一位后，加上除数y来得到下一个新余数Rᵢ₊₁，这样就跳过了恢复余数这一步，因此称为不恢复余数法</p>
+                <p>这一操作用可控加减法电路非常容易实现</p>
+                <p>由于运算过程中，分别用加法和减法交替计算余数，所以不恢复余数法也称为加减交替法</p>
+                
+                <h2>原码除法—不恢复余数法举例</h2>
+                <div>
+                $$
+                \begin{flalign*} &\text{【举例】设 }[x]_{\text{原}} = \textcolor{blue}{1}.1001,\ [y]_{\text{原}} = \textcolor{blue}{0}.1011,\ \text{用不恢复余数法} &\\ &\qquad\qquad\qquad\qquad\qquad\qquad\ \text{求 }[x]_{\text{原}} \div [y]_{\text{原}}。 &\\[8pt] &\text{解析：}\quad [|x|]_{\text{补}} = \textcolor{blue}{0}.1001 \qquad\quad [|y|]_{\text{补}} = \textcolor{blue}{0}.1011 \qquad\quad [-|y|]_{\text{补}} = \textcolor{blue}{1}.0101 & \end{flalign*}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{flalign*} \begin{array}{l r r r l} & \text{进位}C_{out} & \text{余数}R & \text{商}Q & \\ & & \textcolor{blue}{0}.1001 & 0.0000 & \text{初始余数}R_0\text{是被除数} \\ +[-|y|]_{\text{补}} & & \textcolor{blue}{1}.0101 & & \text{减去除数}y \\ \hline & \textcolor{purple}{0} & \textcolor{blue}{1}.1110 & 0.000\textcolor{red}{0} & R_1<0,\ \text{上商}\textcolor{red}{0} \\ & & \textcolor{blue}{1}.1100 & 0.00\textcolor{red}{0} & R\text{和}Q\text{一起左移一位} \\ +[|y|]_{\text{补}} & & \textcolor{blue}{0}.1011 & & \text{加上除数}y \\ \hline & \textcolor{purple}{1} & \textcolor{blue}{0}.0111 & 0.00\textcolor{red}{0}\textcolor{green}{1} & R_2>0,\ \text{上商}\textcolor{green}{1} \\ & & \textcolor{blue}{0}.1110 & 0.0\textcolor{red}{0}\textcolor{green}{1} & R\text{和}Q\text{一起左移一位} \\ +[-|y|]_{\text{补}} & & \textcolor{blue}{1}.0101 & & \text{减去除数}y \\ \hline & \textcolor{purple}{1} & \textcolor{blue}{0}.0011 & 0.0\textcolor{red}{0}\textcolor{green}{1}\textcolor{green}{1} & R_3>0,\ \text{上商}\textcolor{green}{1} \\ & & \textcolor{blue}{0}.0110 & 0.\textcolor{red}{0}\textcolor{green}{1}\textcolor{green}{1} & R\text{和}Q\text{一起左移一位} \\ +[-|y|]_{\text{补}} & & \textcolor{blue}{1}.0101 & & \text{减去除数}y \\ \hline & \textcolor{purple}{0} & \textcolor{blue}{1}.1011 & 0.\textcolor{red}{0}\textcolor{green}{1}\textcolor{green}{1}\textcolor{red}{0} & R_4<0,\ \text{上商}\textcolor{red}{0} \\ & & \textcolor{blue}{1}.0110 & \textcolor{red}{0}.\textcolor{green}{1}\textcolor{green}{1}\textcolor{red}{0} & R\text{和}Q\text{一起左移一位} \\ +[|y|]_{\text{补}} & & \textcolor{blue}{0}.1011 & & \text{加上除数}y \\ \hline & \textcolor{purple}{1} & \textcolor{blue}{0}.0001 & \textcolor{red}{0}.\textcolor{green}{1}\textcolor{green}{1}\textcolor{red}{0}\textcolor{green}{1} & R_5>0,\ \text{上商}\textcolor{green}{1} \\ \end{array} & \end{flalign*}
+                $$
+                </div>
+                
+                <h2>不恢复余数法注意点</h2>
+                <ol>
+                <li>
+                <p>最后一次运算上商时，若余数小于0，此时虽然所有上商位都已经得到了，但负余数还需要加上除数y恢复成正数。</p>
+                </li>
+                <li>
+                <p>不难发现，上商位与进位位的值是相同的。因此，在硬件逻辑实现时，可用加法器的进位输出作为上商的控制信号以及可控加减法电路的控制信号。</p>
+                </li>
+                </ol>
+                
+                <h2>如何确定商值</h2>
+                <p>与原码除法运算一样，补码除法运算也包含恢复余数法和不恢复余数法两种</p>
+                <p>与原码除法将符号位和数值部分分开处理不同，补码除法将符号位和数值部分一起参加运算，商符是在求商的过程中自然形成的</p>
+                <p>因此，补码除法的运算方法没有原码除法的运算方法直观，需要解决以下三个主要问题：分别是如何确定商值、如何形成商符、如何得到新余数</p>
+                <p>由于补码除法中的被除数、除数和中间余数都是有符号的，因此不能像原码除法那样将符号位单独处理，而直接用做减法来判断是否够减</p>
+                <p>补码除法判断是否够减的依据是：中间余数（初始为被除数）与除数之间符号的异同，以及相应做减法或加法后结果的符号</p>
+                <p>被除数记为 \( X \)     除数记为 \( Y \)     余数记为 \( R_i \) （初始余数为 \( R_0 \) ， \( R_1 \) 、 \( R_2 \) 、 \( R_3 \) ……表示中间余数）</p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <thead>
+                <tr><th> \( [X]_{\text{补}} \) 的符号位与 \( [Y]_{\text{补}} \) 的符号位</th><th>求 \( [R_1]_{\text{补}} \) </th><th>比较 \( [R_i]_{\text{补}} \) 与 \( [Y]_{\text{补}} \) 的符号</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>同号</td><td> \( [R_1]_{\text{补}} = [X]_{\text{补}} - [Y]_{\text{补}} \) </td><td>同号，表示“够减”</td></tr>
+                <tr><td>异号</td><td> \( [R_1]_{\text{补}} = [X]_{\text{补}} + [Y]_{\text{补}} \) </td><td>异号，表示“够减”</td></tr>
+                </tbody>
+                </table>
+                </div>
+                <ul>
+                <li>在判断出是否“够减”后，就可以确定相应的上商位的值:
+                <ul>
+                <li>若 \( [X]_{\text{补}} \) 与 \( [Y]_{\text{补}} \) 同号，则商为正，“够减”时上商1，“不够减”时上商0（按原码规则上商）。</li>
+                <li>若 \( [X]_{\text{补}} \) 与 \( [Y]_{\text{补}} \) 异号，则商为负，“够减”时上商0，“不够减”时上商1（按反码规则上商）。</li>
+                </ul>
+                </li>
+                </ul>
+                
+                <h2>如何形成商符</h2>
+                <p>被除数记为 \( X \)     除数记为 \( Y \)     余数记为 \( R_i \) （初始余数为 \( R_0 \) ， \( R_1 \) 、 \( R_2 \) 、 \( R_3 \) ……表示中间余数）</p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <thead>
+                <tr><th> \( [X]_{\text{补}} \) 的符号位与 \( [Y]_{\text{补}} \) 的符号位</th><th>求 \( [R_1]_{\text{补}} \) </th><th>比较 \( [R_i]_{\text{补}} \) 与 \( [Y]_{\text{补}} \) 的符号</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>同号(商为正)</td><td> \( [R_1]_{\text{补}} = [X]_{\text{补}} - [Y]_{\text{补}} \) </td><td>同号，表示“够减”，上商1<br>异号，表示“不够减”，上商0</td></tr>
+                <tr><td>异号(商为负)</td><td> \( [R_1]_{\text{补}} = [X]_{\text{补}} + [Y]_{\text{补}} \) </td><td>异号，表示“够减”，上商0<br>同号，表示“不够减”，上商1</td></tr>
+                </tbody>
+                </table>
+                </div>
+                
+                <h2>如何得到新余数</h2>
+                <p>新余数 \( [R_{i+1}]_{\text{补}} \) 的获取方法与原码除法不恢复余数法（加减交替法）是类似的，规则如下:</p>
+                <div class="article-table-container">
+                <table class="article-table">
+                <thead>
+                <tr><th> \( [R_i]_{\text{补}} \) 与 \( [Y]_{\text{补}} \) 的符号</th><th>上商位</th><th> \( [R_{i+1}]_{\text{补}} \) </th></tr>
+                </thead>
+                <tbody>
+                <tr><td>同号</td><td>1</td><td> \( [R_{i+1}]_{\text{补}} = 2[R_i]_{\text{补}} + [-Y]_{\text{补}} \) </td></tr>
+                <tr><td>异号</td><td>0</td><td> \( [R_{i+1}]_{\text{补}} = 2[R_i]_{\text{补}} + [Y]_{\text{补}} \) </td></tr>
+                </tbody>
+                </table>
+                </div>
+                <div class="article-table-container">
+                <table class="article-table">
+                <thead>
+                <tr><th> \( [X]_{\text{补}} \) 的符号位与 \( [Y]_{\text{补}} \) 的符号位</th><th>求 \( [R_1]_{\text{补}} \) </th><th>比较 \( [R_i]_{\text{补}} \) 与 \( [Y]_{\text{补}} \) 的符号</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>同号(商为正)</td><td> \( [R_1]_{\text{补}} = [X]_{\text{补}} - [Y]_{\text{补}} \) </td><td>同号，表示“够减”，上商1<br>异号，表示“不够减”，上商0</td></tr>
+                <tr><td>异号(商为负)</td><td> \( [R_1]_{\text{补}} = [X]_{\text{补}} + [Y]_{\text{补}} \) </td><td>异号，表示“够减”，上商0<br>同号，表示“不够减”，上商1</td></tr>
+                </tbody>
+                </table>
+                </div>
+                
+                <h2>补码除法—不恢复余数法举例</h2>
+                <div>
+                $$
+                \begin{flalign*} &\text{【举例】已知 }x=-0.1001,\ y=+0.1101,\ \text{求 }[x]_{\text{补}} \div [y]_{\text{补}}。 &\\[8pt] &\text{解析：}\quad [x]_{\text{补}} = \textcolor{blue}{1}.0111,\qquad [y]_{\text{补}} = \textcolor{blue}{0}.1101,\qquad [-y]_{\text{补}} = \textcolor{blue}{1}.0011, & \end{flalign*}
+                $$
+                </div>
+                <div>
+                $$
+                \begin{flalign*} \begin{array}{l r r l} & \text{余数}[R]_{\text{补}} & \text{商}[Q]_{\text{补}} & \\ & \textcolor{blue}{1}.0111 & 0.0000 & \text{初始余数}[R_0]_{\text{补}}\text{是}[x]_{\text{补}} \\ +[y]_{\text{补}} & \textcolor{blue}{0}.1101 & & \text{由于}[x]_{\text{补}}\text{与}[y]_{\text{补}}\text{异号，因此}[x]_{\text{补}}+[y]_{\text{补}} \\ \hline & \textcolor{blue}{0}.0100 & 0.000\textcolor{red}{1} & [R_1]_{\text{补}}\text{与}[y]_{\text{补}}\text{同号，上商}\textcolor{red}{1} \\ & \textcolor{blue}{0}.1000 & 0.00\textcolor{red}{1} & \ll 1 \\ +[-y]_{\text{补}} & \textcolor{blue}{1}.0011 & & +[-y]_{\text{补}} \\ \hline & \textcolor{blue}{1}.1011 & 0.00\textcolor{red}{1}\textcolor{green}{0} & [R_2]_{\text{补}}\text{与}[y]_{\text{补}}\text{异号，上商}\textcolor{green}{0} \\ & \textcolor{blue}{1}.0110 & 0.0\textcolor{red}{1}\textcolor{green}{0} & \ll 1 \\ +[y]_{\text{补}} & \textcolor{blue}{0}.1101 & & +[y]_{\text{补}} \\ \hline & \textcolor{blue}{0}.0011 & 0.0\textcolor{red}{1}\textcolor{green}{0}\textcolor{red}{1} & [R_3]_{\text{补}}\text{与}[y]_{\text{补}}\text{同号，上商}\textcolor{red}{1} \\ & \textcolor{blue}{0}.0110 & 0.\textcolor{red}{1}\textcolor{green}{0}\textcolor{red}{1} & \ll 1 \\ +[-y]_{\text{补}} & \textcolor{blue}{1}.0011 & & +[-y]_{\text{补}} \\ \hline & \textcolor{blue}{1}.1001 & 0.\textcolor{red}{1}\textcolor{green}{0}\textcolor{red}{1}\textcolor{green}{0} & [R_4]_{\text{补}}\text{与}[y]_{\text{补}}\text{异号，上商}\textcolor{green}{0} \\ & \textcolor{blue}{1}.0010 & \textcolor{red}{1}.\textcolor{green}{0}\textcolor{red}{1}\textcolor{green}{0}\textcolor{red}{1} & \ll 1,\ \textcolor{red}{\text{末位商恒置1}} \\ \end{array} & \end{flalign*}
+                $$
+                </div>
+                
+                <h2>浮点数加减运算的思想</h2>
+                <div>
+                $$
+                \begin{flalign*} &\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad \textcolor{red}{\text{对阶}} &\\ &0.132 \times 10^5 + \textcolor{yellow}{0.408 \times 10^2} = 0.132 \times 10^5 + \textcolor{yellow}{0.\textcolor{red}{000}408 \times 10^\textcolor{red}{5}} &\\[6pt] &\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad \textcolor{red}{\text{尾数运算}} &\\ &\qquad\qquad\qquad\qquad\qquad\qquad = \left( \textcolor{red}{0.132 + 0.000408} \right) \times 10^5 &\\[6pt] &\qquad\qquad\qquad\qquad\qquad\qquad = \textcolor{red}{0.132408 \times 10^5} &\\ &\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad \textcolor{red}{\text{结果规格化}} & \end{flalign*}
+                $$
+                </div>
+                <p>对阶、尾数运算、结果规格化、舍入处理</p>
+                
+                <h2>浮点数加减运算的举例</h2>
+                <p>（内容）</p>
+                
+                <h2>IEEE 754 浮点数加减运算和浮点数的加减运算的区别</h2>
+                <p>（内容）</p>
+                
+                <h2>IEEE 754 浮点数加减运算的举例</h2>
+                <p>（内容）</p>
+                
+                <h2>浮点乘法运算</h2>
+                <p>（内容）</p>
+                
+                <h2>浮点除法运算</h2>
+                <p>（内容）</p>
+                
+                <h2>什么是运算器</h2>
+                <p>（内容）</p>
+                
+                <h2>运算器的分类</h2>
+                <p>（内容）</p>
+                
+                <h2>一位ALU</h2>
+                <p>（内容）</p>
+                
+                <h2>n位ALU</h2>
+                <p>（内容）</p>
+                
+                <h2>常见的状态标志位</h2>
+                <p>（内容）</p>
+                
+                
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>

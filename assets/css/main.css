@@ -424,32 +424,32 @@ footer cite {
 
 /* 表格容器 */
 .article-table-container {
-    margin: 1.5em 0;                /* 上下外边距，与段落间距协调 */
-    border-radius: 12px;            /* 圆角，与卡片风格一致 */
-    overflow-x: auto;               /* 水平滚动，适配移动端宽表 */
+    margin: 1.5em 0;
+    border-radius: 12px;
+    overflow-x: auto;
     overflow-y: hidden;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05); /* 轻微阴影，与侧边栏统一 */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
 }
 
 /* 表格本体 */
 .article-table {
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.95); /* 半透白背景，融入内容卡片 */
-    border-collapse: collapse;      /* 边框合并，干净利落 */
+    background-color: rgba(255, 255, 255, 0.95);
+    border-collapse: collapse;
     font-family: "JetBrains Mono", "Times New Roman", "微软雅黑", Consolas;
     font-size: 14px;
     color: #222;
-    border-style: hidden;           /* 隐藏表格外框，由单元格边框负责 */
+    border-style: hidden;
     border-radius: 12px;
 }
 
-/* 表头与单元格通用样式 */
+/* 表头与单元格通用样式（默认水平居中 + 垂直居中） */
 .article-table th,
 .article-table td {
     padding: 10px 14px;
-    border: 1px solid #e9edf2;      /* 极浅灰边框，细腻柔和 */
-    text-align: left;
-    vertical-align: top;
+    border: 1px solid #e9edf2;
+    text-align: center;             /* 水平居中 */
+    vertical-align: middle;         /* 垂直居中（原为 top，现改为 middle） */
 }
 
 /* 表头样式 */
@@ -457,8 +457,14 @@ footer cite {
     background-color: rgba(240, 248, 255, 0.85);
     font-weight: 600;
     color: #2c3e50;
-    border-bottom: 2px solid #dce4ec; /* 底部加粗，区分表头 */
+    border-bottom: 2px solid #dce4ec;
     font-size: 14px;
+}
+
+/* 通过 id="left-align" 强制左对齐（垂直方向保持居中） */
+.article-table#left-align th,
+.article-table#left-align td {
+    text-align: left;
 }
 
 /* 行悬停效果 */
@@ -466,7 +472,7 @@ footer cite {
     background-color: rgba(240, 248, 255, 0.5);
 }
 
-/* 极淡斑马纹，辅助视线 */
+/* 极淡斑马纹 */
 .article-table tbody tr:nth-child(even) {
     background-color: rgba(0, 0, 0, 0.01);
 }
@@ -500,10 +506,10 @@ footer cite {
     text-align: center;
     font-style: italic;
     margin: 8px 0 12px 0;
-    caption-side: top;           /* 默认位于表格上方 */
+    caption-side: top;
 }
 
-/* 移动端适配：缩小内边距与字号 */
+/* 移动端适配 */
 @media (max-width: 768px) {
     .article-table th,
     .article-table td {
