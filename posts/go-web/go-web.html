@@ -65,9 +65,39 @@
         <!-- 中间正文 -->
         <div class="main-content-wrapper">
             <div class="article-content">
-                <h1>Go Web</h1>
-                
-                <h2></h2>
+                <pre><code class="language-go">package main
+
+import "fmt"
+
+/*
+    Unicode字符的字母、数字：
+        Lu  Uppercase Letter    如：A, Φ（大写希腊字母）
+        Ll  Lowercase Letter    如：a, φ, π（小写希腊字母）
+        Lo  Other Letter        如：家(中文), あ(日文)
+        Lm  Modifier Letter     如：ʰ（修饰字母）
+        Lt  Titlecase Letter    如：ǅ（标题字母）
+        Nd  Decimal Number      如：0, ９（十进制数字）
+*/
+
+func main() {
+    // 1.标识符由Unicode字符的 字母、数字以及下划线 组成，不能以数字开头
+    var _a1 int8 = 6
+    var π float64 = 3.1415926
+    var 变量 string = "中文变量名"
+    fmt.Println(_a1, π, 变量)
+
+    // 2.标识符不能包含特殊字符
+    // var a$ string = "你好"
+    // var a@ string = "你好"
+    // var a# string = "你好"
+    // var a? string = "你好"
+    // fmt.Println(a$,a@,a#,a?)
+
+    // 3.标识符不能是Go语言的关键字
+    // var break int = 100
+    // fmt.Println(break)
+}</code></pre>
+
                 
             </div>
         </div>

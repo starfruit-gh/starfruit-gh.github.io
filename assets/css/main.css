@@ -690,7 +690,7 @@ pre code.hljs,
 .code-switcher .code-lang-select {
     position: absolute;                /* 定位方式：绝对定位，相对于最近的非 static 祖先元素 */
     top: 8px;                          /* 距离顶部：8px */
-    right: 8px;                        /* 距离右侧：8px */
+    right: 72px;                        /* 距离右侧：72px */
     background: white;                 /* 背景颜色：白色 */
     border: 1px solid #ccc;            /* 边框：1px 实线，颜色 #ccc */
     border-radius: 4px;                /* 边框圆角：4px */
@@ -1189,4 +1189,97 @@ h6 .code-inline {
         height: 45px;                /* 高度45px */
         font-size: 22px;             /* 字体大小22px */
     }
+}
+
+/* ============================================================
+   23. 代码块复制按钮样式
+   ============================================================ */
+
+/* 给代码块容器开启相对定位，作为按钮定位基准 */
+pre, .code-switcher {
+    position: relative;
+}
+
+.code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 12px;
+    color: #9aa0a6;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.2s ease;
+    user-select: none;
+    line-height: 1.4;
+}
+
+.code-copy-btn:hover {
+    color: #c6cdd5;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* 双方框复制图标（纯CSS绘制） */
+.code-copy-btn .copy-icon {
+    position: relative;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+.code-copy-btn .copy-icon::before,
+.code-copy-btn .copy-icon::after {
+    content: '';
+    position: absolute;
+    box-sizing: border-box;
+    border: 1.5px solid currentColor;
+    border-radius: 2px;
+    background: transparent;
+}
+/* 后方方框 */
+.code-copy-btn .copy-icon::before {
+    top: 0;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    opacity: 0.6;
+}
+/* 前方方框（偏移形成重叠效果） */
+.code-copy-btn .copy-icon::after {
+    top: 3px;
+    left: 3px;
+    width: 9px;
+    height: 9px;
+}
+
+/* 复制成功状态：对号图标 */
+.code-copy-btn.success .copy-icon::before,
+.code-copy-btn.success .copy-icon::after {
+    display: none;
+}
+.code-copy-btn.success .copy-icon::before {
+    display: block;
+    top: 1px;
+    left: 4px;
+    width: 4px;
+    height: 8px;
+    border: solid #98c379;
+    border-width: 0 1.5px 1.5px 0;
+    border-radius: 0;
+    transform: rotate(45deg);
+    opacity: 1;
+    background: transparent;
+}
+.code-copy-btn.success {
+    color: #98c379;
+    border-color: rgba(152, 195, 121, 0.3);
+    background: rgba(152, 195, 121, 0.08);
 }

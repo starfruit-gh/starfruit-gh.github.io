@@ -84,6 +84,12 @@ function setupCodeBlockSwitchers() {
                 if (oldLineNumbers) oldLineNumbers.remove();
                 hljs.lineNumbersBlock(newCode);
             }
+
+            // 移除旧的复制按钮
+            const oldBtn = switcher.querySelector('.code-copy-btn');
+            if (oldBtn) oldBtn.remove();
+            // 重新添加新的复制按钮
+            addCopyButtonToContainer(switcher, newPre);
         });
     });
 }
@@ -329,6 +335,9 @@ window.addEventListener('DOMContentLoaded', () => {
         singleLine: false  // 单行代码块不显示行号
     });
 
+    // 初始化代码块复制按钮
+    setTimeout(setupCopyButtons, 100);
+
     /* =========================================== */
     /* 7. 日历组件逻辑                               */
     /* =========================================== */
@@ -459,3 +468,79 @@ window.addEventListener('DOMContentLoaded', () => {
         backToTopBtn.classList.remove('show');
     }
 });
+
+/**
+ * 给单个代码块容器添加复制按钮
+ * @param {HTMLElement} container - 容器（pre 或 .code-switcher）
+ * @param {HTMLElement} preElement - 对应的 pre 元素（用于提取代码文本）
+ */
+function addCopyButtonToContainer(container, preElement) {
+    if (container.querySelector('.code-copy-btn')) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'code-copy-btn';
+    btn.type = 'button';
+    btn.title = '复制代码';
+    btn.innerHTML = '<span class="copy-icon"></span><span class="copy-text">复制</span>';
+
+    btn.addEventListener('click', async () => {
+        try {
+            // ========== 修复：正确提取带换行的代码 ==========
+            let codeText = '';
+            const codeEl = preElement.querySelector('code');
+            
+            // 优先判断：是否启用了行号插件（生成了 .hljs-ln 表格）
+            const lineRows = preElement.querySelectorAll('.hljs-ln .hljs-ln-code');
+            if (lineRows.length > 0) {
+                // 逐行提取，手动加换行符，确保换行不丢失
+                const lines = [];
+                lineRows.forEach(td => {
+                    lines.push(td.textContent);
+                });
+                codeText = lines.join('\n');
+            } else if (codeEl) {
+                // 没有行号时用 innerText（比 textContent 更能保留换行）
+                codeText = codeEl.innerText;
+            } else {
+                codeText = preElement.innerText;
+            }
+
+            await navigator.clipboard.writeText(codeText.trimEnd());
+            // =================================================
+
+            btn.classList.add('success');
+            btn.querySelector('.copy-text').textContent = '已复制';
+
+            setTimeout(() => {
+                btn.classList.remove('success');
+                btn.querySelector('.copy-text').textContent = '复制';
+            }, 2000);
+        } catch (err) {
+            console.error('复制失败:', err);
+            btn.querySelector('.copy-text').textContent = '失败';
+            setTimeout(() => {
+                btn.querySelector('.copy-text').textContent = '复制';
+            }, 2000);
+        }
+    });
+
+    container.appendChild(btn);
+}
+
+/**
+ * 初始化所有代码块的复制按钮
+ */
+function setupCopyButtons() {
+    // 1. 普通代码块（不带语言切换的）
+    document.querySelectorAll('pre:not(.code-switcher pre):not(.code-copy-processed)').forEach(pre => {
+        addCopyButtonToContainer(pre, pre);
+        pre.classList.add('code-copy-processed');
+    });
+
+    // 2. 带语言切换的代码块
+    document.querySelectorAll('.code-switcher:not(.code-copy-processed)').forEach(switcher => {
+        const pre = switcher.querySelector('pre');
+        if (pre) addCopyButtonToContainer(switcher, pre);
+        switcher.classList.add('code-copy-processed');
+    });
+}
