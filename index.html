@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>我的博客 | 首页</title>
 
-    <link rel="shortcut icon" href="/assets/images/common/starfruit_stage_6.png" />
-
-    <!-- Font Awesome 图标库 -->
+    <link rel="icon" href="/assets/images/common/starfruit_stage_6.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
@@ -696,6 +694,7 @@
         /* 1. 常量定义 - 专栏和标签统一管理             */
         /* =========================================== */
 
+        // 专栏
         const COLUMNS = {
             ALL: "全部文章",
             DATA_STRUCTURE: "数据结构",
@@ -706,10 +705,27 @@
             GO_LANG: "Go语言",
         };
 
+        const COLUMN_ICONS = {
+            [COLUMNS.DATA_STRUCTURE]: "fas fa-project-diagram",
+            [COLUMNS.ALGORITHM]: "fas fa-calculator",
+            [COLUMNS.COMPUTER_ORGANIZATION]: "fas fa-microchip",
+            [COLUMNS.OPERATING_SYSTEM]: "fas fa-laptop-code",
+            [COLUMNS.COMPUTER_NETWORK]: "fas fa-network-wired",
+            [COLUMNS.GO_LANG]: "fab fa-golang",
+            "default": "fas fa-folder"
+        };
+
+        function getColumnIcon(columnName) {
+            return COLUMN_ICONS[columnName] || COLUMN_ICONS.default;
+        }
+
+        // 文章标签
         const TAGS = {
-            GO: "Go",
             C: "C",
+            CPP: "C++",
             JAVA: "Java",
+            PYTHON: "Python",
+            GO: "Go",
             HTML: "HTML",
             CSS: "CSS",
             JAVASCRIPT: "JavaScript",
@@ -731,51 +747,11 @@
             HASH_TABLE: "哈希表",
             SEARCH: "搜索",
             SORTING: "排序",
-            DISTRIBUTED_SYSTEM: "分布式系统",
-            CONCURRENCY: "并发编程",
-            NETWORK: "网络协议",
             OPERATING_SYSTEM: "操作系统",
-            DATABASE: "数据库",
-            CACHE: "缓存",
-            MICROSERVICE: "微服务",
-            ARCHITECTURE: "架构设计",
-            SYSTEM_DESIGN: "系统设计",
-            DEVOPS: "DevOps",
-            CONTAINER: "容器化",
-            KUBERNETES: "Kubernetes",
-            DOCKER: "Docker",
-            GIT: "Git",
-            LINUX: "Linux",
-            REDIS: "Redis",
-            KAFKA: "Kafka",
-            GRPC: "gRPC",
-            CAP_THEORY: "CAP理论",
-            RAFT: "Raft",
-            CONSISTENCY: "一致性",
-            TRANSACTION: "事务",
-            ISOLATION_LEVEL: "隔离级别",
-            PERFORMANCE: "性能优化",
-            SECURITY: "网络安全",
-            CLOUD_COMPUTING: "云计算",
-            ARTIFICIAL_INTELLIGENCE: "人工智能"
         };
-
-        const COLUMN_ICONS = {
-            [COLUMNS.DATA_STRUCTURE]: "fas fa-project-diagram",
-            [COLUMNS.ALGORITHM]: "fas fa-calculator",
-            [COLUMNS.COMPUTER_ORGANIZATION]: "fas fa-microchip",
-            [COLUMNS.OPERATING_SYSTEM]: "fas fa-laptop-code",
-            [COLUMNS.COMPUTER_NETWORK]: "fas fa-network-wired",
-            [COLUMNS.GO_LANG]: "fab fa-golang",
-            "default": "fas fa-folder"
-        };
-
-        function getColumnIcon(columnName) {
-            return COLUMN_ICONS[columnName] || COLUMN_ICONS.default;
-        }
 
         /* =========================================== */
-        /* 2. 文章数据存储                              */
+        /* 2. 文章列表                                  */
         /* =========================================== */
 
         const articlesDatabase = [{

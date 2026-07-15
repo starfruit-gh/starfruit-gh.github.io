@@ -548,6 +548,7 @@ pre code.hljs,
     border-radius: 3px !important;   /* 圆角3px，重要规则 */
     --line-numbers-gutter-bg: #333;  /* 行号背景色变量 */
     margin: 15px 0 !important;       /* 上下外边距15px，重要规则 */
+    tab-size: 4;
 }
 
 /* 代码块滚动条样式 */

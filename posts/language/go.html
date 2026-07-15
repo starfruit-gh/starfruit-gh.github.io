@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go语言</title>
+    <!-- 网站图标 -->
+    <link rel="icon" href="/assets/images/common/starfruit_stage_6.png" type="image/png" />
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 使用 MathJax 渲染 LaTeX 数学公式 -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 引语 -->
+                <div class="author-quote">
+                    Have a good day!
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/02_linear-list.html" class="related-article-link">（二）线性表</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文 -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+                <h1>Go语言</h1>
+
+                <h2>基础</h2>
+                <h3>标识符</h3>
+                <ol>
+                    <li>定义</li>
+                    <p><strong>标识符（Identifier）</strong>：是程序员自定义的、用于唯一标识程序中各类实体（Entity）的字符序列。这些实体包括但不限于：</p>
+                    <ul style="margin-left: 30px;">
+                        <li>变量（如<code class="code-inline">age</code>）</li>
+                        <li>常量（如<code class="code-inline">MaxSize</code>）</li>
+                        <li>函数/方法（如<code class="code-inline">GetUserByID</code>）</li>
+                        <li>结构体（如<code class="code-inline">User</code>）</li>
+                        <li>接口（如<code class="code-inline">Reader</code>）</li>
+                        <li>包（如<code class="code-inline">fmt</code>）</li>
+                        <li>...</li>
+                    </ul>
+                    <p>通俗来说，标识符就是代码里各种 “东西” 的名字。</p>
+                    <li>作用</li>
+                    <p>标识符是内存地址的抽象替代。程序运行时，数据和指令都存储在内存中，需要通过对应的地址进行操作，但是使用内存地址（如 0x3A4F）极易出错且难以记忆。因此可以通过标识符直接操作对应的数据，编译器会自动完成标识符到底层内存位置的映射与转换。这样就只需关心“是什么数据”，而无需关心“数据在哪儿”，极大提高了代码的可读性和可维护性。</p>
+                    <li>语法规则（Go语言规则）</li>
+                    <ol>
+                        <li>标识符由Unicode字符的 字母、数字以及下划线 组成，不能以数字开头</li>
+                        <li>标识符不能包含特殊字符。这些特殊字符包括但不限于：</li>
+                        <ul>
+                            <li>货币符号：<code class="code-inline">$</code>、<code class="code-inline">¥</code>、<code class="code-inline">€</code>等</li>
+                            <li>标点符号：<code class="code-inline">?</code>、<code class="code-inline">:</code>、<code class="code-inline">;</code>、<code class="code-inline">"</code>、<code class="code-inline">'</code>、<code class="code-inline">、</code>、<code class="code-inline">。</code>等</li>
+                            <li>算术/逻辑运算符：<code class="code-inline">+</code>、<code class="code-inline">-</code>、<code class="code-inline">*</code>、<code class="code-inline">/</code>、<code class="code-inline">%</code>、<code class="code-inline">&amp;</code>、<code class="code-inline">|</code>、<code class="code-inline">!</code>、<code class="code-inline">^</code>、<code class="code-inline">~</code>、<code class="code-inline">=</code>、<code class="code-inline">&gt</code>、<code class="code-inline">&lt</code>等</li>
+                            <li>分隔类字符：<code class="code-inline">-</code>、<code class="code-inline">.</code>、<code class="code-inline">\</code>、<code class="code-inline">/</code> 等</li>
+                            <li>各类括号：<code class="code-inline">()</code>、<code class="code-inline">[]</code>、<code class="code-inline">{}</code>、<code class="code-inline"><></code> 等</li>
+                            <li>...</li>
+                        </ul>
+                        <li>标识符不能是Go语言的关键字</li>
+                    </ol>
+                    <li>命名规范（Go语言规范）</li>
+                    <ul>
+                        <li>项目名：全小写，多个单词之间用连字符(<code class="code-inline">-</code>)分隔。例如，<code class="code-inline">go-zero</code>、<code class="code-inline">go-redis</code>等。</li>
+                        <li>目录名：仅由小写字母组成，严禁使用大写字母、驼峰、下划线（<code class="code-inline">_</code>）或连字符（<code class="code-inline">-</code>）。建议保持目录名与包名一致，简短且有语义。例如，<code class="code-inline">auth</code>✅<code class="code-inline">authentication</code>❌、<code class="code-inline">model</code>✅<code class="code-inline">Models</code>❌、<code class="code-inline">middleware</code>✅<code class="code-inline">middle_ware</code>❌<code class="code-inline">middle-ware</code>❌等。</li>
+                        <li>文件名：全小写，多个单词之间用下划线(<code class="code-inline">_</code>)分隔，即蛇形命名。例如，<code class="code-inline">task_queue.go</code>、<code class="code-inline">auth_test.go</code>等。</li>
+                        <li>标识符：一般使用驼峰式命名，其中首字母大小写控制可见性：大写导出(Public)、小写包内私有(Private)。需要特别说明的是，</li>
+                        <ul>
+                            <li>包名：建议包名与目录名保持一致，避免导入路径和实际包名脱节。当目录名与包名不一致时，其他包下的go程序导入该包时，导包语句的路径为该包的目录名，但在程序内调用该包的函数时使用的是该包的包名。</li>
+                            <li>缩略词：对于<code class="code-inline">ID</code>、<code class="code-inline">URL</code>、<code class="code-inline">HTTP</code>、<code class="code-inline">API</code>、<code class="code-inline">JSON</code>等通用缩略词，命名时保持完整的大小写，不使用驼峰拼写。例如，<code class="code-inline">UserID</code>✅<code class="code-inline">UserId</code>❌、<code class="code-inline">HTTPHandler</code>✅<code class="code-inline">HttpHandler</code>❌等。</li>
+                            <li>变量：作用域越小，变量名越短：循环、短函数内用<code class="code-inline">i</code>、<code class="code-inline">j</code>、<code class="code-inline">err</code>、<code class="code-inline">u</code> 这类短名；作用域越大，变量名描述性越强：包级变量、全局变量语义要完整。例如<code class="code-inline">maxConnectionNum</code>。</li>
+                            <li>常量：在Go中不推荐常量使用 全大写 + 下划线 的命名风格，常量命名规则与变量完全一致，采用驼峰式，首字母控制可见性。</li>
+                            <li>构造函数：构造函数推荐使用 New 前缀，例如，<code class="code-inline">NewUser</code>、<code class="code-inline">NewStudent</code>等。</li>
+                            <li>接收者：一般为类型本身的缩写（通常是一两个字母的长度）。例如，<code class="code-inline">func (s Student)</code>、<code class="code-inline">func (t *Teacher)</code>等。</li>
+                            <li>接口：只包含一个方法的接口应当以该方法的名称加上-er后缀来命名，例如，<code class="code-inline">Reader</code>、<code class="code-inline">Writer</code>等。</li>
+                            <li>...</li>
+                        </ul>
+                    </ul>
+                </ol>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+/*
+    Unicode字符的字母、数字：
+        Lu  Uppercase Letter    如：A, Φ（大写希腊字母）
+        Ll  Lowercase Letter    如：a, φ, π（小写希腊字母）
+        Lo  Other Letter        如：家(中文), あ(日文)
+        Lm  Modifier Letter     如：ʰ（修饰字母）
+        Lt  Titlecase Letter    如：ǅ（标题字母）
+        Nd  Decimal Number      如：0, ９（十进制数字）
+*/
+
+func main() {
+    // 1.标识符由Unicode字符的 字母、数字以及下划线 组成，不能以数字开头
+    var _a1 int8 = 6
+    var π float64 = 3.1415926
+    var 变量 string = "中文变量名"
+    fmt.Println(_a1, π, 变量)
+
+    // 2.标识符不能包含特殊字符
+    // var a$ string = "你好"
+    // var a@ string = "你好"
+    // var a# string = "你好"
+    // var a? string = "你好"
+    // fmt.Println(a$,a@,a#,a?)
+
+    // 3.标识符不能是Go语言的关键字
+    // var break int = 100
+    // fmt.Println(break)
+}</code></pre>
+
+            <h3>关键字</h3>
+            <p><strong>关键字（Keyword）</strong>：是编程语言中预定义的、具有特殊语法含义的保留词汇，直接参与代码的结构化。它们被编译器或解释器用于解析代码逻辑。并且通常不允许被开发者用作自定义标识符或改变其内置语义。</p>
+<pre><code class="language-go">    break        default      func         interface    select
+    case         defer        go           map          struct
+    chan         else         goto         package      switch
+    const        fallthrough  if           range        type
+    continue     for          import       return       var
+</code></pre>
+
+            <h3>预定义标识符</h3>
+            <p><strong>预定义标识符（Pre-defined Identifier）</strong>：是编程语言预先声明好、并赋予特定含义或默认值的名称。预定义标识符不是关键字，本质上依然是标识符，且可以赋值覆盖，但不建议。</p>
+<pre><code class="language-go">Constants:   true  false  iota  nil
+
+    Types:   int  int8  int16  int32  int64
+             uint  uint8  uint16  uint32  uint64  uintptr
+             float32  float64  complex64  complex128
+             bool  byte  rune  string  error
+
+Functions:   make  len  cap  new  append  copy  close  delete
+             complex  real  imag
+             panic  recover
+</code></pre>
+            <p>在Go语言中，使用预定义标识符作为标识符会导致标识符的原有功能被覆盖，从而引发错误或逻辑混乱。</p>
+<pre><code class="language-go">// 1.覆盖内建常量
+func example() {
+    true := false     // 覆盖预定义常量 true
+    if true {         // 实际条件为 false
+        fmt.Println("执行 A")
+    } else {
+        fmt.Println("执行 B") // 实际输出
+    }
+}
+// true 被赋值为 false，导致条件逻辑与预期相反，产生隐蔽的逻辑错误。
+
+// 2.覆盖内建类型
+func example() {
+    var int = 10    // 变量名覆盖了内置类型 int
+    var x int       // 错误！此时 int 是变量，不是类型
+    fmt.Println(x)
+}
+// int 在函数内部被声明为变量，导致无法再使用 int 类型声明其他变量，编译时报错 type int is not an expression.
+
+// 3.覆盖内建函数
+func main( ) {
+    len := 5             // 变量名覆盖了内置函数 len
+    s := []int{1, 2, 3}
+    fmt.Println(len(s)) // 错误！len 是变量，无法调用
+}
+// len 被覆盖为整型变量后，尝试调用 len(s) 会触发编译错误 cannot call non-function len.
+</code></pre>
+
+            <h3>变量和常量</h3>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    //一、变量
+    //1.标准声明
+    var a int8
+    fmt.Println(a)
+    
+    //2.批量声明
+    var (
+        b int16
+        c int32
+        d int64        
+    )
+    fmt.Println(b, c, d)
+    
+    //3.赋值
+    d = 8
+    fmt.Println(d)
+    
+    //4.修改变量的值
+    d = 9
+    fmt.Println(d)
+    
+    //5.标准初始化
+    var e uint8 = 10
+    fmt.Println(e)
+    
+    //6.批量初始化
+    var (
+        f uint16 = 11
+        g uint32 = 12
+        h uint64 = 13
+    )
+    fmt.Println(f, g, h)
+    
+    //7.一次初始化多个变量(可以是不同类型的变量)
+    var i, j = 14, "abc"
+    fmt.Println(i, j)
+    
+    //8.类型推导
+    var k = 15
+    var l = "def"
+    fmt.Println(k, l)
+    
+    //9.短变量
+    m := 16
+    fmt.Println(m)
+    
+    //10.匿名变量
+    n, _ := 17, 18
+    _, o := 19, 20
+    fmt.Println(n, o)
+    
+    //二、常量
+    //1.标准初始化
+    const PI float32 = 3.14
+    fmt.Println(PI)
+    
+    //2.批量初始化
+    const (
+        P float64 = 1.23
+        Q byte    = 'i'
+        R string  = "jkl"
+    )
+    fmt.Println(P, Q, R)
+    
+    //3.一次初始化多个常量(可以是不同类型的常量)
+    const S, T = 21, "mn"
+    fmt.Println(S, T)
+    
+    //4.类型推导
+    const U = 22
+    const V = "opq"
+    fmt.Println(U, V)
+    
+    //5.const 与 iota
+    //批量初始化时，未初始化值则表示与上一行值相同
+    const (
+        W = 100
+        X
+        Y
+    )
+    fmt.Println(W, X, Y)
+    //iota 在 const 出现时，iota 从 0 开始，每新增一行常量声明 iota 自动递增
+    const (
+        Z1 = iota
+        Z2
+        Z3
+    )
+    fmt.Println(Z1, Z2, Z3)
+    //可以使用 _ 跳过值
+    const (
+        Z4 = iota
+        Z5
+        _
+        Z6
+    )
+    fmt.Println(Z4, Z5, Z6)
+    //可以插入某些值
+    const (
+        Z7 = iota
+        Z8 = 100
+        Z9 = iota
+        Z10
+    )
+    fmt.Println(Z7, Z8, Z9, Z10)
+    //多个 iota 定义在一行
+    const (
+        Z11, Z12 = iota + 1, iota + 2
+        Z13, Z14
+        Z15, Z16
+    )
+    fmt.Println(Z11, Z12, Z13, Z14, Z15, Z16)
+    //定数量级
+    const (
+        _  = iota
+        KB = 1 << (10 * iota)
+        MB = 1 << (10 * iota)
+        GB = 1 << (10 * iota)
+        TB = 1 << (10 * iota)
+        PB = 1 << (10 * iota)
+    )
+    fmt.Printf("KB: %v, MB: %v, GB: %v, TB: %v, PB: %v, ", KB, MB, GB, TB, PB)
+}</code></pre>
+
+            <h3>数据类型</h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+/*
+    整型：
+        uint8 uint16 uint32 uint64
+        int8 int16 int32 int64
+        uint int uintptr
+    浮点型：
+        float32 float64
+    复数：
+        complex64 complex128
+    布尔型：
+        bool
+    字符型：
+        byte(uint8) rune(int32)
+    字符串：
+        string
+    
+    array、slice、map、func、pointer、struct、interface、error、channel
+*/
+
+func main() {
+    //1.各数据类型的 零值 以及 内存空间的初始化情况
+    var (
+        a int
+        b uint
+        c float32
+        d float64
+        e complex64
+        f complex128
+        g bool
+        h byte
+        i rune
+        j string
+
+        //数组
+        k [3]int
+        //切片
+        l []int
+        //map
+        m map[int]string
+        //func(匿名、无参、无返回值)
+        n func()
+        //指针
+        o *int
+        //结构体(匿名、无属性)
+        p struct{}
+        //接口(匿名、空接口)
+        q interface{}
+        //error
+        r error
+        //channel
+        s chan int
+    )
+    vars := []interface{}{&a, &b, &c, &d, &e, &f, &g, &h, &i, &j, &k, &l, &m, &n, &o, &p, &q, &r, &s}
+    for _, v := range vars {
+        val := reflect.ValueOf(v).Elem()
+        typ := val.Type()
+        kind := typ.Kind()
+        value := getValueString(val)
+        addr := getAddressInfo(v, val)
+        fmt.Printf("Type: %-15s Kind: %-10s Value: %-10v Address: %s\n", typ, kind, value, addr)
+    }
+}
+
+func getAddressInfo(ptr interface{}, val reflect.Value) string {
+    if isNilType(val) && val.IsNil() {
+        return "未指向有效的底层数据结构"
+    }
+    return fmt.Sprintf("%p", ptr)
+}
+
+func isNilType(val reflect.Value) bool {
+    switch val.Kind() {
+    case reflect.Slice, reflect.Map, reflect.Func, reflect.Ptr, reflect.Interface, reflect.Chan:
+        return true
+    default:
+        return false
+    }
+}
+
+func getValueString(val reflect.Value) string {
+    switch val.Kind() {
+    case reflect.Slice, reflect.Map, reflect.Func, reflect.Ptr, reflect.Interface, reflect.Chan:
+        if val.IsNil() {
+            return "nil"
+        }
+    }
+    return fmt.Sprintf("%v", val.Interface())
+}</code></pre>
+
+            <h3>数组</h3>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    // 1.声明
+    var arr1 [3]int
+    fmt.Println("arr1:", arr1)
+
+    // 2.初始化
+    // 方式一：
+    var arr2 = [3]int{1, 2, 3}
+    // 方式二：
+    var arr3 = [...]string{"北京", "上海", "广东", "深圳"}
+    // 方式三：
+    var arr4 = [3]int{1: 2, 2: 3}
+    var arr5 = [...]string{1: "上海", 3: "深圳"}
+    fmt.Println("arr2:", arr2)
+    fmt.Println("arr3:", arr3)
+    fmt.Println("arr4:", arr4)
+    fmt.Println("arr5:", arr5)
+
+    // 3.遍历
+    // 方式一：
+    fmt.Print("arr3: ")
+    for i := 0; i < len(arr3); i++ {
+        fmt.Print(arr3[i], " ")
+    }
+    fmt.Println()
+    // 方式二：
+    fmt.Print("arr3: ")
+    for _, res := range arr3 {
+        fmt.Print(res, " ")
+    }
+    fmt.Println()
+
+    // 4.CRUD
+    // 改
+    arr3[2] = "杭州"
+    fmt.Println("改: arr3:", arr3)
+    // 查
+    fmt.Println("查: arr3:", arr3[0], arr3[1], arr3[2], arr3[3])
+}
+</code></pre>
+
+            <h3>切片</h3>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    //1.声明
+    var s1 []int
+    fmt.Println("s1:", s1)
+
+    //2.初始化
+    //方式一：
+    var s2 = []int{1, 2, 3}
+    //方式二：
+    var s3 = []int{2: 1, 5: 6}
+    //方式三(切片表达式)：
+    var arr1 = [5]int{1, 2, 3, 4, 5}
+    var s4 = arr1[1:3]
+    var s5 = arr1[2:]
+    var s6 = arr1[:3]
+    var s7 = arr1[:]
+    var s8 = arr1[1:4:4] //a[low : high : max]，cap=max-low
+    //方式四(make函数)：
+    var s9 = make([]string, 0)
+    var s10 = make([]string, 0, 10)
+    var s11 = make([]string, 5, 10)
+    fmt.Println("s2:", s2)
+    fmt.Println("s3:", s3)
+    fmt.Printf("s4: %v type:%T len:%d cap:%d\n", s4, s4, len(s4), cap(s4))
+    fmt.Printf("s5: %v type:%T len:%d cap:%d\n", s5, s5, len(s5), cap(s5))
+    fmt.Printf("s6: %v type:%T len:%d cap:%d\n", s6, s6, len(s6), cap(s6))
+    fmt.Printf("s7: %v type:%T len:%d cap:%d\n", s7, s7, len(s7), cap(s7))
+    fmt.Printf("s8: %v type:%T len:%d cap:%d\n", s8, s8, len(s8), cap(s8))
+    fmt.Printf("s9: len:%d cap:%d\n", len(s9), cap(s9))
+    fmt.Printf("s10: len:%d cap:%d\n", len(s10), cap(s10))
+    fmt.Printf("s11: len:%d cap:%d\n", len(s11), cap(s11))
+
+    //3.遍历
+    //方式一:
+    fmt.Print("s2: ")
+    for i := 0; i < len(s2); i++ {
+        fmt.Print(s2[i], " ")
+    }
+    fmt.Println()
+    //方式二:
+    fmt.Print("s2: ")
+    for _, res := range s2 {
+        fmt.Print(res, " ")
+    }
+    fmt.Println()
+
+    //4.CRUD
+    //增
+    s9 = append(s9, "a", "b", "c")
+    fmt.Println("增: s9:", s9)
+    //删
+    s9 = append(s9[:1], s9[2:]...)
+    fmt.Println("删: s9:", s9)
+    //改
+    s9[0] = "A"
+    fmt.Println("改: s9:", s9)
+    //查
+    fmt.Println("查: s9:", s9[0], s9[1])
+
+    //5.判空(要用 len(s)==0,不能用 s==nil)
+    fmt.Println("s1是否为空:", len(s1) == 0)
+    fmt.Println("s2是否为空:", len(s2) == 0)
+
+    //6.赋值拷贝、copy()函数
+    a := []int{1, 2, 3, 4, 5}
+    b := a //切片赋值，底层数组共用
+    c := make([]int, 5)
+    copy(c, a) //切片赋值拷贝，底层数组不共用
+    fmt.Println("a:", a)
+    fmt.Println("b:", b)
+    fmt.Println("c:", c)
+    a[0] = 100
+    fmt.Println("a:", a)
+    fmt.Println("b:", b)
+    fmt.Println("c:", c)
+}</code></pre>
+            <h3>map</h3>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    //1.声明
+    var map1 map[int]string
+    fmt.Println("map1:", map1)
+
+    //2.初始化
+    //方式一：
+    var map2 = map[int]string{
+        1: "zhangsan",
+        2: "lisi",
+        3: "wangwu",
+    }
+    //方式二(make函数)：
+    var map3 = make(map[int]string, 10)
+    fmt.Println("map2:", map2)
+    fmt.Printf("map3: %v len:%v\n", map3, len(map3))
+
+    //3.遍历
+    fmt.Printf("%-12s", "map2:")
+    //遍历map
+    for key, value := range map2 {
+        fmt.Printf("%v:%v ", key, value)
+    }
+    fmt.Println()
+    fmt.Printf("%-12s", "map2 key:")
+    //遍历key
+    for key := range map2 {
+        fmt.Print(key, " ")
+    }
+    fmt.Println()
+    fmt.Printf("%-12s", "map2 value:")
+    //遍历value
+    for _, value := range map2 {
+        fmt.Print(value, " ")
+    }
+    fmt.Println()
+
+    //4.CRUD
+    //增
+    map3[1] = "猫"
+    map3[2] = "狗"
+    map3[3] = "兔子"
+    map3[4] = "乌龟"
+    fmt.Println("增: map3:", map3)
+    //删
+    delete(map3, 3)
+    fmt.Println("删: map3:", map3)
+    //改
+    map3[4] = "Tom"
+    fmt.Println("改: map3:", map3)
+    //查
+    fmt.Println("查: map3:", map3[1], map3[2], map3[4])
+
+    //5.判断某个键是否存在
+    v1, ok1 := map2[1]
+    if ok1 {
+        fmt.Println("key:1存在,其对应的值为: ", v1)
+    } else {
+        fmt.Println("key:1不存在")
+    }
+    v2, ok2 := map2[4]
+    if ok2 {
+        fmt.Println("key:4存在,其对应的值为: ", v2)
+    } else {
+        fmt.Println("key:4不存在")
+    }
+}</code></pre>
+            <h3>指针</h3>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+/*
+    &:取地址
+    *:根据地址取值
+*/
+
+func main() {
+    //1.声明
+    var ptr1 *int
+    fmt.Printf("type:%T val:%v addr:%p\n", ptr1, ptr1, ptr1)
+
+    //2.初始化
+    //方式一：
+    var a int = 3
+    var ptr2 = &a
+    //方式二：
+    var ptr3 = new(int)
+    fmt.Printf("type:%T val:%v addr:%p\n", ptr2, ptr2, ptr2)
+    fmt.Printf("type:%T val:%v addr:%p\n", ptr3, ptr3, ptr3)
+
+    //3.取值
+    var b = *ptr2
+    var c = *ptr3
+    fmt.Printf("%v %v", b, c)
+}
+</code></pre>
+            <h3>结构体</h3>
+<pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+// 1.定义
+type student struct {
+	Name string
+	Age  int
+}
+
+// 8.构造函数
+func newStudent(name string, age int) *student {
+	return &student{
+		Name: name,
+		Age:  age,
+	}
+}
+
+// 9.方法
+// 值类型的方法
+func (s student) setAge1(newAge int) {
+	s.Age = newAge
+}
+
+// 指针类型的方法
+func (s *student) setAge2(newAge int) {
+	s.Age = newAge
+}
+
+// 10.匿名字段
+type person struct {
+	string
+	int
+}
+
+// 11.结构体嵌套
+type address struct {
+	province, city, street string
+}
+
+type worker struct {
+	name    string
+	age     int
+	address address
+}
+
+// 12.结构体嵌套中有重名字段
+type addr struct {
+	province, city, street, updatetime string
+}
+
+type email struct {
+	acc, psw, updatetime string
+}
+
+type user struct {
+	name  string
+	age   int
+	addr  //匿名结构体嵌套
+	email //匿名结构体嵌套
+}
+
+// 13.继承
+type animal struct {
+	name string
+}
+
+func (a *animal) move() {
+	fmt.Println(a.name, "会动~")
+}
+
+type dog struct {
+	feet int
+	*animal
+}
+
+func (d *dog) bark() {
+	fmt.Println(d.name, "会狗叫!")
+}
+
+// 14.序列化与反序列化
+type class struct {
+	//如果想要从json格式的数据反序列化出Go的数据，需要字段首字母大写。但可以用Tag命名
+	ClassID  string    //`json:"classid"`
+	Students []student //`json:"students" db:"student" xml:"ss"`
+}
+
+func main() {
+	//2.声明(实例化)
+	var s1 student
+	fmt.Println("s1:", s1)
+
+	//3.赋值
+	s1.Name = "xiaoshuai"
+	s1.Age = 18
+	fmt.Println("s1:", s1)
+
+	//4.修改值
+	s1.Age = 20
+	fmt.Println("s1:", s1)
+
+	//5.匿名结构体
+	var p struct {
+		name string
+		age  int
+	}
+	fmt.Println("p", p)
+
+	//6.结构体类型的指针
+	var s2 = new(student)
+	var s3 = &student{}
+	s2.Name = "小明" //(*s2).name
+	s3.Age = 18    //(*s3).age
+	fmt.Println("s2:", s2)
+	fmt.Println("s3:", s3)
+
+	//7.初始化
+	//方式一:
+	var s4 = student{
+		Name: "张三",
+		Age:  18,
+	}
+	var s5 = student{
+		Name: "李四",
+	}
+	//方式二:
+	var s6 = student{
+		"王五",
+		20,
+	}
+	fmt.Println("s4:", s4)
+	fmt.Println("s5:", s5)
+	fmt.Println("s6:", s6)
+
+	//8.构造函数
+	s7 := newStudent("小明", 13)
+	fmt.Println("s7:", s7)
+
+	//9.方法
+	s7.setAge1(15)
+	fmt.Println("s7:", s7)
+	s7.setAge2(15)
+	fmt.Println("s7:", s7)
+
+	//10.匿名字段
+	p1 := person{
+		"小红",
+		18,
+	}
+	fmt.Println("p1:", p1)
+	fmt.Println("p1:", p1.string, p1.int)
+
+	//11.结构体嵌套
+	var w1 = worker{
+		name: "胡凯莉",
+		age:  34,
+		address: address{
+			"湖北省",
+			"武汉市",
+			"户部巷",
+		},
+	}
+	fmt.Println("w1", w1)
+
+	//12.嵌套结构体中有重名字段
+	var user1 = user{
+		name: "柔风",
+		age:  18,
+		addr: addr{
+			"四川省",
+			"成都市",
+			"宽窄巷子",
+			"2025-3-10",
+		},
+		email: email{
+			"34565216",
+			"asdfasd",
+			"2024.8.20",
+		},
+	}
+	fmt.Println(user1.addr.updatetime)
+	fmt.Println(user1.email.updatetime)
+
+	//13.继承(dog不仅有自己的属性和方法，还会继承嵌套结构体的属性和方法)
+	var dog1 = dog{
+		feet: 4,
+		animal: &animal{
+			name: "小狗",
+		},
+	}
+	fmt.Println(dog1.name)
+	dog1.bark()
+	dog1.move()
+
+	//14.序列化与反序列化
+	class01 := class{
+		ClassID:  "火箭101班",
+		Students: make([]student, 0, 20),
+	}
+	class01.Students = append(class01.Students, *newStudent("小明同学", 18))
+	class01.Students = append(class01.Students, *newStudent("小红同学", 18))
+	class01.Students = append(class01.Students, *newStudent("小绿同学", 18))
+	class01.Students = append(class01.Students, *newStudent("小白同学", 18))
+	class01.Students = append(class01.Students, *newStudent("小黑同学", 18))
+	fmt.Println("class01: ", class01)
+	//序列化
+	jsonData, err := json.Marshal(class01)
+	if err != nil {
+		fmt.Println("json marshal error", err)
+		return
+	}
+	fmt.Println("jsonData:", string(jsonData))
+	//反序列化
+	jsonStr := `{"ClassID":"火箭102班","Students":[{"Name":"李华同学","Age":18},{"Name":"peter同学","Age":18},{"Name":"David同学","Age":18},{"Name":"李明同学","Age":18},{"Name":"小黑同学","Age":18}]}`
+	var class02 class
+	err1 := json.Unmarshal([]byte(jsonStr), &class02)
+	if err1 != nil {
+		fmt.Println("json unmarshal error", err)
+		return
+	}
+	fmt.Printf("class02: %v", class02)
+}
+</code></pre>
+            <h3>接口</h3>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+//1.定义
+type Animaler interface {
+	Move()
+	Say()
+}
+
+type Animal struct {
+	Name string
+	Feet int
+}
+
+func newAnimal(name string, feet int) Animal {
+	return Animal{
+		Name: name,
+		Feet: feet,
+	}
+}
+
+//2.实现接口（实现接口里的所有方法）
+//2.1实现接口的方法的接收者是值类型，创建接口变量时，不管是结构体类型还是对应的结构体指针类型的变量都可以赋值给该接口变量
+func (a Animal) Move() {
+	fmt.Println(a.Name, "会动！")
+}
+
+//2.2实现接口的方法的接收者是指针类型，创建接口变量时，只有结构体指针类型的变量可以赋值给该接口变量，结构体类型不行
+func (a *Animal) Say() {
+	fmt.Println(a.Name, "会叫~")
+}
+
+type Dog struct {
+	Animal
+}
+
+func newDog(name string, feet int) Dog {
+	return Dog{
+		newAnimal(name, feet),
+	}
+}
+
+func (d Dog) Say() {
+	fmt.Println(d.Name, ":小奶狗来喽，汪汪汪~")
+}
+
+type Cat struct {
+	Animal
+}
+
+func newCat(name string, feet int) Cat {
+	return Cat{
+		newAnimal(name, feet),
+	}
+}
+
+func (c Cat) Say() {
+	fmt.Println(c.Name, "会喵喵喵的叫~")
+}
+
+type Bird struct {
+	Animal
+}
+
+func newBird(name string, feet int) *Bird {
+	return &Bird{
+		newAnimal(name, feet),
+	}
+}
+
+//3.只有接口可以实现一个函数接收多种类型的参数
+func Hungry(a Animaler) {
+	a.Say()
+}
+
+func main() {
+	//4.多态
+	var dog1 Animaler = newDog("旺财", 4)
+	fmt.Printf("%T,%v\n", dog1, dog1)
+	dog1.Move()
+	dog1.Say()
+	Hungry(dog1)
+	var cat1 Animaler = newCat("小猫", 4)
+	fmt.Printf("%T,%v\n", cat1, cat1)
+	cat1.Move()
+	cat1.Say()
+	Hungry(cat1)
+	var bird1 Animaler = newBird("小鸟", 2)
+	fmt.Printf("%T,%v\n", bird1, bird1)
+	bird1.Move()
+	bird1.Say()
+	Hungry(bird1)
+}</code></pre>
+            <h3>反射</h3>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	//1.TypeOf
+	a := 10
+	b := "你好"
+	c := [3]int{1, 2, 3}
+	d := []string{"北京", "上海", "广州", "深圳"}
+	e := map[int]string{
+		1: "北京",
+		2: "上海",
+		3: "广州",
+		4: "深圳",
+	}
+	var f struct {
+		name string
+		age  int
+	}
+	f.name = "xiaoming"
+	f.age = 18
+	refType(a)
+	refType(b)
+	refType(c)
+	refType(d)
+	refType(e)
+	refType(f)
+	refValue(a)
+	refValue(b)
+	refValue(c)
+	refValue(d)
+	refValue(e)
+	refValue(f)
+}
+
+func refType(x interface{}) {
+	t := reflect.TypeOf(x)
+	fmt.Printf("%v Name:%v Kind:%v\n", t, t.Name(), t.Kind())
+}
+
+func refValue(y interface{}) {
+	t := reflect.ValueOf(y)
+	fmt.Printf("type:%T value:%v", t, t)
+}</code></pre>
+            <h3>goroutine</h3>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+// 5.使用 sync.WaitGroup 等待多个 goroutine 执行完成
+// 5.1创建 WaitGroup 全局变量
+var wg sync.WaitGroup
+
+func main() {
+	wg.Add(1)
+	//1.用 go 关键字启动 goroutine
+	go hello() //2.启动单个 goroutine
+	fmt.Println("你好")
+	//3.使用 time.Sleep 等待单个 goroutine 执行完成
+	//time.Sleep(time.Second)
+	//4.启动多个 goroutine
+	for i := 0; i < 10; i++ {
+		//5.2每启动一个 goroutine，wg 就 +1
+		wg.Add(1)
+		go hellos(i)
+	}
+	//5.4等待所有的 goroutine 结束
+	wg.Wait()
+}
+
+func hello() {
+	fmt.Println("hello")
+	wg.Done()
+}
+
+func hellos(i int) {
+	//5.3每完成一个 goroutine，wg 就 -1
+	defer wg.Done()
+	fmt.Println("hello", i)
+}</code></pre>
+            <h3>channel</h3>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+// 零协程：只输出 0
+func zeroRoutine(chZero chan struct{}, done chan struct{}, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for {
+		<-chZero
+		fmt.Print(0)
+		done <- struct{}{}
+	}
+}
+
+// 奇数协程：输出 1,3,5...
+func oddRoutine(chOdd chan struct{}, done chan struct{}, n int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for i := 1; i <= n; i += 2 {
+		<-chOdd
+		fmt.Print(i)
+		done <- struct{}{}
+	}
+}
+
+// 偶数协程：输出 2,4,6...
+func evenRoutine(chEven chan struct{}, done chan struct{}, n int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for i := 2; i <= n; i += 2 {
+		<-chEven
+		fmt.Print(i)
+		done <- struct{}{}
+	}
+}
+
+func main() {
+	n := 6 // 可修改为任意正整数
+
+	// 创建三个控制 channel
+	chZero := make(chan struct{})
+	chOdd := make(chan struct{})
+	chEven := make(chan struct{})
+	done := make(chan struct{}) // 用于等待上一次输出完成
+
+	var wg sync.WaitGroup
+	wg.Add(3)
+
+	// 启动三个协程
+	go zeroRoutine(chZero, done, &wg)
+	go oddRoutine(chOdd, done, n, &wg)
+	go evenRoutine(chEven, done, n, &wg)
+
+	// 主协程控制输出顺序
+	for i := 1; i <= n; i++ {
+		// 输出 0
+		chZero <- struct{}{}
+		<-done
+
+		if i%2 == 1 { // 奇数位输出奇数
+			chOdd <- struct{}{}
+		} else { // 偶数位输出偶数
+			chEven <- struct{}{}
+		}
+		<-done
+	}
+
+	// 程序结束（实际需优雅退出，这里简化处理）
+	// 实际生产环境需要通知协程退出，但此题目只需输出一次，main 结束即可
+	// 为避免 goroutine 泄漏，可以 close 所有 channel
+	close(chZero)
+	close(chOdd)
+	close(chEven)
+	close(done)
+
+	// 等待协程结束（可选，因 main 已结束）
+	// wg.Wait()
+	fmt.Println() // 换行
+}</code></pre>
+
+
+
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
