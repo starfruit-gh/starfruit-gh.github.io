@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL</title>
+    <!-- 网站图标 -->
+    <link rel="icon" href="/assets/images/common/starfruit_stage_6.png" type="image/png" />
+    <!-- highlight.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- 使用 MathJax 渲染 LaTeX 数学公式 -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="home">
+        <!-- 左侧侧边栏 -->
+        <div class="left-sidebar-wrapper">
+            <!-- 作者信息 -->
+            <div class="left-sidebar left-author-card">
+                <img src="/assets/images/common/avatar.png" alt="糟糕，头像没显示出来..." class="author-avatar">
+                <div class="author-nickname">Starfruit</div>
+                <div class="author-realname">HJL</div>
+                
+                <!-- 引语 -->
+                <div class="author-quote">
+                    Have a good day!
+                </div>
+            </div>
+            
+            <!-- 日历 -->
+            <div class="left-sidebar left-calendar-card">
+                <div class="blog-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-btn" id="prevMonth">&lt;</button>
+                        <div class="calendar-year-month" id="yearMonth">2025年12月</div>
+                        <button class="calendar-btn" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-week">
+                        <div class="week-item">日</div>
+                        <div class="week-item">一</div>
+                        <div class="week-item">二</div>
+                        <div class="week-item">三</div>
+                        <div class="week-item">四</div>
+                        <div class="week-item">五</div>
+                        <div class="week-item">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+            </div>
+            
+            <!-- 相关文章 -->
+            <div class="left-sidebar left-related-articles">
+                <div class="sidebar-title">相关文章</div>
+                <ul class="related-articles-list">
+                    <li class="related-article-item">
+                        <a href="/posts/data-structure/02_linear-list.html" class="related-article-link">（二）线性表</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 中间正文 -->
+        <div class="main-content-wrapper">
+            <div class="article-content">
+    <h1>MySQL 笔记</h1>
+
+    <h2>数据库概述</h2>
+    <p><strong>数据库</strong>（Database，简称 DB）：按照数据结构来组织、存储和管理数据的仓库。</p>
+    <p><strong>数据库管理系统</strong>（Database Management System，简称 DBMS）：操纵和管理数据库的大型软件。</p>
+    <p><strong>SQL</strong>：结构化查询语言。</p>
+    <p>三者关系：DBMS 执行 SQL 操作 DB。</p>
+
+    <div class="note">
+        <p><strong>组织：</strong>运用数据结构，把数据合理地摆放好。建立表、定义字段、建立关联。</p>
+        <p><strong>存储：</strong>将数据持久化地保存在计算机的硬盘上，不会因断电而丢失。</p>
+        <p><strong>管理：</strong>提供工具和语言（SQL）对数据进行增、删、改、查操作。</p>
+        <p><strong>结构化查询：</strong>数据库本身是结构化的，SQL 语句按照这些结构查询。</p>
+    </div>
+
+    <h3>数据库类型</h3>
+    <table>
+        <thead>
+            <tr><th>类型</th><th>代表产品</th></tr>
+        </thead>
+        <tbody>
+            <tr><td rowspan="6">关系型数据库（SQL）</td><td>Oracle</td></tr>
+            <tr><td>MySQL</td></tr>
+            <tr><td>MS SQL Server</td></tr>
+            <tr><td>PostgreSQL</td></tr>
+            <tr><td>IBM DB2</td></tr>
+            <tr><td>SQLite</td></tr>
+            <tr><td rowspan="4">非关系型数据库（NoSQL）</td><td>MongoDB（Document）</td></tr>
+            <tr><td>Redis（Key-Value）</td></tr>
+            <tr><td>Elasticsearch（Multi-model）</td></tr>
+            <tr><td>Neo4j（Graph）</td></tr>
+        </tbody>
+    </table>
+
+    <h3>SQL 类型</h3>
+    <ul>
+        <li><strong>DQL</strong>（数据查询语言）：SELECT</li>
+        <li><strong>DDL</strong>（数据定义语言）：CREATE、ALTER、DROP</li>
+        <li><strong>DML</strong>（数据操纵语言）：INSERT、UPDATE、DELETE</li>
+        <li><strong>DCL</strong>（数据控制语言）：GRANT、REVOKE</li>
+        <li><strong>TPL</strong>（事务处理语言）：BEGIN TRANSACTION、COMMIT、ROLLBACK</li>
+        <li><strong>CCL</strong>（指针控制语言）：DECLARE CURSOR、FETCH INTO、UPDATE WHERE CURRENT</li>
+    </ul>
+
+    <h2>MySQL 的下载与安装</h2>
+    <p>下载地址：<a href="https://www.mysql.com" target="_blank">https://www.mysql.com</a></p>
+    <p>步骤：点击 DOWNLOADS → 下滑点击 MySQL Community (GPL) Downloads → 点击 MySQL Community Server → 选择版本（MySQL 8 LTS，mysql-8.4.3-winx64.zip）→ 点击 "No thanks, just start my download."</p>
+
+    <h3>安装与配置</h3>
+    <ol>
+        <li>将压缩包解压到某个文件夹</li>
+        <li>配置环境变量（将 bin 目录加入 Path）</li>
+        <li>以管理员身份运行黑窗口，进入 bin 目录</li>
+        <li>执行命令：<code class="code-inline">mysqld --initialize --console</code>，记住生成的密码</li>
+        <li>安装 MySQL 服务：<code class="code-inline">mysqld -install</code></li>
+        <li>启动 MySQL 服务：<code class="code-inline">net start mysql</code></li>
+        <li>登录 MySQL：<code class="code-inline">mysql -uroot -p</code>，输入随机密码</li>
+        <li>修改密码：<code class="code-inline">ALTER USER 'root'@'localhost' IDENTIFIED BY '新密码';</code></li>
+    </ol>
+
+    <h3>卸载 MySQL</h3>
+    <ol>
+        <li>停止服务：<code class="code-inline">net stop mysql</code></li>
+        <li>删除服务：<code class="code-inline">mysqld --remove mysql</code></li>
+        <li>删除 MySQL 目录</li>
+    </ol>
+
+    <h3>登录 MySQL</h3>
+    <p><strong>本地登录：</strong><code class="code-inline">mysql -uroot -p</code>，然后输入密码。</p>
+    <p><strong>远程登录：</strong><code class="code-inline">mysql -uroot -p -h 远程IP</code></p>
+    <div class="warning">
+        <p><strong>注意：</strong>MySQL 默认 root 账户不支持远程登录。如需开放（危险），执行：</p>
+        <pre><code class="language-sql">USE mysql;
+UPDATE user SET host = '%' WHERE user = 'root';
+FLUSH PRIVILEGES;</code></pre>
+    </div>
+
+    <h2>基本命令</h2>
+    <pre><code class="language-sql">-- 查看有哪些数据库
+SHOW DATABASES;
+
+-- 创建数据库
+CREATE DATABASE 数据库名;
+
+-- 使用某个数据库
+USE 数据库名;
+
+-- 查看当前使用的是哪个数据库
+SELECT DATABASE();
+
+-- 查看当前数据库中有哪些表
+SHOW TABLES;
+
+-- 查看某张表的结构
+DESC 表名;
+DESCRIBE 表名;
+SHOW COLUMNS FROM 表名;
+SHOW CREATE TABLE 表名;
+
+-- 删除数据库
+DROP DATABASE 数据库名;
+
+-- 查看 MySQL 版本
+mysql --version        -- 未登录时
+SELECT VERSION();      -- 登录后
+
+-- 退出
+EXIT;
+QUIT;                  -- 不能退出 DOS 窗口
+
+-- 终止书写错误的 SQL 语句
+\c
+
+-- \g 效果等同于定界符 ";"
+-- \G 使数据垂直展示
+
+-- 执行 SQL 脚本
+SOURCE /path/to/script.sql;</code></pre>
+
+    <h2>简单查询</h2>
+    <pre><code class="language-sql">-- 查询一个字段
+SELECT 字段名 FROM 表名;
+
+-- 查询多个字段
+SELECT 字段名1, 字段名2 FROM 表名;
+
+-- 查询所有字段（不推荐使用 *）
+SELECT * FROM 表名;</code></pre>
+
+    <h3>数值类型字段可直接参与数学运算</h3>
+    <pre><code class="language-sql">-- 计算员工年薪
+SELECT ename, sal*12 FROM emp;</code></pre>
+
+    <h3>列起别名</h3>
+    <pre><code class="language-sql">-- 使用 AS 起别名
+SELECT ename, sal*12 AS yearsal FROM emp;
+
+-- AS 可以省略
+SELECT ename, sal*12 yearsal FROM emp;
+
+-- 别名中有空格，需用引号括起来（建议使用单引号）
+SELECT ename, sal*12 'year sal' FROM emp;</code></pre>
+
+    <h2>条件查询</h2>
+    <pre><code class="language-sql">SELECT 字段1, 字段2, ...
+FROM 表名
+WHERE 条件;
+
+-- 常见条件：=, !=, &lt;&gt;, &gt;, &gt;=, &lt;, &lt;=
+-- AND (&&), OR (||)
+-- BETWEEN ... AND ...
+-- IN / NOT IN
+-- IS NULL / IS NOT NULL
+-- LIKE（模糊查询）</code></pre>
+
+    <h3>示例</h3>
+    <pre><code class="language-sql">-- 查询工资等于 3000 的员工
+SELECT empno, ename FROM emp WHERE sal = 3000;
+
+-- 查询工资大于 3000 的员工
+SELECT empno, ename FROM emp WHERE sal > 3000;
+
+-- 查询工资在 3000 到 5000 之间的员工
+SELECT ename, sal FROM emp WHERE sal >= 3000 AND sal <= 5000;
+
+-- AND 和 OR 同时使用，AND 优先级高于 OR，可用括号调整
+SELECT ename, deptno, sal FROM emp
+WHERE sal < 1500 AND (deptno = 20 OR deptno = 30);
+
+-- BETWEEN ... AND ...（左小右大）
+SELECT ename, sal FROM emp WHERE sal BETWEEN 1600 AND 3000;
+
+-- IN 枚举
+SELECT ename, sal, job FROM emp WHERE job IN ('MANAGER', 'SALESMAN');
+
+-- NOT IN（注意 NULL 值问题）
+SELECT ename, comm FROM emp WHERE comm NOT IN (NULL, 300);  -- 结果为空
+
+-- IS NULL / IS NOT NULL
+SELECT ename, sal, comm FROM emp WHERE comm IS NULL;
+
+-- LIKE 模糊查询（% 任意多个字符，_ 任意一个字符）
+SELECT ename FROM emp WHERE ename LIKE 'S%';
+SELECT ename FROM emp WHERE ename LIKE '%O%';
+SELECT ename FROM emp WHERE ename LIKE '_A%';
+
+-- 转义特殊字符（如 _ 或 %）
+SELECT name FROM student WHERE name LIKE '%\_%';</code></pre>
+
+    <h2>按某个字段排序</h2>
+    <pre><code class="language-sql">SELECT 字段1, 字段2, ...
+FROM 表名
+ORDER BY 字段 ASC/DESC;
+
+-- 默认为升序（ASC）
+-- 指定降序：ORDER BY 字段 DESC
+-- 多个字段排序：ORDER BY 字段1 ASC/DESC, 字段2 ASC/DESC ...</code></pre>
+    <pre><code class="language-sql">-- 按工资升序
+SELECT ename, sal FROM emp ORDER BY sal;
+
+-- 按工资降序
+SELECT ename, sal FROM emp ORDER BY sal DESC;
+
+-- 先按工资升序，再按姓名升序
+SELECT ename, sal FROM emp ORDER BY sal ASC, ename ASC;
+
+-- 按查询结果中字段的位置排序（不推荐）
+SELECT ename, sal FROM emp ORDER BY 2;</code></pre>
+
+    <h2>单行处理函数</h2>
+    <p>特点：一个输入对应一个输出。</p>
+
+    <h3>字符串相关</h3>
+    <pre><code class="language-sql">LOWER() / LCASE()   -- 转小写
+UPPER() / UCASE()   -- 转大写
+SUBSTR(str, pos, len) / SUBSTR(str, pos)  -- 截取
+CONCAT()            -- 字符串拼接
+LENGTH()            -- 字符串长度（字节）
+CHAR_LENGTH()       -- 字符个数
+TRIM()              -- 去除前后空白
+TRIM(LEADING 前缀 FROM 字符)
+TRIM(TRAILING 后缀 FROM 字符)
+TRIM(BOTH 前后缀 FROM 字符)</code></pre>
+
+    <h3>数字相关</h3>
+    <pre><code class="language-sql">ROUND(x) / ROUND(x, y)   -- 四舍五入
+RAND() / RAND(x)         -- 生成随机数
+TRUNCATE(x, y)           -- 舍去
+CEIL() / FLOOR()         -- 向上/下取整</code></pre>
+
+    <h3>时间相关</h3>
+    <pre><code class="language-sql">NOW()          -- 执行 SELECT 语句的时刻
+SYSDATE()      -- 执行 SYSDATE() 函数的时刻
+CURDATE()      -- 当前日期
+CURTIME()      -- 当前时间
+YEAR(), MONTH(), WEEK(), DAY(), HOUR(), MINUTE(), SECOND()
+DATE(), TIME()
+DAYOFWEEK(), DAYOFMONTH(), DAYOFYEAR()
+LAST_DAY()     -- 当月最后一天
+DATE_FORMAT()  -- 格式化日期
+STR_TO_DATE()  -- 字符串转日期
+DATE_ADD() / DATE_SUB()
+DATEDIFF() / TIMEDIFF()</code></pre>
+
+    <pre><code class="language-sql">-- 日期格式：%Y 年，%m 月，%d 日，%H 时，%i 分，%s 秒
+SELECT DATE_FORMAT(NOW(), '%Y/%m/%d %H:%i:%s');
+
+-- 字符串转日期
+INSERT INTO t_student(name, birth) VALUES('zhangsan', STR_TO_DATE('10/01/1985', '%m/%d/%Y'));</code></pre>
+
+    <h3>其他函数</h3>
+    <pre><code class="language-sql">IF(条件, 'YES', 'NO')
+CASE ... WHEN ... THEN ... WHEN ... THEN ... ELSE ... END
+IFNULL(x, y)     -- x 为 NULL 时，当作 y 处理
+CAST(值 AS 数据类型)
+MD5()            -- MD5 加密</code></pre>
+
+    <pre><code class="language-sql">-- IFNULL 示例：计算年薪（含补助）
+SELECT ename, (sal + IFNULL(comm, 0)) * 12 AS yearsal FROM emp;
+
+-- CASE WHEN 示例
+SELECT ename, job,
+    CASE job
+        WHEN 'MANAGER' THEN sal * 1.1
+        WHEN 'SALESMAN' THEN sal * 1.2
+        ELSE sal
+    END AS sal
+FROM emp;</code></pre>
+
+    <h2>多行处理函数（分组函数）</h2>
+    <p>特点：多个输入对应一个输出。使用前需分组，未分组时默认整表为一组。</p>
+    <p><strong>注意：</strong>所有多行处理函数自动忽略 NULL；不能直接用在 WHERE 子句中。</p>
+
+    <pre><code class="language-sql">COUNT()   -- 计数
+MAX()     -- 最大值
+MIN()     -- 最小值
+SUM()     -- 求和
+AVG()     -- 平均值
+
+-- 示例
+SELECT COUNT(ename) AS empnum FROM emp;
+SELECT MAX(sal) FROM emp;
+SELECT MIN(sal) FROM emp;
+SELECT SUM(sal) FROM emp;
+SELECT AVG(sal) FROM emp;
+
+-- 组合使用
+SELECT COUNT(ename), MAX(sal), MIN(sal), SUM(sal), AVG(sal) FROM emp;
+
+-- COUNT(*) 与 COUNT(字段) 的区别
+-- COUNT(字段)：统计该字段不为 NULL 的记录数
+-- COUNT(*)：统计所有记录数</code></pre>
+
+    <h2>分组查询</h2>
+    <pre><code class="language-sql">SELECT ...
+FROM ...
+WHERE ...
+GROUP BY 字段1, 字段2, ...
+HAVING ...
+
+-- 注意：SELECT 中只能跟分组函数或参与分组的字段
+SELECT job, AVG(sal) FROM emp GROUP BY job;
+SELECT deptno, MAX(sal) FROM emp GROUP BY deptno;
+SELECT deptno, job, AVG(sal) FROM emp GROUP BY deptno, job;
+
+-- HAVING：对分组后的数据进行过滤
+-- 建议优先使用 WHERE 过滤，实在不行再用 HAVING
+SELECT deptno, AVG(sal) FROM emp WHERE deptno <> 20 GROUP BY deptno;
+SELECT deptno, AVG(sal) FROM emp GROUP BY deptno HAVING AVG(sal) > 2000;
+
+-- 组内排序：找出每组前两名
+SELECT SUBSTRING_INDEX(GROUP_CONCAT(empno ORDER BY sal DESC), ',', 2)
+FROM emp GROUP BY job;</code></pre>
+
+    <h2>DISTINCT 关键字</h2>
+    <pre><code class="language-sql">-- 去重
+SELECT DISTINCT job FROM emp;
+
+-- DISTINCT 必须放在所有字段最前方，表示联合去重
+SELECT DISTINCT deptno, job FROM emp;
+
+-- 统计工作种类数量
+SELECT COUNT(DISTINCT job) FROM emp;</code></pre>
+
+    <h2>LIMIT 与分页</h2>
+    <pre><code class="language-sql">-- 完整用法：LIMIT startIndex, length
+-- startIndex 从 0 开始
+-- 缺省用法：LIMIT index 表示取前 index 个
+
+-- 取工资排名前五
+SELECT ename, sal FROM emp ORDER BY sal DESC LIMIT 5;
+
+-- 取工资排名 3-5 名
+SELECT ename, sal FROM emp ORDER BY sal DESC LIMIT 2, 3;
+
+-- 分页公式：每页 pageSize 条，第 pageNo 页
+-- LIMIT (pageNo - 1) * pageSize, pageSize</code></pre>
+
+    <h2>单表查询总结</h2>
+    <pre><code class="language-sql">SELECT ...
+FROM ...
+WHERE ...
+GROUP BY ...
+HAVING ...
+ORDER BY ...
+LIMIT ...
+
+-- 执行顺序：
+-- 1. FROM
+-- 2. WHERE
+-- 3. GROUP BY
+-- 4. HAVING
+-- 5. SELECT
+-- 6. ORDER BY
+-- 7. LIMIT</code></pre>
+
+    <h2>连接查询</h2>
+    <p>从两张或更多张表中联合查询数据。</p>
+    <h3>分类</h3>
+    <ul>
+        <li><strong>内连接</strong>：等值连接、非等值连接、自连接</li>
+        <li><strong>外连接</strong>：左连接、右连接、全连接</li>
+    </ul>
+
+    <div class="warning">
+        <p><strong>笛卡尔积现象：</strong>两张表连接查询不加限制时，结果条数为两张表记录条数的乘积。需添加条件筛选。</p>
+    </div>
+
+    <h3>内连接</h3>
+    <pre><code class="language-sql">-- 等值连接
+SELECT e.ename, d.dname
+FROM emp e
+INNER JOIN dept d ON e.deptno = d.deptno;
+
+-- 非等值连接
+SELECT e.ename, e.sal, s.grade
+FROM emp e
+JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal;
+
+-- 自连接
+SELECT e.ename 员工名, l.ename 领导名
+FROM emp e
+JOIN emp l ON e.mgr = l.empno;</code></pre>
+
+    <h3>外连接</h3>
+    <pre><code class="language-sql">-- 左外连接（左表全部显示）
+SELECT d.*, e.ename
+FROM dept d
+LEFT OUTER JOIN emp e ON d.deptno = e.deptno;
+
+-- 右外连接（右表全部显示）
+SELECT d.*, e.ename
+FROM emp e
+RIGHT OUTER JOIN dept d ON d.deptno = e.deptno;
+
+-- 外连接自连接
+SELECT e.ename 员工名, l.ename 领导名
+FROM emp e
+LEFT JOIN emp l ON e.mgr = l.empno;</code></pre>
+
+    <h3>多表连接</h3>
+    <pre><code class="language-sql">SELECT e.ename, d.dname, s.grade
+FROM emp e
+JOIN dept d ON e.deptno = d.deptno
+JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal;</code></pre>
+
+    <h2>子查询</h2>
+    <p>SELECT 语句中嵌套 SELECT 语句。</p>
+    <h3>WHERE 后的子查询</h3>
+    <pre><code class="language-sql">-- 查询工资高于平均工资的员工
+SELECT ename, sal FROM emp WHERE sal > (SELECT AVG(sal) FROM emp);</code></pre>
+
+    <h3>FROM 后的子查询（派生表）</h3>
+    <pre><code class="language-sql">-- 查询部门平均工资对应的薪资等级
+SELECT t.*, s.grade
+FROM (SELECT deptno, AVG(sal) avgsal FROM emp GROUP BY deptno) t
+JOIN salgrade s ON t.avgsal BETWEEN s.losal AND s.hisal;</code></pre>
+
+    <h3>SELECT 后的子查询（标量子查询）</h3>
+    <pre><code class="language-sql">SELECT e.ename, (SELECT d.dname FROM dept d WHERE e.deptno = d.deptno) AS dname
+FROM emp e;</code></pre>
+
+    <h3>EXISTS / NOT EXISTS</h3>
+    <pre><code class="language-sql">-- 查询有订单的客户
+SELECT * FROM t_customer c
+WHERE EXISTS (SELECT * FROM t_order o WHERE o.customer_id = c.customer_id);
+
+-- 查询没有订单的客户
+SELECT * FROM t_customer c
+WHERE NOT EXISTS (SELECT * FROM t_order o WHERE o.customer_id = c.customer_id);</code></pre>
+
+    <h3>子查询典型场景总结</h3>
+    <table>
+        <thead><tr><th>位置</th><th>返回要求</th><th>典型用途</th><th>是否别名</th></tr></thead>
+        <tbody>
+            <tr><td>SELECT 后</td><td>必须单值</td><td>添加计算列、关联信息</td><td>否</td></tr>
+            <tr><td>FROM 后</td><td>多行多列（表）</td><td>数据预处理、复杂聚合</td><td>是</td></tr>
+            <tr><td>WHERE 后</td><td>单值或多值</td><td>条件过滤、存在性判断</td><td>否</td></tr>
+        </tbody>
+    </table>
+
+    <h2>UNION / UNION ALL</h2>
+    <pre><code class="language-sql">-- UNION 合并查询结果，自动去重
+SELECT ename, job FROM emp WHERE job = 'MANAGER'
+UNION
+SELECT ename, job FROM emp WHERE job = 'SALESMAN';
+
+-- UNION ALL 不去重，效率更高
+-- 要求：两个结果集列数相同，列数据类型相同</code></pre>
+
+    <h2>DDL（数据定义语言）</h2>
+    <pre><code class="language-sql">-- 创建表
+CREATE TABLE 表名 (
+    字段名1 数据类型,
+    字段名2 数据类型,
+    ...
+);
+
+-- 复制表
+CREATE TABLE 表名 AS SELECT语句;
+
+-- 修改表结构
+ALTER TABLE 表名 RENAME 新表名;                        -- 修改表名
+ALTER TABLE 表名 RENAME COLUMN 旧字段名 TO 新字段名;   -- 修改字段名
+ALTER TABLE 表名 MODIFY COLUMN 字段名 数据类型;        -- 修改字段类型
+ALTER TABLE 表名 ADD 字段名 数据类型;                  -- 新增字段
+ALTER TABLE 表名 DROP 字段名;                          -- 删除字段
+
+-- 删除表
+DROP TABLE 表名;
+DROP TABLE IF EXISTS 表名;</code></pre>
+
+    <h2>DML（数据操纵语言）</h2>
+    <pre><code class="language-sql">-- 插入数据
+INSERT INTO 表名(字段1, 字段2, ...) VALUES (值1, 值2, ...);
+INSERT INTO 表名 VALUES (值1, 值2, ...);
+INSERT INTO 表名(字段1, 字段2, ...) VALUES (值1, 值2, ...), (值1, 值2, ...), ...;
+
+-- 将查询结果插入表
+INSERT INTO 表名 SELECT语句;
+
+-- 更新数据
+UPDATE 表名 SET 字段1=值1, 字段2=值2 WHERE 条件;
+
+-- 删除数据
+DELETE FROM 表名;
+DELETE FROM 表名 WHERE 条件;
+TRUNCATE TABLE 表名;   -- 不支持事务，不可回滚</code></pre>
+
+    <h2>MySQL 数据类型</h2>
+    <table>
+        <thead><tr><th>分类</th><th>类型</th></tr></thead>
+        <tbody>
+            <tr><td rowspan="5">整数</td><td>TINYINT</td></tr>
+            <tr><td>SMALLINT</td></tr>
+            <tr><td>MEDIUMINT</td></tr>
+            <tr><td>INT</td></tr>
+            <tr><td>BIGINT</td></tr>
+            <tr><td rowspan="3">浮点数</td><td>FLOAT</td></tr>
+            <tr><td>DOUBLE</td></tr>
+            <tr><td>DECIMAL</td></tr>
+            <tr><td rowspan="5">日期时间</td><td>YEAR</td></tr>
+            <tr><td>DATE</td></tr>
+            <tr><td>TIME</td></tr>
+            <tr><td>DATETIME</td></tr>
+            <tr><td>TIMESTAMP</td></tr>
+            <tr><td rowspan="5">字符串</td><td>CHAR</td></tr>
+            <tr><td>VARCHAR</td></tr>
+            <tr><td>TINYTEXT</td></tr>
+            <tr><td>TEXT</td></tr>
+            <tr><td>LONGTEXT</td></tr>
+            <tr><td rowspan="3">二进制</td><td>TINYBLOB</td></tr>
+            <tr><td>BLOB</td></tr>
+            <tr><td>LONGBLOB</td></tr>
+            <tr><td>枚举/集合</td><td>ENUM / SET</td></tr>
+        </tbody>
+    </table>
+
+    <h2>约束（Constraint）</h2>
+    <ul>
+        <li><strong>非空约束</strong>：NOT NULL</li>
+        <li><strong>唯一性约束</strong>：UNIQUE</li>
+        <li><strong>主键约束</strong>：PRIMARY KEY</li>
+        <li><strong>外键约束</strong>：FOREIGN KEY</li>
+        <li><strong>检查约束</strong>：CHECK</li>
+    </ul>
+
+    <h3>UNIQUE 约束</h3>
+    <pre><code class="language-sql">-- 列级约束
+CREATE TABLE t_vip (
+    id INT,
+    name VARCHAR(255) UNIQUE,
+    email VARCHAR(255) UNIQUE
+);
+
+-- 表级约束（联合唯一）
+CREATE TABLE t_vip (
+    id INT,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    UNIQUE(name, email)
+);
+
+-- UNIQUE + NOT NULL 在 MySQL 中自动变为主键</code></pre>
+
+    <h3>主键约束</h3>
+    <ul>
+        <li>主键值必须唯一且不为 NULL</li>
+        <li>一个表只能有一个主键</li>
+        <li>分类：自然主键 / 业务主键；单一主键 / 复合主键</li>
+        <li>InnoDB 中主键自动创建聚簇索引</li>
+    </ul>
+
+    <h3>外键约束</h3>
+    <pre><code class="language-sql">-- 语法：FOREIGN KEY (外键字段) REFERENCES 父表(引用字段)
+
+-- 示例：学生表引用班级表
+CREATE TABLE t_class (
+    classno INT PRIMARY KEY,
+    classname VARCHAR(255)
+);
+
+CREATE TABLE t_student (
+    no INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    cno INT,
+    FOREIGN KEY (cno) REFERENCES t_class(classno)
+);
+
+-- 操作顺序：
+-- 创建：先父后子
+-- 删除：先子后父
+-- 插入：先父后子
+-- 删除数据：先子后父
+
+-- 级联操作
+ON DELETE CASCADE   -- 级联删除
+ON DELETE SET NULL  -- 设置为 NULL
+ON UPDATE CASCADE   -- 级联更新</code></pre>
+
+    <h2>存储引擎</h2>
+    <table>
+        <thead>
+            <tr><th>存储引擎</th><th>事务支持</th><th>锁粒度</th><th>外键</th><th>主要优势</th><th>适用场景</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>InnoDB</strong></td><td>✅</td><td>行级锁</td><td>✅</td><td>事务安全、高并发、崩溃恢复</td><td>默认选择，OLTP</td></tr>
+            <tr><td><strong>MyISAM</strong></td><td>❌</td><td>表级锁</td><td>❌</td><td>读取速度快</td><td>只读或读多写极少</td></tr>
+            <tr><td><strong>Memory</strong></td><td>❌</td><td>表级锁</td><td>❌</td><td>极致速度（内存中）</td><td>临时表、缓存</td></tr>
+            <tr><td><strong>Archive</strong></td><td>❌</td><td>行级锁</td><td>❌</td><td>超高压缩比</td><td>日志归档</td></tr>
+        </tbody>
+    </table>
+    <div class="warning">
+        <p><strong>MyISAM 被弃用原因：</strong>在现代应用中，数据一致性（事务）和高并发（行级锁）的重要性远高于微弱的读性能优势。强烈不推荐在新项目中使用。</p>
+    </div>
+
+    <h2>数据库设计三范式</h2>
+    <h3>第一范式（1NF）</h3>
+    <p>任何一张表都应该有主键，并且每一个字段原子性不可再分。</p>
+    <div class="note">
+        <p><strong>反例：</strong>一个单元格里存储多个联系方式，如 "电话:13800138000, 邮箱:abc@example.com"</p>
+        <p><strong>后果：</strong>查询困难且低效，数据更新/删除异常，数据完整性无法保证。</p>
+    </div>
+
+    <h3>第二范式（2NF）</h3>
+    <p>建立在第一范式基础之上，所有非主键字段完全依赖主键，不能产生部分依赖。</p>
+    <div class="note">
+        <p><strong>反例：</strong>订单明细表主键为 (订单ID, 产品ID)，但包含客户姓名字段。</p>
+        <p><strong>后果：</strong>数据冗余、更新异常、插入异常、删除异常。</p>
+        <p><strong>解决方案：</strong>拆分为订单表和订单明细表。</p>
+    </div>
+
+    <h3>第三范式（3NF）</h3>
+    <p>建立在第二范式基础之上，所有非主键字段直接依赖主键，不能产生传递依赖。</p>
+    <div class="note">
+        <p><strong>反例：</strong>员工表中包含部门编号和部门经理字段。</p>
+        <p><strong>后果：</strong>数据冗余、更新异常、插入异常、删除异常。</p>
+    </div>
+
+    <h3>表关系设计</h3>
+    <ul>
+        <li><strong>多对多：</strong>三张表，关系表两个外键</li>
+        <li><strong>一对多：</strong>两张表，多的表加外键</li>
+        <li><strong>一对一：</strong>外键唯一</li>
+    </ul>
+
+    <h2>视图</h2>
+    <pre><code class="language-sql">-- 创建视图
+CREATE VIEW 视图名 AS 查询结果;   -- AS 后只能跟 DQL 语句
+
+-- 删除视图
+DROP VIEW 视图名;
+
+-- 作用：隐藏表的实现细节，避免复杂语句的多次操作</code></pre>
+
+    <h2>索引</h2>
+    <p><strong>索引是一种用来提高检索效率的数据结构。</strong>如同书籍的目录。</p>
+
+    <h3>优点</h3>
+    <ul>
+        <li>极大提高查询速度</li>
+        <li>提高连接查询的效率</li>
+        <li>减少排序和分组的时间</li>
+    </ul>
+
+    <h3>缺点</h3>
+    <ul>
+        <li>占用额外空间</li>
+        <li>降低增、删、改的速度</li>
+    </ul>
+
+    <h3>适合使用索引的情况</h3>
+    <ul>
+        <li>频繁作为查询条件的列（WHERE 子句）</li>
+        <li>用于表连接的列（JOIN ... ON ...）</li>
+        <li>需要排序的列（ORDER BY）</li>
+        <li>需要分组统计的列（GROUP BY）</li>
+        <li>高选择性的列</li>
+        <li>用于覆盖查询的列</li>
+    </ul>
+
+    <h3>不适合使用索引的情况</h3>
+    <ul>
+        <li>频繁进行写操作的列</li>
+        <li>很少被用于查询的列</li>
+        <li>低选择性的列</li>
+        <li>数据量很小的表</li>
+    </ul>
+
+    <h3>索引失效的情况</h3>
+    <ul>
+        <li>数据量太小</li>
+        <li>索引列的选择性差</li>
+        <li>类型不匹配</li>
+        <li>OR 条件使用不当（两边包含无索引列）</li>
+        <li>函数操作索引列</li>
+        <li>联合索引未遵循最左前缀原则</li>
+        <li>范围查询右侧的列</li>
+        <li>模糊查询以 % 开头</li>
+    </ul>
+
+    <h3>索引类型</h3>
+    <ul>
+        <li><strong>按数据结构：</strong>B+树索引、哈希索引、全文索引、R树索引</li>
+        <li><strong>按物理存储：</strong>聚簇索引、非聚簇索引</li>
+        <li><strong>按逻辑功能：</strong>普通索引、唯一索引、主键索引、联合索引</li>
+    </ul>
+
+    <h3>B+树</h3>
+    <ul>
+        <li>B+树的叶节点层包含所有元素，从小到大排列，节点间用指针连接成链表</li>
+        <li>非叶节点是叶节点的索引，加速查询</li>
+        <li>兼顾顺序查找和随机查找</li>
+    </ul>
+
+    <h3>哈希索引</h3>
+    <ul>
+        <li>通过哈希函数将关键字映射到地址</li>
+        <li>直接定址法（无冲突）、除留余数法（可能冲突）</li>
+        <li>处理冲突：开放地址法（线性探测、平方探测）、拉链法</li>
+    </ul>
+
+    <h3>全文索引</h3>
+    <ul>
+        <li>基于倒排索引（词元 → 文档列表）</li>
+        <li>支持关键词查询、短语查询、模糊查询、相关性排序</li>
+        <li>核心算法：TF-IDF、BM25</li>
+        <li>适用于搜索引擎、电商搜索、文档管理等场景</li>
+    </ul>
+
+    <h3>聚簇索引 vs 非聚簇索引</h3>
+    <table>
+        <thead><tr><th>对比项</th><th>聚簇索引</th><th>非聚簇索引</th></tr></thead>
+        <tbody>
+            <tr><td>数据存储</td><td>叶子节点直接存放完整数据行</td><td>索引和数据分开存储</td></tr>
+            <tr><td>物理顺序</td><td>表数据物理顺序与索引顺序一致</td><td>表数据物理顺序与索引无关</td></tr>
+            <tr><td>数量限制</td><td>一个表只能有一个</td><td>一个表可以有多个</td></tr>
+            <tr><td>InnoDB 实现</td><td>主键自动成为聚簇索引</td><td>叶子节点存储主键值</td></tr>
+        </tbody>
+    </table>
+
+    <h3>回表与覆盖索引</h3>
+    <ul>
+        <li><strong>回表：</strong>使用非聚簇索引查询时，需要回到聚簇索引查找完整行。</li>
+        <li><strong>覆盖索引：</strong>索引包含查询所需的所有列，不需要回表。</li>
+    </ul>
+
+    <h3>深度分页</h3>
+    <p>查询大页码时，数据库需要扫描并丢弃之前页码的所有内容，导致大量无用 I/O 和 CPU 开销。</p>
+    <p><strong>解决方案：</strong></p>
+    <ul>
+        <li>游标分页（记录上一页最后一条的位置）</li>
+        <li>覆盖索引 + 子查询</li>
+        <li>业务层限制最大分页深度</li>
+    </ul>
+
+    <h3>InnoDB 三层 B+树容量估算</h3>
+    <ul>
+        <li>页大小：16KB</li>
+        <li>主键类型：8 字节，指针大小：6 字节</li>
+        <li>非叶子节点：每个节点约 1170 个分支</li>
+        <li>叶子节点：每条记录约 1KB，每个叶子节点约 16 条记录</li>
+        <li>总容量 ≈ 1170 × 1170 × 16 ≈ 2200 万条</li>
+    </ul>
+
+    <h2>事务</h2>
+    <p><strong>事务</strong>是一个不可分割的最小工作单元，包含一系列操作，要么全部成功，要么全部失败。</p>
+
+    <h3>ACID 特性</h3>
+    <ul>
+        <li><strong>原子性（A）：</strong>事务中所有操作要么全部提交成功，要么全部失败回滚。</li>
+        <li><strong>一致性（C）：</strong>事务前后，数据库从一个合法一致状态转换到另一个合法一致状态。</li>
+        <li><strong>隔离性（I）：</strong>多个并发事务之间相互隔离，互不干扰。</li>
+        <li><strong>持久性（D）：</strong>事务提交后，结果永久保存在数据库中。</li>
+    </ul>
+
+    <h3>隔离级别</h3>
+    <table>
+        <thead><tr><th>隔离级别</th><th>脏读</th><th>不可重复读</th><th>幻读</th></tr></thead>
+        <tbody>
+            <tr><td>读未提交（READ UNCOMMITTED）</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>读已提交（READ COMMITTED）</td><td>❌</td><td>✅</td><td>✅</td></tr>
+            <tr><td>可重复读（REPEATABLE READ）</td><td>❌</td><td>❌</td><td>✅（InnoDB 通过 MVCC 解决）</td></tr>
+            <tr><td>串行化（SERIALIZABLE）</td><td>❌</td><td>❌</td><td>❌</td></tr>
+        </tbody>
+    </table>
+
+    <h3>现象说明</h3>
+    <ul>
+        <li><strong>脏读：</strong>读取到另一个事务未提交的数据。</li>
+        <li><strong>不可重复读：</strong>同一事务内多次读取同一数据行，结果不一致。</li>
+        <li><strong>幻读：</strong>前后两次相同查询条件得到的结果集不一致（变多或变少）。</li>
+    </ul>
+
+    <h2>日志</h2>
+    <table>
+        <thead><tr><th>日志类型</th><th>作用</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td><strong>错误日志</strong></td><td>记录启动、运行、停止时的错误信息</td><td>默认开启</td></tr>
+            <tr><td><strong>二进制日志（Binlog）</strong></td><td>数据恢复、主从复制</td><td>默认开启，格式：STATEMENT / ROW / MIXED</td></tr>
+            <tr><td><strong>查询日志</strong></td><td>记录所有客户端操作语句</td><td>默认不开启</td></tr>
+            <tr><td><strong>慢查询日志</strong></td><td>记录执行时间超过阈值的 SQL</td><td>默认不开启</td></tr>
+            <tr><td><strong>重做日志（Redo Log）</strong></td><td>实现事务持久性</td><td>记录数据页物理修改</td></tr>
+            <tr><td><strong>回滚日志（Undo Log）</strong></td><td>提供回滚和 MVCC</td><td>逻辑日志</td></tr>
+            <tr><td><strong>中继日志（Relay Log）</strong></td><td>主从复制中转站</td><td>仅存在于从库</td></tr>
+        </tbody>
+    </table>
+
+    <h2>锁</h2>
+    <ul>
+        <li><strong>读锁（共享锁）：</strong>允许多个事务同时读取，阻止修改。</li>
+        <li><strong>写锁（排他锁）：</strong>允许持有锁的事务读写，阻止其他事务访问。</li>
+    </ul>
+
+    <h3>锁的分类</h3>
+    <ul>
+        <li>按粒度：全局锁、表级锁、行级锁、页级锁</li>
+        <li>按模式：共享锁（S 锁）、排他锁（X 锁）、意向锁</li>
+        <li>按算法：间隙锁、临键锁、记录锁</li>
+        <li>按思想：悲观锁（SELECT ... FOR UPDATE）、乐观锁（版本号机制）</li>
+    </ul>
+
+    <h3>死锁</h3>
+    <p><strong>死锁</strong>是两个或多个事务相互等待对方释放锁资源，导致所有事务无法继续执行的永久阻塞状态。</p>
+    <p><strong>四个必要条件：</strong>互斥条件、占有且等待、不可剥夺、循环等待。</p>
+    <p><strong>排查：</strong><code class="code-inline">SHOW ENGINE INNODB STATUS;</code> 或查询 <code class="code-inline">performance_schema.data_locks</code>。</p>
+
+    <h2>MVCC（多版本并发控制）</h2>
+    <ul>
+        <li>MVCC 通过保存数据的历史版本，实现并发读写不阻塞。</li>
+        <li>核心组件：<strong>隐藏字段</strong>（DB_TRX_ID、DB_ROLL_PTR）、<strong>Undo Log</strong>（回滚日志）、<strong>Read View</strong>（读视图）</li>
+        <li>在 <strong>READ COMMITTED</strong> 和 <strong>REPEATABLE READ</strong> 隔离级别下生效。</li>
+        <li>RC 级别下，每次查询都生成新的 Read View；RR 级别下，事务内第一次查询时生成 Read View，后续复用。</li>
+    </ul>
+
+    <h2>DBA 命令</h2>
+    <pre><code class="language-sql">-- 导出数据库（在 DOS 窗口不登录 MySQL）
+mysqldump 数据库名 > 路径/文件名.sql -uroot -p
+
+-- 导入数据库（登录 MySQL 后）
+SOURCE /path/to/script.sql;   -- 路径中不要有中文</code></pre>
+
+    <h2>存储过程</h2>
+    <p>存储过程是一组预编译的 SQL 语句，存储在数据库中，可通过名称调用执行。</p>
+    <div class="note">
+        <p>MySQL 笔记内容涵盖：数据库概述、SQL 类型、MySQL 安装与配置、基本命令、查询（简单查询、条件查询、排序、分组）、单行/多行处理函数、连接查询、子查询、UNION、DDL/DML、数据类型、约束、存储引擎、三范式、视图、索引、事务、日志、锁、MVCC、DBA 命令、存储过程等。</p>
+        <p>本文档基于 MySQL 8.x 版本，所有示例均可在 MySQL 环境中执行。</p>
+    </div>
+            </div>
+        </div>
+        
+        <!-- 右侧目录（自动包含代码块相关标题） -->
+        <div class="right-catalog-wrapper">
+            <div class="right-catalog">
+                <div class="catalog-title">文章目录</div>
+                <ul class="catalog-list" id="dynamicCatalogList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button id="backToTopBtn" class="back-to-top-btn" title="回到顶部">↑</button>
+    
+    <!-- highlight.js 核心JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 行号插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <!-- 添加C++语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <!-- 添加Go语言支持 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
